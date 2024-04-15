@@ -1,0 +1,19 @@
+image: maven:latest
+
+#CI with build and test
+stages:          
+  - build
+  - test
+  - package
+  - deploy
+
+build-job:      
+  stage: build
+  script: mvn package -B
+  artifacts:
+    paths:
+      - target/*.jar
+
+unit-test-job:
+  stage: test    
+  script: mvn test
