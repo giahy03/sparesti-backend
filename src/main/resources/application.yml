@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: sparesti-backend
+
+springdoc:
+  api-docs:
+    path: /api/v1/docs
+  swagger-ui:
+    path: /api/v1/docs/ui
+    operations-sorter: method
