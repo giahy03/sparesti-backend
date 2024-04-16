@@ -2,7 +2,16 @@ package edu.ntnu.idatt2106.sparesti.model.user;
 
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -62,7 +71,7 @@ public class User implements UserDetails {
   private String lastName;
 
   @Schema(description = "The user's saving goals.")
-  @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   @NonNull
   private Set<SavingGoal> goals;
 
