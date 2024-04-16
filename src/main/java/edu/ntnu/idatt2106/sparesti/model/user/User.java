@@ -1,11 +1,10 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-
 import java.util.Collection;
 import java.util.Set;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,36 +16,61 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * Represents a stored user entity.
+ * The user class represents a user entity in the application.
+ * This class implements the Spring Security {@link UserDetails} interface.
+ * Each User object encapsulates information about a user.
  *
  * @author Tobias Oftedal
- * @see UserDetails
+ * @author Ramtin Samavat
+ * @version 1.0
  */
-@Entity
-@Table(name = "users")
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "users")
+@Schema(description = "A user entity.")
 public class User implements UserDetails {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Schema(description = "The unique identifier for the user")
   @Column(name = "user_id")
   @Setter(AccessLevel.NONE)
   private Long userId;
 
-  @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
-  private Set<SavingGoal> goals;
-
-  @Column(name = "username", nullable = false, unique = true)
+  @Schema(description = "The user's email address.")
+  @Column(name = "email", nullable = false, unique = true)
   @NonNull
-  @Setter(AccessLevel.NONE)
-  private String username;
+  private String email;
 
+  @Schema(description = "The user's password.")
   @Column(name = "password", nullable = false)
   @NonNull
   private String password;
+
+  @Schema(description = "The user's first name.")
+  @Column(name = "first_name", nullable = false)
+  @NonNull
+  private String firstName;
+
+  @Schema(description = "The user's last name.")
+  @Column(name = "last_name", nullable = false)
+  @NonNull
+  private String lastName;
+
+  @Schema(description = "The user's saving goals.")
+  @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+  @NonNull
+  private Set<SavingGoal> goals;
+
+  @Enumerated(EnumType.STRING)
+  @Schema(description = "The user's role.")
+  @Column(name = "role", nullable = false)
+  @NonNull
+  private Role role;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
