@@ -8,9 +8,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -24,45 +27,15 @@ import java.time.LocalDate;
  */
 @Getter
 @Setter
-@Builder
+@Table(name = "saving_challenge")
 @Entity
-@RequiredArgsConstructor
-public class SavingChallenge implements Challenge {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "challenge_id", nullable = false)
-  @Setter(AccessLevel.NONE)
-  private Long challengeId;
-
-  @Column(name = "description", nullable = false)
-  private String description;
-
-  @Column(name = "save_percentage", nullable = false)
-  private int percentage;
+@AllArgsConstructor
+@NoArgsConstructor
+public class SavingChallenge extends Challenge {
 
   @Column(name = "amount", nullable = false)
-  private double amount;
+  private double totalAmount;
 
-  @Column(name = "start_date", nullable = false)
-  private LocalDate startDate;
-
-  @Column(name = "end_date", nullable = false)
-  private LocalDate endDate;
-
-  @Column(name = "is_completed", nullable = false)
-  private boolean isCompleted;
-
-  @Column(name = "difficulty", nullable = false)
-  private Difficulty difficulty;
-
-  @ManyToOne
-  @JoinColumn(name="user_id", nullable = false)
-  private User user;
-
-  //TODO implement checkCompletion method
-  @Override
-  public boolean checkCompletion() {
-    return false;
-  }
+  @Column(name = "current_amount", nullable = false)
+  private double currentAmount;
 }
