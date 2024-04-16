@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
+import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import jakarta.persistence.*;
 
@@ -38,6 +39,9 @@ public class User implements UserDetails {
 
   @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
   private Set<SavingGoal> goals;
+
+  @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+  private Set<Badge> badges;
 
   @Column(name = "username", nullable = false, unique = true)
   @NonNull
