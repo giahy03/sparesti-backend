@@ -1,12 +1,11 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
+import jakarta.persistence.*;
+
 import java.util.Collection;
+import java.util.Set;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +35,9 @@ public class User implements UserDetails {
   @Column(name = "user_id")
   @Setter(AccessLevel.NONE)
   private Long userId;
+
+  @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+  private Set<SavingGoal> goals;
 
   @Column(name = "username", nullable = false, unique = true)
   @NonNull
