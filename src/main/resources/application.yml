@@ -2,6 +2,18 @@ spring:
   application:
     name: sparesti-backend
 
+  mail:
+    host: smtp.gmail.com
+    username: sparestibot@gmail.com
+    password: gvil bkva pdde cmdx
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 springdoc:
   api-docs:
     path: /api/v1/docs
