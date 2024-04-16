@@ -36,7 +36,7 @@ public class User implements UserDetails {
   @Setter(AccessLevel.NONE)
   private Long userId;
 
-  @OneToMany(mappedBy="user_id")
+  @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
   private Set<SavingGoal> goals;
 
   @Column(name = "username", nullable = false, unique = true)

@@ -27,8 +27,7 @@ public class SavingGoal {
     private Long goalId;
 
     @ManyToOne
-    @JoinColumn(name="user", nullable = false)
-    @NonNull
+    @JoinColumn(name="user_id", nullable = false)
     private User user;
 
     @Column(name="goal_name", nullable = false)
