@@ -12,24 +12,32 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import java.time.LocalDate;
 
 
+/**
+ * Represents a challenge entity superclass.
+ *
+ * @author Jeffrey Yaw Annor Tabiri
+ * @version 1.0
+ */
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Getter
 @Setter
 @SuperBuilder
-@MappedSuperclass
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "challenge")
 public abstract class Challenge {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -47,7 +55,6 @@ public abstract class Challenge {
   private LocalDate endDate;
 
   @Column(name = "is_completed", nullable = false)
-  @NonNull
   private boolean isCompleted;
 
   @Enumerated(EnumType.STRING)
@@ -55,10 +62,10 @@ public abstract class Challenge {
   @NonNull
   private Difficulty difficulty;
 
-  @ManyToOne
-  @JoinColumn(name="user_id", nullable = false)
-  @NonNull
-  private User user;
+//  @ManyToOne
+//  @JoinColumn(name = "user_id", nullable = false)
+//  @NonNull
+//  private User user;
 
   public boolean isCompleted() {
     return isCompleted;

@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ChallengesRepository extends JpaRepository<Challenge, Long> {
-  List<Challenge> findAllByUser_Username(String username, Pageable pageable);
+//  List<Challenge> findAllByUser_Username(String username, Pageable pageable);
 
 }

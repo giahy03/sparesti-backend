@@ -2,7 +2,6 @@ package edu.ntnu.idatt2106.sparesti.controller;
 
 
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
-import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeResponseDto;
 import edu.ntnu.idatt2106.sparesti.service.challenge.ChallengeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,14 +28,9 @@ public class ChallengeController {
 
   private final ChallengeService challengeService;
 
-  @GetMapping("/challenge")
-  public ResponseEntity<List<ChallengeDto>> getChallengesForUser(
-          Principal principal, @RequestBody ChallengeDto challengeRequestDto) {
-
-    log.info("Attempting to retrieve challenges for user {}", challengeRequestDto.getUsername());
-
-    log.info("Successfully retrieved challenges for user {}", challengeRequestDto.getUsername());
-
-    return ResponseEntity.ok(null);
+  @GetMapping("/challenges")
+  public ResponseEntity<String> getChallengesForUser() {
+    challengeService.getChallengesForUsers(null, null);
+    return ResponseEntity.ok("Accepted");
   }
 }

@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
-@Builder
 @Getter
 @Data
 @SuperBuilder

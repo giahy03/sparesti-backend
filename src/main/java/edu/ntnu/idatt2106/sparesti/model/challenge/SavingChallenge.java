@@ -7,19 +7,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 /**
- * Represents a stores saving challenge entity.
+ * Represents a saving-challenge entity.
  *
  * @author Jeffrey Yaw Annor Tabiri
  * @version 1.0
  */
-@Getter
-@Setter
-@Table(name = "saving_challenge")
 @Entity
+@Table(name = "saving_challenge")
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class SavingChallenge extends Challenge {
 
   @Column(name = "amount", nullable = false)
