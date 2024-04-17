@@ -2,12 +2,13 @@ package edu.ntnu.idatt2106.sparesti.dto.challenge;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import java.time.LocalDate;
+
 
 
 /**
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 )
 
 public class ChallengeDto {
+  private Long id;
   private String title;
   private int lives;
   private int currentTile;
