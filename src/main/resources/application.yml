@@ -2,6 +2,19 @@ spring:
   application:
     name: sparesti-backend
 
+  datasource:
+    url: jdbc:mysql://localhost:3306/sparesti
+    username: root
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+      show-sql: false
+
   mail:
     host: smtp.gmail.com
     username: sparestibot@gmail.com
