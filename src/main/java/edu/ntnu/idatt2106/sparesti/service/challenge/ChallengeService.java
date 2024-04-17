@@ -6,11 +6,10 @@ import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.SavingChallengeDto;
 import edu.ntnu.idatt2106.sparesti.mapper.ChallengeMapper;
 import edu.ntnu.idatt2106.sparesti.mapper.SavingChallengeMapper;
-import edu.ntnu.idatt2106.sparesti.mapper.challenge.ChallengeMapper;
-import edu.ntnu.idatt2106.sparesti.mapper.challenge.SavingChallengeMapper;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.repositories.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,11 +38,14 @@ public class ChallengeService {
   private final ChallengesRepository challengesRepository;
   private final ChallengeMapper challengeMapperImpl = Mappers.getMapper(ChallengeMapper.class);
   private final SavingChallengeMapper savingChallengeMapperImpl = Mappers.getMapper(SavingChallengeMapper.class);
+  private final UserRepository userRepository;
+
 
   public List<ChallengePreviewDto> getChallenges(Principal principal, Pageable pageable) {
 
-    log.info("Getting challenges");
-    List<Challenge> challenges = challengesRepository.findAll();
+    String username = principal.getName();
+    log.info("Getting challenges previews for {}.", username);
+    List<Challenge> challenges = challengesRepository.findAllByUser_Username(username, pageable);
     List <ChallengePreviewDto> challengePreviewDtos = new ArrayList<>();
 
     for (Challenge challenge : challenges) {
@@ -53,12 +56,18 @@ public class ChallengeService {
   }
 
 
-  public void addChallenge(ChallengeDto challenge) {
+  public void addChallenge(Principal principal, ChallengeDto challenge) {
     log.info("Adding challenge");
+
+    String username = principal.getName();
+
+    User user = userRepository.findUserByEmailIgnoreCase(principal.getName()).get();
+
+    checkForUser(username);
 
     if (challenge instanceof SavingChallengeDto) {
       log.info("Saving, saving challenge");
-      SavingChallenge savingChallenge = savingChallengeMapperImpl.savingChallengeDtoToSavingChallenge((SavingChallengeDto) challenge, challengeMapperImpl);
+      SavingChallenge savingChallenge = savingChallengeMapperImpl.savingChallengeDtoToSavingChallenge((SavingChallengeDto) challenge,user, challengeMapperImpl);
       challengesRepository.save(savingChallenge);
       return;
     }
@@ -68,21 +77,40 @@ public class ChallengeService {
   public void removeChallenge(Principal principal, ChallengePreviewDto challengePreviewDto) {
 
     String username = principal.getName();
-
-    User user = userRepository.findUserByUsernameIgnoreCase(username).orElseThrow(() ->
-            new UsernameNotFoundException("User with username " + username + " not found"));
+    checkForUser(username);
+    checkValidity(challengePreviewDto, username);
 
     log.info("Removing challenge with id: " + challengePreviewDto.getId());
     challengesRepository.deleteById(challengePreviewDto.getId());
   }
 
-  public ChallengeDto getChallenge(Principal principal, ChallengePreviewDto challengePreviewDto) {
-    log.info("Getting challenge with id: " + challengePreviewDto.getId());
-    Optional<Challenge> challenge = challengesRepository.findById(challengePreviewDto.getId());
-    if (challenge.get() instanceof SavingChallenge) {
-      return savingChallengeMapperImpl.savingChallengeDto((SavingChallenge) challenge.get(), challengeMapperImpl);
+  private void checkValidity(ChallengePreviewDto challengePreviewDto, String username) {
+    if (challengesRepository.findById(challengePreviewDto.getId()).get().getUser().getUsername().equals(username)) {
+      return;
+    } else {
+      throw new IllegalArgumentException("User with username " + username + " does not have access to challenge with id " + challengePreviewDto.getId());
     }
-    return challenge.map(challengeMapperImpl::challengeIntoChallengeDto).orElse(null);
+  }
+
+  private void checkForUser(String username) {
+    User user = userRepository.findUserByEmailIgnoreCase(username).orElseThrow(() ->
+            new UsernameNotFoundException("User with username " + username + " not found"));
+  }
+
+  public ChallengeDto getChallenge(Principal principal, ChallengePreviewDto challengePreviewDto) {
+
+    checkForUser(principal.getName());
+    checkValidity(challengePreviewDto, principal.getName());
+
+
+    Optional<Challenge> challenge = challengesRepository.findById(challengePreviewDto.getId());
+    log.info("Getting challenge with id: " + challengePreviewDto.getId());
+
+    if (challenge.get() instanceof SavingChallenge) {
+      return savingChallengeMapperImpl.savingChallengeDto((SavingChallenge) challenge.get(),  challengeMapperImpl);
+    }
+
+    return null;
   }
 
 }
