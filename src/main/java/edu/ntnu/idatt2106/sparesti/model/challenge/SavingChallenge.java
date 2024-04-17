@@ -1,23 +1,12 @@
-package edu.ntnu.idatt2106.sparesti.model.savingchallenge;
+package edu.ntnu.idatt2106.sparesti.model.challenge;
 
-import edu.ntnu.idatt2106.sparesti.model.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 /**
  * Represents a stores saving challenge entity.
@@ -38,4 +27,9 @@ public class SavingChallenge extends Challenge {
 
   @Column(name = "current_amount", nullable = false)
   private double currentAmount;
+
+  @Override
+  public boolean isCompleted() {
+    return currentAmount >= totalAmount;
+  }
 }

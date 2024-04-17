@@ -1,8 +1,10 @@
-package edu.ntnu.idatt2106.sparesti.model.savingchallenge;
+package edu.ntnu.idatt2106.sparesti.model.challenge;
 
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -10,10 +12,12 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
@@ -23,31 +27,40 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "challenge")
-@Inheritance(strategy = InheritanceType.JOINED)
 @SuperBuilder
+@MappedSuperclass
 public abstract class Challenge {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Column(name = "description", nullable = false)
+  @NonNull
   private String description;
 
   @Column(name = "start_date", nullable = false)
+  @NonNull
   private LocalDate startDate;
 
   @Column(name = "end_date", nullable = false)
+  @NonNull
   private LocalDate endDate;
 
   @Column(name = "is_completed", nullable = false)
+  @NonNull
   private boolean isCompleted;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "difficulty", nullable = false)
+  @NonNull
   private Difficulty difficulty;
 
   @ManyToOne
   @JoinColumn(name="user_id", nullable = false)
+  @NonNull
   private User user;
+
+  public boolean isCompleted() {
+    return isCompleted;
+  }
 }

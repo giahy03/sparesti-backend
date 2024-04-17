@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.model.savingchallenge;
+package edu.ntnu.idatt2106.sparesti.model.challenge;
 
 /**
  * Represents the difficulty of a saving challenge.
