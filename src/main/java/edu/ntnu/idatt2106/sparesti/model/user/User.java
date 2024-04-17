@@ -75,12 +75,10 @@ public class User implements UserDetails {
 
   @Schema(description = "The user's saving goals.")
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  @NonNull
   private Set<SavingGoal> goals;
 
   @Schema(description = "The user's badges.")
   @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
-  @NonNull
   private Set<Badge> badges;
 
   @Enumerated(EnumType.STRING)
