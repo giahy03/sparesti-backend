@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.banking;
 
+import edu.ntnu.idatt2106.sparesti.model.analysis.SsbPurchaseCategory;
 import java.time.MonthDay;
 import lombok.Data;
 import lombok.NonNull;
@@ -19,5 +20,6 @@ public class Transaction {
   private Double amount;
   @NonNull
   private Boolean isIncoming;
+  private SsbPurchaseCategory category;
 }
 
