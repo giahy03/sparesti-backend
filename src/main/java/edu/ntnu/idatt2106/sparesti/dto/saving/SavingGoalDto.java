@@ -29,7 +29,7 @@ public class SavingGoalDto {
     private String description;
     private LocalDate deadLine;
     private double amount;
-    private double progress;
+    private double progress;   // Flytte til child?
     private boolean achieved;
     
 }

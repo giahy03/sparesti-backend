@@ -1,7 +1,9 @@
 package edu.ntnu.idatt2106.sparesti.service.saving;
 
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.repository.SavingGoalRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -77,7 +79,7 @@ public class SavingGoalService {
      */
 
     public SavingGoalDto getSavingGoalById(long goalId) {
-        SavingGoal savingGoal = savingGoalRepository.findSavingGoalById(goalId).orElseThrow(new Exception("Preliminary goal not found error"));
+        SavingGoal savingGoal = savingGoalRepository.findSavingGoalByGoalId(goalId).orElseThrow();
 
         return savingGoalMapper.mapToSavingGoalDto(savingGoal);
     }
