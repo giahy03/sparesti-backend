@@ -25,4 +25,15 @@ public class SavingGoalMapper {
                 .build();
     }
 
+    // --- Preliminary methods for mapper: ---
+    // mapToSavingGoal(savingGoalCreationRequestDto, user)
+    // mapToAllGoalIdsDto
+    //
+
+    // --- Preliminary DTOs to create: ---
+    // SavingGoalCreationRequestDto
+    // SavingGoalCreationResponseDto
+    // AllFoalIdsDto
+
+
 }

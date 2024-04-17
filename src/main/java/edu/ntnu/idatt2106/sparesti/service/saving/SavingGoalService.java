@@ -24,10 +24,10 @@ import java.security.Principal;
 @AllArgsConstructor
 public class SavingGoalService {
 
+    //    @NonNull
+    //    private final UserRepository userRepository;
     @NonNull
     private final SavingGoalRepository savingGoalRepository;
-//    @NonNull
-//    private final UserRepository userRepository;
     @NonNull
     private final SavingGoalMapper savingGoalMapper;
 
@@ -60,7 +60,7 @@ public class SavingGoalService {
 
 
     /**
-     * Retries a list containing the ID number of all the goals belonging to the authenticated user.
+     * Retrieves a list containing the ID number of all the goals belonging to the authenticated user.
      *
      * @param principal The authenticated user
      * @return DTO containing the ids of all the goals

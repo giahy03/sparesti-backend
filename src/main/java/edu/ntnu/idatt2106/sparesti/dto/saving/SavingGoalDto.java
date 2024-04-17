@@ -8,10 +8,8 @@ import java.util.Date;
 @Data
 @Builder
 public class SavingGoalDto {
-    //private String username;
+    // user, description ?
     private String goalName;
-
-    //private String description;
     private Date deadLine;
     private double amount;
     private double progress;

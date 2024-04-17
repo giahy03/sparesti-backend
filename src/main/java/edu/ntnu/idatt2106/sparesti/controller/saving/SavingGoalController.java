@@ -85,7 +85,7 @@ public class SavingGoalController {
 
         log.info("Returning list of goals for user: " + principal.getName());
         SavingGoalIdsDto goals = savingGoalService.getAllGoalIdsByEmail(principal);
-        return new ResponseEntity<>(goals, HttpStatus.OK);  // Returns all goal ID's.
+        return new ResponseEntity<>(goals, HttpStatus.OK);  // Returns all goal IDs
     }
 
     */
@@ -108,7 +108,7 @@ public class SavingGoalController {
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
     @GetMapping("goal/{goalId}")
-    public ResponseEntity<SavingGoalDto> getGoalById(@PathVariable long goalId) {  // Change to a UID?
+    public ResponseEntity<SavingGoalDto> getGoalById(@PathVariable long goalId) {
 
         //log.info("Returning Saving Goal: " + goalId);
         SavingGoalDto goal = savingGoalService.getSavingGoalById(goalId);
