@@ -1,6 +1,9 @@
-package edu.ntnu.idatt2106.sparesti.model.analysis;
+package edu.ntnu.idatt2106.sparesti.service.analysis;
 
 import edu.ntnu.idatt2106.sparesti.dto.ssb.response.SsbConsumptionApiResponseDto;
+import edu.ntnu.idatt2106.sparesti.model.analysis.SsbIncomeQuartile;
+import edu.ntnu.idatt2106.sparesti.model.analysis.SsbLivingStatus;
+import edu.ntnu.idatt2106.sparesti.model.analysis.SsbPurchaseCategory;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.http.HttpEntity;
@@ -15,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
  * Retrieves data from the SSB API.
  */
 @Service
-public class SsbDataRetriever {
+public class SsbDataService {
   private static final String API_LOCATION = "https://data.ssb.no/api/v0/no/table/14157";
 
   /**

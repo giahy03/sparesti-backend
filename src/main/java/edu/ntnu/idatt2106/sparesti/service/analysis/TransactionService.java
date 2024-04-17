@@ -1,5 +1,6 @@
-package edu.ntnu.idatt2106.sparesti.model.analysis;
+package edu.ntnu.idatt2106.sparesti.service.analysis;
 
+import edu.ntnu.idatt2106.sparesti.model.analysis.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
  * Classifies a transaction into a category.
  */
 @Service
-public class TransactionClassifier {
+public class TransactionService {
   /**
    * Categorizes a transaction.
    *

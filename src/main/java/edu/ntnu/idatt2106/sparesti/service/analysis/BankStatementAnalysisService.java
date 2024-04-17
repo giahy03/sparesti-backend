@@ -2,11 +2,9 @@ package edu.ntnu.idatt2106.sparesti.service.analysis;
 
 import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbDataRetriever;
 import edu.ntnu.idatt2106.sparesti.model.analysis.SsbIncomeQuartile;
 import edu.ntnu.idatt2106.sparesti.model.analysis.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.analysis.SsbPurchaseCategory;
-import edu.ntnu.idatt2106.sparesti.model.analysis.TransactionClassifier;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,8 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BankStatementAnalysisService {
-  @NonNull SsbDataRetriever ssbDataRetriever;
-  @NonNull TransactionClassifier transactionClassifier;
+  @NonNull SsbDataService ssbDataService;
+  @NonNull TransactionService transactionService;
 
   /**
    * Analyzes a bank statement and compares it to the expected usage of the given demography.
@@ -40,7 +38,7 @@ public class BankStatementAnalysisService {
 
     categorizeTransactions(bankStatement);
     HashMap<SsbPurchaseCategory, Double> expectedUsage =
-        ssbDataRetriever.getExpectedUsage(monthlyIncomeAfterTaxes, livingStatus, incomeQuartile);
+        ssbDataService.getExpectedUsage(monthlyIncomeAfterTaxes, livingStatus, incomeQuartile);
 
     HashMap<SsbPurchaseCategory, Double> actualUsage = getActualUsage(bankStatement);
 
@@ -61,7 +59,7 @@ public class BankStatementAnalysisService {
    */
   private void categorizeTransactions(BankStatement bankStatement) {
     bankStatement.getTransactions()
-        .forEach(transaction -> transactionClassifier.categorize(transaction));
+        .forEach(transaction -> transactionService.categorize(transaction));
   }
 
   /**
