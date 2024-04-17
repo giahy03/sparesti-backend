@@ -1,35 +1,20 @@
 package edu.ntnu.idatt2106.sparesti.dto.saving;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Data
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        property = "challengeType")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = SavingGoalDto.class, name = "SavingGoalDto")}
-)
-
+@Builder
 public class SavingGoalDto {
-    private String username;
+    //private String username;
     private String goalName;
 
-    private String description;
-    private LocalDate deadLine;
+    //private String description;
+    private Date deadLine;
     private double amount;
-    private double progress;   // Flytte til child?
+    private double progress;
     private boolean achieved;
     
 }

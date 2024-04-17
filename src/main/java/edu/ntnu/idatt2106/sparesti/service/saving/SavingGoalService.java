@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.SavingGoalRepository;
+import edu.ntnu.idatt2106.sparesti.mapper.SavingGoalMapper;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,8 +26,8 @@ public class SavingGoalService {
 
     @NonNull
     private final SavingGoalRepository savingGoalRepository;
-    @NonNull
-    private final UserRepository userRepository;
+//    @NonNull
+//    private final UserRepository userRepository;
     @NonNull
     private final SavingGoalMapper savingGoalMapper;
 
@@ -39,6 +40,7 @@ public class SavingGoalService {
      * @return The response DTO containing the ID of the created saving goal
      */
 
+/*
     public SavingGoalCreationResponseDto createSavingGoal(SavingGoalCreationRequestDto savingGoalCreationRequestDto,
                                                           Principal principal) {
         String email = principal.getName();
@@ -54,6 +56,7 @@ public class SavingGoalService {
                 .savingGoalId(savedSavingGoal.getGoalId())
                 .build();
     }
+*/
 
 
     /**
@@ -63,12 +66,14 @@ public class SavingGoalService {
      * @return DTO containing the ids of all the goals
      */
 
+/*
     public AllGoalIdsDto getAllGoalIdsByEmail(Principal principal) {
         return savingGoalRepository.findAllGoalsByEmail(principal.getName())
                 .stream()
                 .map(savingGoalMapper::mapToAllGoalIdsDto)
                 .toList();
     }
+*/
 
 
     /**
