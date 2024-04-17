@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
+import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
@@ -76,6 +77,11 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   @NonNull
   private Set<SavingGoal> goals;
+
+  @Schema(description = "The user's badges.")
+  @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+  @NonNull
+  private Set<Badge> badges;
 
   @Enumerated(EnumType.STRING)
   @Schema(description = "The user's role.")

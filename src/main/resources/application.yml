@@ -3,7 +3,7 @@ spring:
     name: sparesti-backend
 
   datasource:
-    url: jdbc:mysql://localhost:3306/sparesti
+    url: jdbc:mysql://localhost:3307/sparesti
     username: root
     password: password
 
