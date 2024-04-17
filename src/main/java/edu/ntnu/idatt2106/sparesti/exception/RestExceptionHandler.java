@@ -1,6 +1,8 @@
 package edu.ntnu.idatt2106.sparesti.exception;
 
 import edu.ntnu.idatt2106.sparesti.exception.user.EmailAlreadyExistsException;
+import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
+import java.time.LocalDateTime;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -8,19 +10,18 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.time.LocalDateTime;
 
 /**
  * The class serves as a global exception handler for REST controllers. Based on the
  * exceptions that are thrown within the controllers, it returns a ResponseEntity with
  * an appropriate error response.
  *
- * <p> The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/exception/RestExceptionHandler.java">...</a>
+ * <p>
+ * The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/exception/RestExceptionHandler.java">...</a>
+ * </p>
  *
  * @author Ramtin Samavat
  * @version 1.0
@@ -74,17 +75,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
    */
   @ExceptionHandler(BadCredentialsException.class)
   public ResponseEntity<ErrorResponse> handleBadCredentialsException(@NonNull Exception ex) {
-    String errorMessage = "Username or password was incorrect.";
+    String errorMessage = "Email or password was incorrect.";
     return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.UNAUTHORIZED);
   }
 
   /**
-   * The method handles exceptions when a user based on the username is not found.
+   * The method handles exceptions when a user is not found.
    *
    * @param ex The exception to handle.
    * @return ResponseEntity containing the ErrorResponse with HTTP status code 404 (NOT_FOUND).
    */
-  @ExceptionHandler(UsernameNotFoundException.class)
+  @ExceptionHandler(UserNotFoundException.class)
   public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(@NonNull Exception ex) {
     String errorMessage = ex.getMessage();
     return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.NOT_FOUND);

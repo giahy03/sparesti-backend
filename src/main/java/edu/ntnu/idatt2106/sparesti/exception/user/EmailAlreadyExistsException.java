@@ -3,7 +3,9 @@ package edu.ntnu.idatt2106.sparesti.exception.user;
 /**
  * The class represents a custom exception to indicate that an email
  * is already in use by another user.
+ * <p>
  * The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/exception/user/EmailAlreadyExistsException.java">...</a>
+ * </p>
  *
  * @author Ramtin Samavat
  * @version 1.0
