@@ -9,6 +9,7 @@ import edu.ntnu.idatt2106.sparesti.repositories.UserRepository;
 import edu.ntnu.idatt2106.sparesti.validation.validators.UserValidator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,6 +26,9 @@ public class UserService {
   //CRUD operations on user models.
   private final UserRepository userRepository;
 
+  //Password encoder to hash passwords in a database.
+  private final PasswordEncoder passwordEncoder;
+
   /**
    * Edits the password of the user.
    *
@@ -38,7 +42,7 @@ public class UserService {
             passwordChangeDto.getOldPassword(),
             passwordChangeDto.getNewPassword());
 
-    user.setPassword(passwordChangeDto.getNewPassword());
+    user.setPassword(passwordEncoder.encode(passwordChangeDto.getNewPassword()));
 
     userRepository.save(user);
   }
