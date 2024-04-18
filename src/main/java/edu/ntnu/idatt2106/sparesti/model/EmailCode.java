@@ -20,7 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "email_code")
 public class EmailCode {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +28,9 @@ public class EmailCode {
   @Setter(AccessLevel.NONE)
   private Long id;
 
-  @Column(name = "register_email", nullable = false, unique = true)
+  @Column(name = "email", nullable = false, unique = true)
   @NonNull
-  private String registerEmail;
+  private String email;
 
   @Column(name = "verification_code", nullable = false)
   @NonNull
