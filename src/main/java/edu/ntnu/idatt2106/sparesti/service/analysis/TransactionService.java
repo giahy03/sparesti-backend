@@ -17,7 +17,13 @@ public class TransactionService {
    */
   public void categorize(Transaction transaction) {
     Optional<SsbPurchaseCategory> category = checkIfFood(transaction);
-    category.ifPresent(transaction::setCategory);
+    if (category.isPresent()) {
+      transaction.setCategory(category.get());
+    } else {
+      if (transaction.getCategory() == null) {
+        transaction.setCategory(SsbPurchaseCategory.OTHER);
+      }
+    }
   }
 
   /**
@@ -26,7 +32,7 @@ public class TransactionService {
    * @param transaction the transaction to check.
    * @return the category of the transaction.
    */
-  public Optional<SsbPurchaseCategory> checkIfFood(Transaction transaction) {
+  private Optional<SsbPurchaseCategory> checkIfFood(Transaction transaction) {
     String[] foodStores = {"rema", "kiwi", "meny", "joker", "bunnpris", "coop", "ica", "spar",
         "kiwi"};
     String lowercaseDescription = transaction.getDescription().toLowerCase();
@@ -35,6 +41,6 @@ public class TransactionService {
         return Optional.of(SsbPurchaseCategory.FOOD);
       }
     }
-    return Optional.of(SsbPurchaseCategory.OTHER);
+    return Optional.empty();
   }
 }
