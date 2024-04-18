@@ -22,8 +22,8 @@ import org.mapstruct.Mapping;
 public interface SavingChallengeMapper {
 
   @Mapping(target="user", expression="java( user )")
+  @Mapping(target = "isCompleted", ignore = true)
   SavingChallenge savingChallengeDtoToSavingChallenge(SavingChallengeDto challenge, @Context User user, @Context ChallengeMapper challengeMapperImpl);
-
 
   SavingChallengeDto savingChallengeDto(SavingChallenge savingChallenge, @Context ChallengeMapper challengeMapperImpl);
 }

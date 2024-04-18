@@ -19,6 +19,8 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface ChallengeMapper {
 
+  @Mapping(target = "isCompleted", ignore = true)
+  @Mapping(target = "user", ignore = true)
   Challenge challengeDtoToChallenge(ChallengeDto challengeDto);
 
   ChallengePreviewDto challengeIntoChallengePreviewDto(Challenge challenge);
