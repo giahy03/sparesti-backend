@@ -44,8 +44,9 @@ public class BankStatementAnalysisService {
 
     List<AnalysisItem> analysisItems = new ArrayList<>();
     Arrays.stream(SsbPurchaseCategory.values()).forEach(category -> {
-      AnalysisItem analysisItem =
-          new AnalysisItem(category, expectedUsage.get(category), actualUsage.get(category));
+      AnalysisItem analysisItem = new AnalysisItem(category,
+          expectedUsage.get(category) != null ? expectedUsage.get(category) : 0,
+          actualUsage.get(category) != null ? actualUsage.get(category) : 0);
       analysisItems.add(analysisItem);
     });
 
@@ -68,7 +69,7 @@ public class BankStatementAnalysisService {
    * @param bankStatement The bank statement to analyze.
    * @return The actual usage of the bank statement, per category.
    */
-  private HashMap<SsbPurchaseCategory, Double> getActualUsage(BankStatement bankStatement) {
+  protected HashMap<SsbPurchaseCategory, Double> getActualUsage(BankStatement bankStatement) {
     HashMap<SsbPurchaseCategory, Double> actualUsage = new HashMap<>();
     Arrays.stream(SsbPurchaseCategory.values()).forEach(category -> actualUsage.put(category, 0.0));
 
