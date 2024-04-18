@@ -74,7 +74,7 @@ public class UserController {
                   content = @Content)
   })
   @PutMapping(path = "/first-name")
-  public ResponseEntity<Void> changeFirsName(@RequestBody FirstNameChangeDto firstNameChangeDto,
+  public ResponseEntity<Void> changeFirstName(@RequestBody FirstNameChangeDto firstNameChangeDto,
                                                  Principal principal) {
     String email = principal.getName();
     log.info("Changing first name for user with email {}.", email);
