@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106.sparesti.service.user;
 import edu.ntnu.idatt2106.sparesti.dto.user.FirstNameChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.LastNameChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.PasswordChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.UserDetailsDto;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repositories.UserRepository;
@@ -77,6 +78,17 @@ public class UserService {
     user.setLastName(lastNameChangeDto.getNewLastName());
 
     userRepository.save(user);
+  }
+
+  /**
+   * The method retrieves the user's details for the specified email.
+   *
+   * @param email The email of the user to retrieve the information for.
+   * @return The UserDetailsDto containing user details.
+   */
+  public UserDetailsDto getUserDetails(@NonNull String email) {
+    User user = findUser(email);
+    return new UserDetailsDto(user.getFirstName(), user.getLastName());
   }
 
   /**
