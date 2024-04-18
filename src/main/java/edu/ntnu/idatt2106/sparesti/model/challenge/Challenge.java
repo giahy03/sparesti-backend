@@ -14,7 +14,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -28,7 +31,6 @@ import lombok.experimental.SuperBuilder;
  * @author Jeffrey Yaw Annor Tabiri
  * @version 1.0
  */
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Getter
@@ -40,6 +42,7 @@ public class Challenge {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Setter(AccessLevel.NONE)
   private Long id;
 
   @Column(name = "title", nullable = false)
@@ -71,9 +74,6 @@ public class Challenge {
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   @NonNull
+  @Setter(AccessLevel.NONE)
   private User user;
-
-  public boolean isCompleted() {
-    return isCompleted;
-  }
 }
