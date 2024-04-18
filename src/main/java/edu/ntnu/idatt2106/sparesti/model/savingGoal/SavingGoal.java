@@ -26,7 +26,7 @@ public class SavingGoal {
     @Schema(description = "The unique identifier for the saving goal.")
     @Column(name = "goal_id")
     @Setter(AccessLevel.NONE)
-    private Long goalId;
+    private Long id;
 
     @ManyToOne
     @Schema(description = "The unique identifier for the user.")

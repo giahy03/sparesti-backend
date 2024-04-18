@@ -1,16 +1,21 @@
 package edu.ntnu.idatt2106.sparesti.service.saving;
 
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalCreationRequestDto;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.SavingGoalRepository;
 import edu.ntnu.idatt2106.sparesti.mapper.SavingGoalMapper;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
+import java.util.List;
 
 /**
  * Service class for operations related to Saving Goals.
@@ -21,11 +26,12 @@ import java.security.Principal;
 
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class SavingGoalService {
 
-    //    @NonNull
-    //    private final UserRepository userRepository;
+    @NonNull
+    private final UserRepository userRepository;
     @NonNull
     private final SavingGoalRepository savingGoalRepository;
     @NonNull
@@ -40,8 +46,7 @@ public class SavingGoalService {
      * @return The response DTO containing the ID of the created saving goal
      */
 
-/*
-    public SavingGoalCreationResponseDto createSavingGoal(SavingGoalCreationRequestDto savingGoalCreationRequestDto,
+    public SavingGoalIdDto createSavingGoal(SavingGoalCreationRequestDto savingGoalCreationRequestDto,
                                                           Principal principal) {
         String email = principal.getName();
 
@@ -52,41 +57,64 @@ public class SavingGoalService {
 
         SavingGoal savedSavingGoal = savingGoalRepository.save(createdSavingGoal);
 
-        return SavingGoalCreationResponseDto.builder()
-                .savingGoalId(savedSavingGoal.getGoalId())
+        return SavingGoalIdDto.builder()
+                .id(savedSavingGoal.getId())
                 .build();
     }
-*/
 
 
     /**
      * Retrieves a list containing the ID number of all the goals belonging to the authenticated user.
      *
      * @param principal The authenticated user
-     * @return DTO containing the ids of all the goals
+     * @return List of DTOs containing the id of each goal of the user
      */
 
-/*
-    public AllGoalIdsDto getAllGoalIdsByEmail(Principal principal) {
-        return savingGoalRepository.findAllGoalsByEmail(principal.getName())
+    public List<SavingGoalIdDto> getAllGoalIdsByEmail(Principal principal, Pageable pageable) {
+
+        String email = principal.getName();
+
+        return savingGoalRepository.findAllByUser_Username(email, pageable)
                 .stream()
-                .map(savingGoalMapper::mapToAllGoalIdsDto)
+                .map(savingGoalMapper::mapToSavingGoalIdDto)
                 .toList();
     }
-*/
-
 
     /**
      * Retrieves a goal from the database based on its id.
      *
-     * @param goalId The id of the saving goal
+     * @param savingGoalIdDto DTO containing the id of the saving goal
      * @return DTO containing the saving goal
      */
 
-    public SavingGoalDto getSavingGoalById(long goalId) {
-        SavingGoal savingGoal = savingGoalRepository.findSavingGoalByGoalId(goalId).orElseThrow();
+    public SavingGoalDto getSavingGoalById(SavingGoalIdDto savingGoalIdDto) {
+        SavingGoal savingGoal = savingGoalRepository.findById(savingGoalIdDto.getId()).orElseThrow();
 
         return savingGoalMapper.mapToSavingGoalDto(savingGoal);
     }
+
+    public void deleteSavingGoal(Principal principal, SavingGoalIdDto savingGoalIdDto) {
+
+        String email = principal.getName();
+        checkForUser(email);
+        checkValidity(savingGoalIdDto, email);
+
+        savingGoalRepository.deleteById(savingGoalIdDto.getId());
+
+    }
+
+    private void checkValidity(SavingGoalIdDto savingGoalIdDto, String email) {
+        if (SavingGoalRepository.findById(savingGoalIdDto.getId()).get().getUser().getUsername().equals(email)) {
+            return;
+        } else {
+            throw new IllegalArgumentException("User with username " + email + " does not have access to challenge with id " + SavingGoalIdDto.getId());
+        }
+    }
+
+    private void checkForUser(String email) {
+        User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
+                new UsernameNotFoundException("User with username " + email + " not found"));
+    }
+
 
 }
