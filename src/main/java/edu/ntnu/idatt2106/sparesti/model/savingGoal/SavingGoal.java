@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.model.savingGoal;
 
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,11 +23,13 @@ import java.util.Date;
 public class SavingGoal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "The unique identifier for the saving goal.")
     @Column(name = "goal_id")
     @Setter(AccessLevel.NONE)
     private Long goalId;
 
     @ManyToOne
+    @Schema(description = "The unique identifier for the user.")
     @JoinColumn(name="user_id", nullable = false)
     private User user;
 
@@ -34,15 +37,30 @@ public class SavingGoal {
     @NonNull
     private String goalName;
 
-    @Column(name = "deadline", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "difficulty", nullable = false)
+    @NonNull
+    private GoalDifficulty difficulty;
+
+    @Column(name = "startDate", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date deadline;
+    private Date startDate;
+
+    @Column(name = "endDate", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date endDate;
 
     @Column(name = "goal_amount")
     private double amount;
 
     @Column(name = "goal_progress")
     private double progress;
+
+    @Column(name = "lives")
+    private int lives;
+
+    @Column(name = "currentTile")
+    private int currentTile;
 
     @Column(name = "achieved")
     private boolean achieved;
