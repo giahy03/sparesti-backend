@@ -48,16 +48,16 @@ public class ChallengeService {
    * @return a list of challenges for the specified user.
    */
   public List<ChallengePreviewDto> getChallenges(Principal principal, Pageable pageable) {
+    String email = principal.getName();
+    log.info("Getting challenges previews for {}.", email);
 
-    String username = principal.getName();
-    log.info("Getting challenges previews for {}.", username);
-    List<Challenge> challenges = challengesRepository.findAllByUser_Username(username, pageable);
+    List<Challenge> challenges = challengesRepository.findByUser_Email(email, pageable);
     List<ChallengePreviewDto> challengePreviewDtos = new ArrayList<>();
-
     for (Challenge challenge : challenges) {
       challengePreviewDtos.add(challengeMapperImpl.challengeIntoChallengePreviewDto(challenge));
     }
 
+    log.info("Found {} challenges for user {}.", challenges.size(), email);
     return challengePreviewDtos;
   }
 
@@ -150,5 +150,4 @@ public class ChallengeService {
 
     return null;
   }
-
 }
