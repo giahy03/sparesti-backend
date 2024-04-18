@@ -12,10 +12,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface EmailCodeRepository extends JpaRepository<EmailCode, Long> {
 
-  EmailCode findByRegisterEmail(String email);
+  EmailCode findByEmail(String email);
 
   void deleteByEmail(String email);
-
-  void updateEmailCodeByRegisterEmail(String email, String code);
 
 }

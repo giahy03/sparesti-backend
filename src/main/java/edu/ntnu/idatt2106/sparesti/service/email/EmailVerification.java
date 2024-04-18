@@ -37,7 +37,7 @@ public class EmailVerification {
 
   public EmailCode createEmailCodeDto(String email, String token) {
     return EmailCode.builder()
-                    .registerEmail(email)
+                    .email(email)
                     .verificationCode(token)
                     .build();
   }
@@ -51,13 +51,13 @@ public class EmailVerification {
   }
 
   public boolean checkForRegisterEmail(String email) {
-    return emailCodeRepository.findByRegisterEmail(email) != null;
+    return emailCodeRepository.findByEmail(email) != null;
   }
 
   public void verifyEmailCode(String email, String token) {
-    EmailCode emailCode = emailCodeRepository.findByRegisterEmail(email);
+    EmailCode emailCode = emailCodeRepository.findByEmail(email);
 
-    if (emailCode.getRegisterEmail().equals(email) && emailCode.getVerificationCode().equals(token)) {
+    if (emailCode.getEmail().equals(email) && emailCode.getVerificationCode().equals(token)) {
       emailCodeRepository.deleteByEmail(email);
       return;
     }
