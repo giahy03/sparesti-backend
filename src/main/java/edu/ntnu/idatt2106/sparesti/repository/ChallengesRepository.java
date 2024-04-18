@@ -16,6 +16,6 @@ import java.util.List;
  * @version 1.0
  */
 public interface ChallengesRepository extends JpaRepository<Challenge, Long> {
-  List<Challenge> findAllByUser_Username(String username, Pageable pageable);
+  List<Challenge> findByUser_Email(String email, Pageable pageable);
 
 }
