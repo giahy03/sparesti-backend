@@ -24,7 +24,6 @@ public class EmailVerification {
     for (int i = 0; i < LENGTH; i++) {
       token.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
     }
-
     return token.toString();
   }
 
@@ -43,7 +42,7 @@ public class EmailVerification {
                     .build();
   }
 
-  public void sendCodeToRegisteredEmail(String email) {
+  public void sendCodeToEmail(String email) {
     String token = generateVerificationToken();
     EmailDetailsDto emailDetailsDto = createEmailDto(email, token);
     EmailCode emailCode = createEmailCodeDto(email, token);
@@ -56,7 +55,6 @@ public class EmailVerification {
   }
 
   public void verifyEmailCode(String email, String token) {
-
     EmailCode emailCode = emailCodeRepository.findByRegisterEmail(email);
 
     if (emailCode.getRegisterEmail().equals(email) && emailCode.getVerificationCode().equals(token)) {
