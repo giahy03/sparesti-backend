@@ -36,15 +36,15 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "challenge")
-public abstract class Challenge {
+public class Challenge {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "description", nullable = false)
+  @Column(name = "title", nullable = false)
   @NonNull
-  private String description;
+  private String title;
 
   @Column(name = "start_date", nullable = false)
   @NonNull
@@ -62,10 +62,16 @@ public abstract class Challenge {
   @NonNull
   private Difficulty difficulty;
 
-//  @ManyToOne
-//  @JoinColumn(name = "user_id", nullable = false)
-//  @NonNull
-//  private User user;
+  @Column(name = "lives", nullable = false)
+  private int lives;
+
+  @Column(name = "current_tile", nullable = false)
+  private int currentTile;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  @NonNull
+  private User user;
 
   public boolean isCompleted() {
     return isCompleted;
