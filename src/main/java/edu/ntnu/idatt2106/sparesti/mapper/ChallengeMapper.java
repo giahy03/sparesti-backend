@@ -6,6 +6,7 @@ import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * A mapper for mapping between Challenge and ChallengeDto.
@@ -18,9 +19,9 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface ChallengeMapper {
 
-  Challenge challengeDtoToChallenge(ChallengeDto challengeDto, @Context User user);
+  Challenge challengeDtoToChallenge(ChallengeDto challengeDto);
 
   ChallengePreviewDto challengeIntoChallengePreviewDto(Challenge challenge);
 
-  ChallengeDto challengeIntoChallengeDto(Challenge challenge, @Context User user);
+  ChallengeDto challengeIntoChallengeDto(Challenge challenge);
 }

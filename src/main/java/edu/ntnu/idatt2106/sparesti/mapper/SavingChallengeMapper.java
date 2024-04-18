@@ -7,6 +7,7 @@ import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * A mapper for mapping between SavingChallenge and SavingChallengeDto.
@@ -18,8 +19,11 @@ import org.mapstruct.Mapper;
  * @version 1.0
  */
 @Mapper(uses = ChallengeMapper.class)
-public interface SavingChallengeMapper{
+public interface SavingChallengeMapper {
+
+  @Mapping(target="user", expression="java( user )")
   SavingChallenge savingChallengeDtoToSavingChallenge(SavingChallengeDto challenge, @Context User user, @Context ChallengeMapper challengeMapperImpl);
+
 
   SavingChallengeDto savingChallengeDto(SavingChallenge savingChallenge, @Context ChallengeMapper challengeMapperImpl);
 }
