@@ -1,0 +1,89 @@
+package edu.ntnu.idatt2106.sparesti.service.user;
+
+import edu.ntnu.idatt2106.sparesti.dto.user.FirstNameChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.LastNameChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.PasswordChangeDto;
+import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
+import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.repositories.UserRepository;
+import edu.ntnu.idatt2106.sparesti.validation.validators.UserValidator;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+/**
+ * Service class that encapsulates the logic for handling user-related operations.
+ * It uses the {@link UserRepository} to perform the operations in the database.
+ *
+ * @author Ramtin Samavat
+ * @version  1.0
+ */
+@Service
+@RequiredArgsConstructor
+public class UserService {
+
+  //CRUD operations on user models.
+  private final UserRepository userRepository;
+
+  /**
+   * Edits the password of the user.
+   *
+   * @param passwordChangeDto The DTO containing old and new password.
+   * @param email The email of the user.
+   */
+  public void editPassword(@NonNull PasswordChangeDto passwordChangeDto, @NonNull String email) {
+    User user = findUser(email);
+
+    UserValidator.validatePasswordChange(user.getPassword(),
+            passwordChangeDto.getOldPassword(),
+            passwordChangeDto.getNewPassword());
+
+    user.setPassword(passwordChangeDto.getNewPassword());
+
+    userRepository.save(user);
+  }
+
+  /**
+   * Edits the first name of the user.
+   *
+   * @param firstNameChangeDto The DTO containing new first name.
+   * @param email The email of the user.
+   */
+  public void editFistName(@NonNull FirstNameChangeDto firstNameChangeDto, @NonNull String email) {
+    User user = findUser(email);
+
+    UserValidator.validateFirstName(firstNameChangeDto.getNewFirstName());
+
+    user.setFirstName(firstNameChangeDto.getNewFirstName());
+
+    userRepository.save(user);
+  }
+
+  /**
+   * Edits the last name of the user.
+   *
+   * @param lastNameChangeDto The DTO containing new last name.
+   * @param email The email of the user.
+   */
+  public void editLastName(@NonNull LastNameChangeDto lastNameChangeDto, @NonNull String email) {
+    User user = findUser(email);
+
+    UserValidator.validateFirstName(lastNameChangeDto.getNewLastName());
+
+    user.setLastName(lastNameChangeDto.getNewLastName());
+
+    userRepository.save(user);
+  }
+
+  /**
+   * Finds a user in the database by email.
+   *
+   * @param email The email of the user to find.
+   * @return The user with the given email.
+   * @throws UserNotFoundException If the user with the given email is not found.
+   */
+  private User findUser(@NonNull String email) throws UserNotFoundException {
+    return userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
+            new UserNotFoundException("User with email " + email + " not found."));
+  }
+}
