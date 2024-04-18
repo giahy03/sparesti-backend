@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmailCodeDto {
-  private String registerEmail;
+  private String email;
   private String verificationCode;
 }
