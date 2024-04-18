@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.service.saving;
 
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributionDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalCreationRequestDto;
@@ -30,8 +31,8 @@ import java.util.List;
 @AllArgsConstructor
 public class SavingGoalService {
 
-    @NonNull
-    private final UserRepository userRepository;
+//    @NonNull
+//    private final UserRepository userRepository;
     @NonNull
     private final SavingGoalRepository savingGoalRepository;
     @NonNull
@@ -46,7 +47,7 @@ public class SavingGoalService {
      * @return The response DTO containing the ID of the created saving goal
      */
 
-    public SavingGoalIdDto createSavingGoal(SavingGoalCreationRequestDto savingGoalCreationRequestDto,
+   /* public SavingGoalIdDto createSavingGoal(SavingGoalCreationRequestDto savingGoalCreationRequestDto,
                                                           Principal principal) {
         String email = principal.getName();
 
@@ -61,7 +62,7 @@ public class SavingGoalService {
                 .id(savedSavingGoal.getId())
                 .build();
     }
-
+*/
 
     /**
      * Retrieves a list containing the ID number of all the goals belonging to the authenticated user.
@@ -70,7 +71,7 @@ public class SavingGoalService {
      * @return List of DTOs containing the id of each goal of the user
      */
 
-    public List<SavingGoalIdDto> getAllGoalIdsByEmail(Principal principal, Pageable pageable) {
+   /* public List<SavingGoalIdDto> getAllGoalIdsByEmail(Principal principal, Pageable pageable) {
 
         String email = principal.getName();
 
@@ -79,7 +80,7 @@ public class SavingGoalService {
                 .map(savingGoalMapper::mapToSavingGoalIdDto)
                 .toList();
     }
-
+*/
     /**
      * Retrieves a goal from the database based on its id.
      *
@@ -95,14 +96,38 @@ public class SavingGoalService {
 
     public void deleteSavingGoal(Principal principal, SavingGoalIdDto savingGoalIdDto) {
 
-        String email = principal.getName();
-        checkForUser(email);
-        checkValidity(savingGoalIdDto, email);
+//        String email = principal.getName();
+//        checkForUser(email);
+//        checkValidity(savingGoalIdDto, email);
 
         savingGoalRepository.deleteById(savingGoalIdDto.getId());
 
     }
 
+    public void editCurrentTile(Principal principal, SavingGoalIdDto savingGoalIdDto) {
+//        String email = principal.getName();
+//        checkForUser(email);
+//        checkValidity(savingGoalIdDto, email);
+
+    }
+
+    public void editLives(Principal principal, SavingGoalIdDto savingGoalIdDto) {
+//        String email = principal.getName();
+//        checkForUser(email);
+//        checkValidity(savingGoalIdDto, email);
+    }
+
+    public void registerSavingContribution(Principal principal, SavingGoalContributionDto savingGoalContributionDto) {
+//        String email = principal.getName();
+//        checkForUser(email);
+
+    }
+
+
+
+
+
+/*
     private void checkValidity(SavingGoalIdDto savingGoalIdDto, String email) {
         if (SavingGoalRepository.findById(savingGoalIdDto.getId()).get().getUser().getUsername().equals(email)) {
             return;
@@ -115,6 +140,8 @@ public class SavingGoalService {
         User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
                 new UsernameNotFoundException("User with username " + email + " not found"));
     }
+*/
+
 
 
 }

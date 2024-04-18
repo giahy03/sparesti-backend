@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106.sparesti.controller.saving;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalCreationRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
 import edu.ntnu.idatt2106.sparesti.service.saving.SavingGoalService;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributionDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,7 +29,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/goal")
+@RequestMapping("/api/v1")
 @CrossOrigin(origins = "http://localhost:8082")
 public class SavingGoalController {
 
@@ -43,7 +44,7 @@ public class SavingGoalController {
      * @return ResponseEntity containing the created Saving Goal, or an error message
      */
 
-    @Operation(summary = "Creating a new Savings Goal and store it in the database")
+   /* @Operation(summary = "Creating a new Savings Goal and store it in the database")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The saving goal was successfully created and saved",
             content = {
@@ -57,12 +58,12 @@ public class SavingGoalController {
                    // log.info("Adding Saving Goal for user: " + principal.getName());
                     SavingGoalIdDto savingGoalIdDto =
                             savingGoalService.createSavingGoal(savingGoalCreationRequestDto, principal);
-                    //log.info("The saving goal '" + savingGoalCreationResponseDto.getName() +"' was created");
+                    //log.info("The saving goal '" + savingGoalIdDto.getId() +"' was created");
                    // log.info("The saving goal was stored");
 
                     return new ResponseEntity<>(savingGoalIdDto, HttpStatus.OK);
     }
-
+*/
 
 
     /**
@@ -72,7 +73,7 @@ public class SavingGoalController {
      * @return ResponseEntity containing a list of saving goal ids or a null response with a status code if something went wrong
      */
 
-    @Operation(summary = "Retrieve a list with the ids of all saving goals belonging to the user.")
+  /*  @Operation(summary = "Retrieve a list with the ids of all saving goals belonging to the user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "A list of saving goal ids was retried from the database.",
             content = {
@@ -86,7 +87,7 @@ public class SavingGoalController {
         //log.info("Returning list of goals for user: " + principal.getName());
         List<SavingGoalIdDto> goals = savingGoalService.getAllGoalIdsByEmail(principal, pageable);
         return new ResponseEntity<>(goals, HttpStatus.OK);  // Returns all goal IDs
-    }
+    }*/
 
 
     /**
@@ -133,11 +134,50 @@ public class SavingGoalController {
         return new ResponseEntity<>("Deleted successfully", HttpStatus.OK);
     }
 
+    @Operation(summary = "Edit lives of saving mascot")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The number of lives was edited",
+            content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
+    })
+    @PutMapping("/goal/lives")
+    public ResponseEntity<String> lives(Principal principal, @RequestBody  SavingGoalIdDto goalId) {
+        savingGoalService.editLives(principal, goalId);
+        return new ResponseEntity<>("Lives updated successfully", HttpStatus.OK);
 
-//    PUT /lives (goalID)
-//    PUT /currentTile (goalID)
-//    PUT /saved(goalID, addedValue)
+    }
 
+    @Operation(summary = "Edit current tile of saving goal")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The current tile was edited",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
+    })
+    @PutMapping("/goal/tile")
+    public ResponseEntity<String> tile(Principal principal, @RequestBody  SavingGoalIdDto goalId) {
+        savingGoalService.editCurrentTile(principal, goalId);
+        return new ResponseEntity<>("Current tile updated successfully", HttpStatus.OK);
+
+    }
+
+    @Operation(summary = "Edit current tile of saving goal")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The current tile was edited",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
+    })
+    @PutMapping("/goal/save")
+    public ResponseEntity<String> savedAmount(Principal principal, @RequestBody  SavingGoalContributionDto savingGoalContributionDto) {
+        savingGoalService.registerSavingContribution(principal, savingGoalContributionDto);
+        return new ResponseEntity<>("Current tile updated successfully", HttpStatus.OK);
+
+    }
 
 
 }
