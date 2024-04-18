@@ -65,8 +65,8 @@ public class AuthService {
 
     UserValidator.validatePassword(registrationDto.getPassword());
     UserValidator.validateEmail(registrationDto.getEmail());
-    UserValidator.validateName(registrationDto.getFirstName());
-    UserValidator.validateSurname(registrationDto.getLastName());
+    UserValidator.validateFirstName(registrationDto.getFirstName());
+    UserValidator.validateLastName(registrationDto.getLastName());
 
     String encodedPassword = passwordEncoder.encode(registrationDto.getPassword());
 
