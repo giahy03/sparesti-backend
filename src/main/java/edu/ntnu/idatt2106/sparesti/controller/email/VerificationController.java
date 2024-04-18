@@ -1,14 +1,13 @@
 package edu.ntnu.idatt2106.sparesti.controller.email;
 
 import edu.ntnu.idatt2106.sparesti.dto.EmailCodeDto;
-import edu.ntnu.idatt2106.sparesti.dto.EmailDetailsDto;
-import edu.ntnu.idatt2106.sparesti.service.email.EmailServiceImpl;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailVerification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,30 +21,29 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/email")
+@RequestMapping("/api/v1/email-verification")
 @Slf4j
 public class VerificationController {
 
     private final EmailVerification emailVerification;
 
-    @PostMapping("/verification")
-    public ResponseEntity<String> sendVerification(@RequestBody EmailCodeDto emailCodeDto) {
-      log.info("Sending verification email to: " + emailCodeDto.getRegisterEmail());
+    @GetMapping("/email")
+    public ResponseEntity<String> getEmailCode(@PathVariable String email) {
+      log.info("Sending verification email to: {}", email);
 
-      emailVerification
+      emailVerification.sendCodeToEmail(email);
 
       return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
-  @GetMapping("/verification")
+  @PostMapping("/verification")
   public ResponseEntity<String> verifyEmailCode(@RequestBody EmailCodeDto emailCodeDto) {
+    log.info("Verifying verification email to: {}", emailCodeDto.getEmail());
 
-      log.info("Verifying email code for: " + emailCodeDto.getRegisterEmail());
+    emailVerification.verifyEmailCode(emailCodeDto.getEmail(), emailCodeDto.getVerificationCode());
 
     return new ResponseEntity<>("OK", HttpStatus.OK);
   }
-
-
 
 }
 
