@@ -1,23 +1,21 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
-
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.service.challenge.ChallengeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.security.Principal;
 import java.util.List;
 
@@ -31,6 +29,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/api/v1/challenge-management")
 public class ChallengeController {
 
   private final ChallengeService challengeService;
@@ -56,23 +55,21 @@ public class ChallengeController {
     return new ResponseEntity<>("OK", HttpStatus.OK);
   }
 
-  @GetMapping("/challenge")
-  public ResponseEntity<ChallengeDto> getChallenges(Principal principal, @RequestBody ChallengePreviewDto challengePreviewDto) {
+  @GetMapping("/challenge/{challengeId}")
+  public ResponseEntity<ChallengeDto> getChallengeById(Principal principal, @PathVariable long challengeId) {
 
     log.info("Getting challenge for user: {}", principal.getName());
 
-    ChallengeDto challenge = challengeService.getChallenge(principal, challengePreviewDto);
+    ChallengeDto challenge = challengeService.getChallenge(principal, challengeId);
 
     return new ResponseEntity<>(challenge, HttpStatus.OK);
   }
 
-  @DeleteMapping("/challenge")
-  public ResponseEntity<String> removeChallenge(Principal principal, @RequestBody ChallengePreviewDto challenge) {
-
+  @DeleteMapping("/challenge/{challengeId}")
+  public ResponseEntity<String> removeChallenge(Principal principal, @PathVariable long challengeId) {
     log.info("Deleting challenge for user: {}", principal.getName());
-
-    challengeService.removeChallenge(principal, challenge);
-
+    challengeService.removeChallenge(principal, challengeId);
     return new ResponseEntity<>("OK", HttpStatus.OK);
   }
+
 }
