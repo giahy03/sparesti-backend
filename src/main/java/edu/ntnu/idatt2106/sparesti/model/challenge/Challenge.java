@@ -74,6 +74,6 @@ public class Challenge {
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   @NonNull
-  @Setter(AccessLevel.NONE)
   private User user;
+
 }

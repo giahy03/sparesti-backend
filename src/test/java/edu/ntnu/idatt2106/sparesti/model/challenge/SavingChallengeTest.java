@@ -35,6 +35,7 @@ class SavingChallengeTest {
 
   @Test
   void Challenge_GetChallenge_ReturnsExpectedValues() {
+
     //Arrange
     Long expectedId = 1L;
     String expectedTitle = "Challenge";
@@ -100,5 +101,19 @@ class SavingChallengeTest {
     assertEquals(expectedLives, challenge.getLives());
     assertEquals(expectedCurrentTiles, challenge.getCurrentTile());
   }
+
+  @Test
+  void Challenge_SetChallengeWithNull_ThrowsException() {
+    //Act & Assert
+    assertThrows(NullPointerException.class, () -> challenge.setTitle(null));
+    assertThrows(NullPointerException.class, () -> challenge.setStartDate(null));
+    assertThrows(NullPointerException.class, () -> challenge.setEndDate(null));
+    assertThrows(NullPointerException.class, () -> challenge.setDifficulty(null));
+  }
+
+
+
+
+
 
 }
