@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106.sparesti.dto.user.UserDetailsDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.FirstNameChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.IncomeChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.LastNameChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.edit.LivingStatusChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.PasswordChangeDto;
 import edu.ntnu.idatt2106.sparesti.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -134,7 +135,7 @@ public class UserController {
   /**
    * REST-endpoint for changing the living status of the currently logged-in user.
    *
-   * @param incomeChangeDto The DTO containing the new living status.
+   * @param livingStatusChangeDto The DTO containing the new living status.
    * @param principal The principal object representing the currently authenticated user.
    * @return A ResponseEntity with status OK if the operation is successful.
    */
@@ -145,11 +146,12 @@ public class UserController {
                   content = @Content)
   })
   @PutMapping(path = "/living-status")
-  public ResponseEntity<Void> changeLivingStatus(@RequestBody IncomeChangeDto incomeChangeDto,
-                                           Principal principal) {
+  public ResponseEntity<Void> changeLivingStatus(@RequestBody
+                                                   LivingStatusChangeDto livingStatusChangeDto,
+                                                 Principal principal) {
     String email = principal.getName();
     log.info("Changing living status for user with email {}.", email);
-    userService.editIncome(incomeChangeDto, email);
+    userService.editLivingStatus(livingStatusChangeDto, email);
     log.info("Living status for {} successfully updated.", email);
     return new ResponseEntity<>(HttpStatus.OK);
   }
