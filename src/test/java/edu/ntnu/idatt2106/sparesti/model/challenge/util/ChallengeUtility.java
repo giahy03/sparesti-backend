@@ -32,6 +32,18 @@ public class ChallengeUtility {
             .build();
   }
 
+  public static User createUserC() {
+    return User.builder()
+            .email("test@test.com")
+            .firstName("Jane")
+            .role(Role.USER)
+            .lastName("Smith")
+            .password("testpassword")
+            .build();
+  }
+
+
+
 
   public static SavingChallenge createSavingChallenge() {
     return (SavingChallenge) SavingChallenge.builder()
@@ -67,4 +79,5 @@ public class ChallengeUtility {
             .lives(2)
             .build();
   }
+
 }
