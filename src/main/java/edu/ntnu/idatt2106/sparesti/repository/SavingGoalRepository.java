@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2106.sparesti.repository;
 
-
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -22,7 +21,5 @@ public interface SavingGoalRepository extends JpaRepository<SavingGoal, Long> {
     Optional<SavingGoal> findById(long goalId);
 
     List<SavingGoal> findAllByUser_Username(String email, Pageable pageable);
-
-
 
 }

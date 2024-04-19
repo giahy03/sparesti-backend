@@ -6,9 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.NonNull;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * DTO containing information to create a new saving goal
@@ -23,12 +22,12 @@ public class SavingGoalCreationRequestDto {
     private String goalName;
     private double amount;
     private double progress;
-    private int lives;
-    private int currentTile;
+    private int lives;         // Default 3 at creation?
+    private int currentTile;    // Set to number of days from start date upon creation
     @NotNull
-    private Date startDate;
+    private LocalDate startDate;
     @NotNull
-    private Date endDate;
+    private LocalDate endDate;
     private GoalDifficulty difficulty;
 
 }

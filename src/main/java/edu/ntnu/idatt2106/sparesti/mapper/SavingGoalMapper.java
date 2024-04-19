@@ -20,12 +20,14 @@ public class SavingGoalMapper {
 
     public SavingGoalDto mapToSavingGoalDto(SavingGoal savingGoal) {
         return SavingGoalDto.builder()
+                .id(savingGoal.getId())
                 .goalName(savingGoal.getGoalName())
                 .startDate(savingGoal.getStartDate())
                 .endDate(savingGoal.getEndDate())
                 .amount(savingGoal.getAmount())
                 .progress(savingGoal.getProgress())
                 .lives(savingGoal.getLives())
+                .currentTile(savingGoal.getLives())
                 .achieved(savingGoal.isAchieved())
                 .build();
     }
@@ -40,9 +42,9 @@ public class SavingGoalMapper {
                 .endDate(savingGoalCreationRequestDto.getEndDate())
                 .amount(savingGoalCreationRequestDto.getAmount())
                 .progress(savingGoalCreationRequestDto.getProgress())
-                .lives(3)
-                .currentTile(savingGoalCreationRequestDto.getCurrentTile())
-                .achieved(false)
+                .lives(savingGoalCreationRequestDto.getLives())     // Set to 3 upon creation?
+                .currentTile(savingGoalCreationRequestDto.getCurrentTile())   // 'update' upon creation
+                .achieved(false)    // 'Calculate' from amount and progress
                 .build();
     }
 
@@ -50,6 +52,7 @@ public class SavingGoalMapper {
     public SavingGoalIdDto mapToSavingGoalIdDto(SavingGoal savingGoals) {
         return SavingGoalIdDto.builder()
                 .id(savingGoals.getId())
+                .title(savingGoals.getGoalName())
                 .build();
     }
 

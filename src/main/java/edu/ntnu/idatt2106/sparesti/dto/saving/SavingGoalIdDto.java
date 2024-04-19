@@ -14,6 +14,7 @@ import lombok.Data;
 @Builder
 public class SavingGoalIdDto {
     private long id;
+    private String title;
 
 }
 

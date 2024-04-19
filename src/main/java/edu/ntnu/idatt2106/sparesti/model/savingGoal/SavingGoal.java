@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Represents a stored saving goal entity.
@@ -44,11 +44,11 @@ public class SavingGoal {
 
     @Column(name = "startDate", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "endDate", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date endDate;
+    private LocalDate endDate;
 
     @Column(name = "goal_amount")
     private double amount;
@@ -56,13 +56,13 @@ public class SavingGoal {
     @Column(name = "goal_progress")
     private double progress;
 
-    @Column(name = "lives")
+    @Column(name = "lives")    // Set to eg. 3 at creation?
     private int lives;
 
-    @Column(name = "currentTile")
+    @Column(name = "currentTile")   // Calculate from today's date and start date
     private int currentTile;
 
-    @Column(name = "achieved")
+    @Column(name = "achieved")   // Calculate from amount and progress
     private boolean achieved;
 
 }
