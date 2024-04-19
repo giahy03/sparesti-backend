@@ -1,14 +1,11 @@
 package edu.ntnu.idatt2106.sparesti.service.email;
 
-import edu.ntnu.idatt2106.sparesti.dto.EmailDetailsDto;
-import lombok.NoArgsConstructor;
+import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service

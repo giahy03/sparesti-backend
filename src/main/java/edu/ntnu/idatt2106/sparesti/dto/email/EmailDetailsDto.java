@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.dto;
+package edu.ntnu.idatt2106.sparesti.dto.email;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
