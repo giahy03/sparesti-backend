@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.challenge.util;
 
+import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.SavingChallengeDto;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
@@ -58,6 +59,11 @@ public class ChallengeUtility {
             .build();
   }
 
-
+  public static ChallengeUpdateRequestDto createChallengeUpdateRequestDto() {
+    return ChallengeUpdateRequestDto.builder()
+            .currentTiles(1)
+            .lives(2)
+            .build();
+  }
 
 }
