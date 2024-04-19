@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
-import edu.ntnu.idatt2106.sparesti.dto.EmailDetailsDto;
 import edu.ntnu.idatt2106.sparesti.dto.NewsDto;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailServiceImpl;
 import edu.ntnu.idatt2106.sparesti.service.news.NewsScrapingService;
