@@ -5,6 +5,7 @@ import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalDifficulty;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the SavingGoal class.
+ * Test class for the SavingGoal model class.
  *
  * @author Hanne-Sofie Søreide
  */
@@ -24,9 +25,10 @@ public class SavingGoalTest {
 
     @BeforeEach
     void setup() {
-        goal = SavingGoalUtility.createSavingGoal();
+        goal = SavingGoalUtility.createSavingGoalA();
     }
 
+    @DisplayName("JUnit test for the getter methods")
     @Test
     void Goal_getGoal_returnsExpectedValues() {
         // Arrange
@@ -55,6 +57,7 @@ public class SavingGoalTest {
     }
 
 
+    @DisplayName("JUnit test for the setter methods")
     @Test
     void Goal_SetGoal_ReturnsExpectedValues() {
 
@@ -79,7 +82,7 @@ public class SavingGoalTest {
         goal.setDifficulty(expectedGoalDifficulty);
         goal.setAmount(expectedAmount);
         goal.setProgress(expectedProgress);
-        goal.setUser(expectedUser);              // Set user?
+        goal.setUser(expectedUser);
 
 
         // Assert
