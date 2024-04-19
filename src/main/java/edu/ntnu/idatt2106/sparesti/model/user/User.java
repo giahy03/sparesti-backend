@@ -89,7 +89,7 @@ public class User implements UserDetails {
   private Set<Badge> badges;
 
   @Schema(description = "The user's additional information.")
-  @OneToOne(mappedBy="user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
   private UserInfo userInfo;
 
   /**
