@@ -40,9 +40,6 @@ public class UserService {
   //Password encoder to hash passwords in a database.
   private final PasswordEncoder passwordEncoder;
 
-  //Map UserInfoDto to UserInfo entity.
-  private final UserInfoMapper userInfoMapper;
-
   /**
    * The method edits the password of the user.
    *
@@ -146,11 +143,8 @@ public class UserService {
   public void addUserInfo(@NonNull UserInfoDto userInfoDto, @NonNull String email) {
     User user = findUser(email);
 
-    UserInfo userInfo = userInfoMapper.toUserInfo(userInfoDto);
+    UserInfo userInfo = UserInfoMapper.INSTANCE.toUserInfo(userInfoDto);
 
-    SsbLivingStatus livingStatus = SsbLivingStatus.fromInteger(userInfoDto.getLivingStatus());
-
-    userInfo.setLivingStatus(livingStatus);
     userInfo.setUser(user);
 
     userInfoRepository.save(userInfo);
