@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.dto.user.edit;
 
 import lombok.Data;
-import lombok.NonNull;
 
 /**
  * Data Transfer Object (DTO) containing new last name.
@@ -11,6 +10,5 @@ import lombok.NonNull;
  */
 @Data
 public class LastNameChangeDto {
-  @NonNull
   private String newLastName;
 }
