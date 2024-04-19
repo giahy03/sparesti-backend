@@ -63,10 +63,9 @@ public class ChallengeController {
 
   @Operation(summary = "Add a challenge to the given user.")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "The challenge was added successfully",
-                  content = @Content),
-          @ApiResponse(responseCode = "400", description = "The challenge could not be added",
-                  content = @Content),})
+          @ApiResponse(responseCode = "200", description = "The challenge was added successfully"),
+          @ApiResponse(responseCode = "400", description = "The challenge could not be added")
+  })
   @PostMapping("/challenge")
   public ResponseEntity<String> addChallenge(Principal principal,
                                              @RequestBody ChallengeDto challenge) {
@@ -79,13 +78,10 @@ public class ChallengeController {
 
   @Operation(summary = "Get a specific challenge to the given user.")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "The challenge was added successfully",
-                  content = @Content),
-          @ApiResponse(responseCode = "400", description = "The challenge could not be found",
-                  content = @Content),
-          @ApiResponse(responseCode = "401", description = "The user is not authorized to change the challenge",
-                  content = @Content)})
-  @PostMapping("/challenge")
+          @ApiResponse(responseCode = "200", description = "The challenge was added successfully"),
+          @ApiResponse(responseCode = "400", description = "The challenge could not be found"),
+          @ApiResponse(responseCode = "401", description = "The user is not authorized to change the challenge")
+  })
   @GetMapping("/challenge/{challengeId}")
   public ResponseEntity<ChallengeDto> getChallengeById(Principal principal,
                                                        @PathVariable long challengeId) {
@@ -97,14 +93,18 @@ public class ChallengeController {
     return new ResponseEntity<>(challenge, HttpStatus.OK);
   }
 
+  /**
+   *
+   * @param principal
+   * @param challengeId
+   * @return
+   */
   @Operation(summary = "Remove a challenge from the given user.")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "The challenge was removed successfully",
-                  content = @Content),
-          @ApiResponse(responseCode = "400", description = "The challenge could not be removed",
-                  content = @Content),
-          @ApiResponse(responseCode = "401", description = "The user is not authorized to change the challenge",
-                  content = @Content)})
+          @ApiResponse(responseCode = "200", description = "The challenge was removed successfully"),
+          @ApiResponse(responseCode = "400", description = "The challenge could not be removed"),
+          @ApiResponse(responseCode = "401", description = "The user is not authorized to change the challenge")
+  })
   @DeleteMapping("/challenge/{challengeId}")
   public ResponseEntity<String> removeChallenge(Principal principal,
                                                 @PathVariable long challengeId) {
@@ -114,15 +114,19 @@ public class ChallengeController {
   }
 
 
+  /**
+   * Update a challenge for the given user.
+   *
+   * @param principal The user that wants to update the challenge.
+   * @param challengeId The id of the challenge to update.
+   * @param updateRequestDto The new challenge data.
+   * @return ResponseEntity containing the status of the operation.
+   */
   @Operation(summary = "Update a challenge for the given user.")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "The challenge was updated successfully",
-                  content = @Content),
-          @ApiResponse(responseCode = "400", description = "The challenge could not be updated",
-                  content = @Content),
-          @ApiResponse(responseCode = "401", description = "The user is not authorized to change the challenge",
-                  content = @Content)
-
+          @ApiResponse(responseCode = "200", description = "The challenge was updated successfully."),
+          @ApiResponse(responseCode = "400", description = "The challenge could not be updated."),
+          @ApiResponse(responseCode = "401", description = "The user is not authorized to change the challenge")
   })
   @PutMapping("/challenge/{challengeId}")
   public ResponseEntity<String> updateChallenge(
@@ -131,7 +135,9 @@ public class ChallengeController {
           @RequestBody ChallengeUpdateRequestDto updateRequestDto) {
 
     log.info("Updating challenge for user: {}", principal.getName());
+
     challengeService.updateChallenge(principal, challengeId, updateRequestDto);
+
     return new ResponseEntity<>("OK", HttpStatus.OK);
   }
 
