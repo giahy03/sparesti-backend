@@ -44,7 +44,6 @@ public abstract class Badge {
     private Date achieved;
 
     @Column(name = "level", nullable = false)
-    @NonNull
     private int level;
 
 }

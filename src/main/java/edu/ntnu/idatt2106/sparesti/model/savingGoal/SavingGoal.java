@@ -1,10 +1,11 @@
 package edu.ntnu.idatt2106.sparesti.model.savingGoal;
 
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Represents a stored saving goal entity.
@@ -22,11 +23,13 @@ import java.util.Date;
 public class SavingGoal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "The unique identifier for the saving goal.")
     @Column(name = "goal_id")
     @Setter(AccessLevel.NONE)
-    private Long goalId;
+    private Long id;
 
     @ManyToOne
+    @Schema(description = "The unique identifier for the user.")
     @JoinColumn(name="user_id", nullable = false)
     private User user;
 
@@ -34,9 +37,18 @@ public class SavingGoal {
     @NonNull
     private String goalName;
 
-    @Column(name = "deadline", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "difficulty", nullable = false)
+    @NonNull
+    private GoalDifficulty difficulty;
+
+    @Column(name = "start_date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date deadline;
+    private LocalDate startDate;
+
+    @Column(name = "end_date", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private LocalDate endDate;
 
     @Column(name = "goal_amount")
     private double amount;
@@ -44,7 +56,16 @@ public class SavingGoal {
     @Column(name = "goal_progress")
     private double progress;
 
-    @Column(name = "achieved")
-    private boolean achieved;
+    @Column(name = "lives")
+    private int lives;
 
+    @Column(name = "current_tile")
+    private int currentTile;
+
+/*    @Column(name = "achieved")   // Calculate from amount and progress, not needed in db
+    private boolean achieved;*/
+
+    public boolean isAchieved() {
+        return progress >= amount;
+    }
 }
