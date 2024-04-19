@@ -1,16 +1,17 @@
 package edu.ntnu.idatt2106.sparesti.service.analysis;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbIncomeQuartile;
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbLivingStatus;
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbPurchaseCategory;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbIncomeQuartile;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
-import edu.ntnu.idatt2106.sparesti.model.user.User;
 import java.time.MonthDay;
 import java.time.YearMonth;
 import java.util.HashMap;
@@ -29,20 +30,18 @@ public class BankStatementAnalysisServiceTest {
   private SsbDataService ssbDataService;
   //used internally by mockito
   @Mock
-  @SuppressWarnings("unused")
   private TransactionService transactionService;
 
   @Test
   void givenValidBankStatement_whenCalculateActualUsage_thenCostIs100ForFood0ForOther() {
 
     //arrange
-    User testUser = new User();
-
     HashMap<SsbPurchaseCategory, Double> testExpectedUsage = new HashMap<>();
 
     for (SsbPurchaseCategory category : SsbPurchaseCategory.values()) {
       testExpectedUsage.put(category, 0.0);
     }
+
     testExpectedUsage.put(SsbPurchaseCategory.FOOD, 100.0);
 
     Transaction transaction = new Transaction(MonthDay.now(), "transaction", 100.0, false);
@@ -50,10 +49,18 @@ public class BankStatementAnalysisServiceTest {
     List<Transaction> transactions = List.of(transaction);
 
     BankStatement bankStatement =
-        new BankStatement(testUser, "11112233333", transactions, YearMonth.now());
+        new BankStatement("11112233333", transactions, YearMonth.now());
 
     when(ssbDataService.getExpectedUsage(0.0, SsbLivingStatus.LIVING_ALONE,
         SsbIncomeQuartile.QUARTILE_1)).thenReturn(testExpectedUsage);
+
+    doAnswer(invocation -> {
+      List<Transaction> transactions1 = invocation.getArgument(0);
+      for (Transaction transaction1 : transactions1) {
+        transaction1.setCategory(SsbPurchaseCategory.FOOD);
+      }
+      return null;
+    }).when(transactionService).categorizeTransactions(anyList());
 
     //act
 
@@ -65,7 +72,7 @@ public class BankStatementAnalysisServiceTest {
 
     for (AnalysisItem analysisItem : bankStatementAnalysis.getAnalysisItems()) {
       if (analysisItem.getPurchaseCategory().equals(SsbPurchaseCategory.FOOD)) {
-        assertEquals(analysisItem.getExpectedValue(), 100.0);
+        assertEquals(analysisItem.getExpectedValue(), 100);
       } else {
         assertEquals(analysisItem.getExpectedValue(), 0.0);
       }
@@ -75,14 +82,13 @@ public class BankStatementAnalysisServiceTest {
   @Test
   void givenValidBankStatement_whenCalculateActualUsage_thenEveryCategoryHasValue100() {
     //arrange
-    User testUser = new User();
 
     Transaction transaction = new Transaction(MonthDay.now(), "transaction", 100.0, false);
     transaction.setCategory(SsbPurchaseCategory.FOOD);
     List<Transaction> transactions = List.of(transaction);
 
     BankStatement bankStatement =
-        new BankStatement(testUser, "11112233333", transactions, YearMonth.now());
+        new BankStatement("11112233333", transactions, YearMonth.now());
 
     //act
     HashMap<SsbPurchaseCategory, Double> actualUsage =
