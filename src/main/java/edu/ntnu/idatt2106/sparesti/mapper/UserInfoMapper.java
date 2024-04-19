@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.mapper;
 
 import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbLivingStatus;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

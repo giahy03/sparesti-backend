@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbLivingStatus;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
