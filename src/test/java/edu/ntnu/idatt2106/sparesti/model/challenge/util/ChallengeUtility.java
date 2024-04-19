@@ -8,6 +8,7 @@ import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class ChallengeUtility {
 
@@ -30,6 +31,7 @@ public class ChallengeUtility {
             .password("password")
             .build();
   }
+
 
   public static SavingChallenge createSavingChallenge() {
     return (SavingChallenge) SavingChallenge.builder()
@@ -65,5 +67,4 @@ public class ChallengeUtility {
             .lives(2)
             .build();
   }
-
 }
