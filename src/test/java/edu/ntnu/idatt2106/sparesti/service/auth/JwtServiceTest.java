@@ -71,7 +71,7 @@ class JwtServiceTest {
   void JwtService_isTokenValid_ReturnFalse() {
     //Arrange
     String generatedToken = jwtService.generateToken(testUser);
-    User differentUser = ChallengeUtility.createUserB();
+    User differentUser = ChallengeUtility.createUserC();
 
     //Act
     boolean isTokenValid = jwtService.isTokenValid(generatedToken, differentUser);
