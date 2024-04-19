@@ -8,6 +8,7 @@ import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class ChallengeUtility {
 

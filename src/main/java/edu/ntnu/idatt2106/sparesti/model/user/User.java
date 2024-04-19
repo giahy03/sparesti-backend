@@ -52,6 +52,7 @@ public class User implements UserDetails {
   @Schema(description = "The unique identifier for the user")
   @Column(name = "user_id")
   @Setter(AccessLevel.NONE)
+  @Getter(AccessLevel.NONE)
   private Long userId;
 
   @Schema(description = "The user's email address.")
