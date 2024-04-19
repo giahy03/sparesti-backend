@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.challenge.util;
 
+import edu.ntnu.idatt2106.sparesti.dto.challenge.SavingChallengeDto;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
@@ -44,5 +45,19 @@ public class ChallengeUtility {
             .user(createUserA())
             .build();
   }
+
+  public static SavingChallengeDto createSavingChallengeDto() {
+    return SavingChallengeDto.builder()
+            .id(1L)
+            .title("Challenge")
+            .startDate(LocalDate.parse("2021-10-10"))
+            .endDate(LocalDate.parse("2021-10-20"))
+            .difficulty("EASY")
+            .lives(3)
+            .currentTile(0)
+            .build();
+  }
+
+
 
 }
