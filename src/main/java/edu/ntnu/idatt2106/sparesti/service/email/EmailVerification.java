@@ -5,9 +5,17 @@ import edu.ntnu.idatt2106.sparesti.model.EmailCode;
 import edu.ntnu.idatt2106.sparesti.repository.EmailCodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.Random;
 
+
+/**
+ * Service class for email verification.
+ * This class contains methods for generating a verification token, sending
+ * the token to the given email and verifying the token.
+ *
+ * @version 1.0
+ * @author Jeffrey Yaw Annor Tabiri
+ */
 @Service
 @RequiredArgsConstructor
 public class EmailVerification {
@@ -18,15 +26,30 @@ public class EmailVerification {
   private final EmailServiceImpl emailService;
 
 
-  public String generateVerificationToken() {
+  /**
+   * Generates a verification token.
+   * The token is a random string of length 6.
+   * @return the generated token.
+   * //TODO might need to refactor to be more secure??? Does not implement TRUE random.
+   */
+  private String generateVerificationToken() {
     StringBuilder token = new StringBuilder(LENGTH);
 
     for (int i = 0; i < LENGTH; i++) {
       token.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
     }
+
     return token.toString();
   }
 
+
+  /**
+   * Creates an email dto.
+   *
+   * @param email the email to send the verification token to.
+   * @param token the verification token.
+   * @return the email dto which is to be sent.
+   */
   public EmailDetailsDto createEmailDto(String email, String token) {
     return EmailDetailsDto.builder()
                     .recipient(email)
@@ -35,6 +58,13 @@ public class EmailVerification {
                     .build();
   }
 
+  /**
+   * Creates an email code object to prime it for permanent storage.
+   *
+   * @param email the email to send the verification token to.
+   * @param token the verification token.
+   * @return the email code dto which is to be saved.
+   */
   public EmailCode createEmailCodeDto(String email, String token) {
     return EmailCode.builder()
                     .email(email)
@@ -42,6 +72,12 @@ public class EmailVerification {
                     .build();
   }
 
+
+  /**
+   * Sends the verification token to the given email.
+   *
+   * @param email the email to send the verification token to.
+   */
   public void sendCodeToEmail(String email) {
     String token = generateVerificationToken();
     EmailDetailsDto emailDetailsDto = createEmailDto(email, token);
@@ -50,18 +86,19 @@ public class EmailVerification {
     emailService.sendEmail(emailDetailsDto);
   }
 
-  public boolean checkForRegisterEmail(String email) {
-    return emailCodeRepository.findByEmail(email) != null;
-  }
 
+  /**
+   * Verifies the email code.
+   * @param email the email to verify.
+   * @param token the token to verify.
+   */
   public void verifyEmailCode(String email, String token) {
     EmailCode emailCode = emailCodeRepository.findByEmail(email);
 
     if (emailCode.getEmail().equals(email) && emailCode.getVerificationCode().equals(token)) {
-      emailCodeRepository.deleteByEmail(email);
       return;
     }
 
-  throw new IllegalArgumentException("Invalid token");
+    throw new IllegalArgumentException("Invalid verification code");
   }
 }
