@@ -51,7 +51,6 @@ public class UserInfo {
   @Enumerated(EnumType.ORDINAL)
   @Schema(description = "The user's living status.")
   @Column(name = "living_status", nullable = false)
-  @NonNull
   private SsbLivingStatus livingStatus;
 
   @OneToOne
