@@ -36,6 +36,7 @@ public class Achievement {
     @OneToMany(mappedBy="achievement")
     private Set<Badge> badges;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
     @NonNull
     private AchievementCategory category;

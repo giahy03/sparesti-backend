@@ -1,7 +1,10 @@
 package edu.ntnu.idatt2106.sparesti.mapper;
 
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalCreationRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
+import edu.ntnu.idatt2106.sparesti.model.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,23 +20,39 @@ public class SavingGoalMapper {
 
     public SavingGoalDto mapToSavingGoalDto(SavingGoal savingGoal) {
         return SavingGoalDto.builder()
+                .id(savingGoal.getId())
                 .goalName(savingGoal.getGoalName())
-                .deadLine(savingGoal.getDeadline())
+                .startDate(savingGoal.getStartDate())
+                .endDate(savingGoal.getEndDate())
                 .amount(savingGoal.getAmount())
                 .progress(savingGoal.getProgress())
+                .lives(savingGoal.getLives())
+                .currentTile(savingGoal.getCurrentTile())
                 .achieved(savingGoal.isAchieved())
                 .build();
     }
 
-    // --- Preliminary methods for mapper: ---
-    // mapToSavingGoal(savingGoalCreationRequestDto, user)
-    // mapToAllGoalIdsDto
-    //
 
-    // --- Preliminary DTOs to create: ---
-    // SavingGoalCreationRequestDto
-    // SavingGoalCreationResponseDto
-    // AllFoalIdsDto
+    public SavingGoal mapToSavingGoal(SavingGoalCreationRequestDto savingGoalCreationRequestDto, User user) {
 
+        return SavingGoal.builder()
+                .user(user)
+                .goalName(savingGoalCreationRequestDto.getGoalName())
+                .startDate(savingGoalCreationRequestDto.getStartDate())
+                .endDate(savingGoalCreationRequestDto.getEndDate())
+                .amount(savingGoalCreationRequestDto.getAmount())
+                .progress(savingGoalCreationRequestDto.getProgress())
+                .lives(savingGoalCreationRequestDto.getLives())
+                .currentTile(savingGoalCreationRequestDto.getCurrentTile())
+                .build();
+    }
+
+
+    public SavingGoalIdDto mapToSavingGoalIdDto(SavingGoal savingGoals) {
+        return SavingGoalIdDto.builder()
+                .id(savingGoals.getId())
+                .title(savingGoals.getGoalName())
+                .build();
+    }
 
 }
