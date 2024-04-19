@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.model.analysis;
+package edu.ntnu.idatt2106.sparesti.model.analysis.ssb;
 
 import lombok.Getter;
 
@@ -21,6 +21,7 @@ public enum SsbPurchaseCategory {
   EATING_OUT("11"),
   INSURANCE("12"),
   OTHER("13");
+
 
   final String categoryCode;
 

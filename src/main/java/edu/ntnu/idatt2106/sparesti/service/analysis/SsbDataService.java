@@ -1,9 +1,9 @@
 package edu.ntnu.idatt2106.sparesti.service.analysis;
 
 import edu.ntnu.idatt2106.sparesti.dto.ssb.response.SsbConsumptionApiResponseDto;
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbIncomeQuartile;
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbLivingStatus;
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbPurchaseCategory;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbIncomeQuartile;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.http.HttpEntity;

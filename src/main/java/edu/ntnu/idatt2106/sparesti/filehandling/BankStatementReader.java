@@ -1,4 +1,4 @@
-package filehandling;
+package edu.ntnu.idatt2106.sparesti.filehandling;
 
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
@@ -30,7 +30,7 @@ public abstract class BankStatementReader {
             String text = new PDFTextStripper().getText(document);
             String[] splitText = text.split("\n");
             for (int i = 0; i < splitText.length; i++) {
-                System.out.println("i: " + i + ", " + splitText[i]);
+                log.info("i: " + i + ", " + splitText[i]);
             }
         } catch (Exception e) {
             log.error("Error reading SpareBank1 statement from file:" + fileLocation.toString(), e);

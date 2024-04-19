@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.model.analysis;
+package edu.ntnu.idatt2106.sparesti.model.analysis.ssb;
 
 import lombok.Getter;
 
