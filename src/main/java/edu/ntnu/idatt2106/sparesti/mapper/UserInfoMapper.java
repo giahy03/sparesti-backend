@@ -12,7 +12,7 @@ import org.mapstruct.factory.Mappers;
  * @author Ramtin Samavat
  * @version 1.0
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserInfoMapper {
 
   /**
