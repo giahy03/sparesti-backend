@@ -2,6 +2,7 @@ package edu.ntnu.idatt2106.sparesti.model.analysis;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import org.junit.jupiter.api.Test;
 
 public class AnalysisItemTest {

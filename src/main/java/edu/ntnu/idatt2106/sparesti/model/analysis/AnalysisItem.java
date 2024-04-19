@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.analysis;
 
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;

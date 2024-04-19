@@ -1,8 +1,7 @@
-package filehandling;
+package edu.ntnu.idatt2106.sparesti.filehandling;
 
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
-import edu.ntnu.idatt2106.sparesti.model.user.User;
 import java.io.File;
 import java.nio.file.Path;
 import java.time.MonthDay;
@@ -77,20 +76,16 @@ public class SpareBank1Reader extends BankStatementReader {
         } catch (Exception e) {
           break;
         }
+        Transaction transaction;
         if (line.toLowerCase().contains("fra")) {
-          Transaction transaction = parseTransaction(line, true);
-          transactions.add(transaction);
-          log.info(line);
+          transaction = parseTransaction(line, true);
         } else {
-          Transaction transaction = parseTransaction(line, false);
-          transactions.add(transaction);
+          transaction = parseTransaction(line, false);
         }
+        transactions.add(transaction);
       }
 
-      BankStatement bankStatement = new BankStatement(new User(), accountNumber, transactions,
-          yearMonth);
-      log.info(bankStatement.toString());
-      return bankStatement;
+      return new BankStatement(accountNumber, transactions, yearMonth);
     } catch (Exception e) {
       log.error("Error reading SpareBank1 statement from file:" + fileLocation.toString(), e);
       return null;

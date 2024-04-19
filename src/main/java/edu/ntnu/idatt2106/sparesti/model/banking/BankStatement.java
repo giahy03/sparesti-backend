@@ -15,7 +15,6 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public class BankStatement {
-  @NonNull
   private User user;
   @NonNull
   private String accountNumber;
