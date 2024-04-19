@@ -1,8 +1,8 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
-import edu.ntnu.idatt2106.sparesti.dto.user.FirstNameChangeDto;
-import edu.ntnu.idatt2106.sparesti.dto.user.LastNameChangeDto;
-import edu.ntnu.idatt2106.sparesti.dto.user.PasswordChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.edit.FirstNameChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.edit.LastNameChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.edit.PasswordChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.UserDetailsDto;
 import edu.ntnu.idatt2106.sparesti.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;

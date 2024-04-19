@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.dto.user;
+package edu.ntnu.idatt2106.sparesti.dto.user.edit;
 
 import lombok.Data;
 import lombok.NonNull;
