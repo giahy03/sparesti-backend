@@ -12,6 +12,7 @@ import edu.ntnu.idatt2106.sparesti.mapper.UserInfoMapper;
 import edu.ntnu.idatt2106.sparesti.model.analysis.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
+import edu.ntnu.idatt2106.sparesti.repositories.user.UserInfoRepository;
 import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.validation.validators.UserValidator;
 import lombok.NonNull;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service class that encapsulates the logic for handling user-related operations.
- * It uses the {@link UserRepository} to perform the operations in the database.
+ * It uses the {@link UserRepository} and  to perform the operations in the database.
  *
  * @author Ramtin Samavat
  * @version  1.0
@@ -30,8 +31,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-  //CRUD operations on user models.
+  //CRUD operations on User models.
   private final UserRepository userRepository;
+
+  //CRUD operations on UserInfo models.
+  private final UserInfoRepository userInfoRepository;
 
   //Password encoder to hash passwords in a database.
   private final PasswordEncoder passwordEncoder;
@@ -149,7 +153,7 @@ public class UserService {
     userInfo.setLivingStatus(livingStatus);
     userInfo.setUser(user);
 
-    userRepository.save(user);
+    userInfoRepository.save(userInfo);
   }
 
   /**
