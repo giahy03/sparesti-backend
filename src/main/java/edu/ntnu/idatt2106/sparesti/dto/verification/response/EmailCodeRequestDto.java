@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.dto;
+package edu.ntnu.idatt2106.sparesti.dto.verification.response;
 
 
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmailCodeDto {
+public class EmailCodeRequestDto {
   private String email;
   private String verificationCode;
 }

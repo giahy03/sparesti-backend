@@ -1,9 +1,8 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
-import edu.ntnu.idatt2106.sparesti.dto.EmailDetailsDto;
+import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

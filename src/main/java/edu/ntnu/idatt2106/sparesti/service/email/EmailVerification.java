@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.service.email;
 
-import edu.ntnu.idatt2106.sparesti.dto.EmailDetailsDto;
+import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
 import edu.ntnu.idatt2106.sparesti.model.EmailCode;
 import edu.ntnu.idatt2106.sparesti.repository.EmailCodeRepository;
 import lombok.RequiredArgsConstructor;
