@@ -164,7 +164,6 @@ public class ChallengeService {
     } else {
       throw new IllegalArgumentException("Not an appropriate challenge type.");
     }
-
   }
 
 
@@ -183,8 +182,7 @@ public class ChallengeService {
 
     Challenge challengeToUpdate = challengesRepository.findById(challengeId).get();
 
-    if (challengeToUpdate instanceof SavingChallenge) {
-      SavingChallenge savingChallenge = (SavingChallenge) challengeToUpdate;
+    if (challengeToUpdate instanceof SavingChallenge savingChallenge) {
       savingChallenge.setLives(challenge.getLives());
       savingChallenge.setCurrentTile(challenge.getCurrentTiles());
       challengesRepository.save(savingChallenge);
