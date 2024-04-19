@@ -1,9 +1,12 @@
 package edu.ntnu.idatt2106.sparesti.mapper;
 
 import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
+import edu.ntnu.idatt2106.sparesti.model.analysis.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -26,9 +29,22 @@ public interface UserInfoMapper {
    * @param userInfoDto UserInfoDto object to be converted.
    * @return UserInfo entity converted from UserInfoDto.
    */
-  @Mapping(target = "id", ignore = true)
-  @Mapping(target = "income", source = "income")
-  @Mapping(target = "livingStatus", ignore = true)
-  @Mapping(target = "user", ignore = true)
+  @Mappings({ @Mapping(
+          target = "id", ignore = true), @Mapping(
+                  target = "income", source = "income"), @Mapping(
+                          target = "livingStatus", qualifiedByName = "mapLivingStatus"), @Mapping(
+                                  target = "user", ignore = true),
+  })
   UserInfo toUserInfo(UserInfoDto userInfoDto);
+
+  /**
+   * Custom mapping method for converting to SsbLivingStatus enum.
+   *
+   * @param livingStatus Living status integer value.
+   * @return Corresponding enum value.
+   */
+  @Named("mapLivingStatus")
+  default SsbLivingStatus mapLivingStatus(Integer livingStatus) {
+    return SsbLivingStatus.fromInteger(livingStatus);
+  }
 }
