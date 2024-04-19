@@ -82,6 +82,11 @@ public class EmailVerification {
     String token = generateVerificationToken();
     EmailDetailsDto emailDetailsDto = createEmailDto(email, token);
     EmailCode emailCode = createEmailCodeDto(email, token);
+
+    if (emailCodeRepository.findByEmail(email) != null) {
+      emailCodeRepository.delete(emailCodeRepository.findByEmail(email));
+    }
+
     emailCodeRepository.save(emailCode);
     emailService.sendEmail(emailDetailsDto);
   }
