@@ -2,7 +2,7 @@ package edu.ntnu.idatt2106.sparesti;
 
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
-import edu.ntnu.idatt2106.sparesti.repositories.UserRepository;
+import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
