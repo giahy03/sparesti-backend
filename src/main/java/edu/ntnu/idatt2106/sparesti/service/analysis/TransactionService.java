@@ -1,46 +1,107 @@
 package edu.ntnu.idatt2106.sparesti.service.analysis;
 
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbPurchaseCategory;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
+import edu.ntnu.idatt2106.sparesti.service.analysis.openai.OpenAiService;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
  * Classifies a transaction into a category.
  */
+@Slf4j
 @Service
+@AllArgsConstructor
 public class TransactionService {
+  OpenAiService openAiService;
+  private static final String assistantId = "asst_NgkqP4xlGYgjOsfZNgrLQs4Z";
+
+
   /**
-   * Categorizes a transaction.
+   * Categorizes a list of transactions.
    *
-   * @param transaction the transaction to categorize.
+   * @param transactions The transactions to categorize.
    */
-  public void categorize(Transaction transaction) {
-    Optional<SsbPurchaseCategory> category = checkIfFood(transaction);
-    if (category.isPresent()) {
-      transaction.setCategory(category.get());
-    } else {
-      if (transaction.getCategory() == null) {
+  public void categorizeTransactions(@NonNull List<Transaction> transactions) {
+
+
+    String transactionsString =
+        transactions.stream().map(Transaction::getDescription)
+            .collect(Collectors.joining("|"));
+
+    try {
+      String response = openAiService.sendMessage(transactionsString, assistantId);
+      log.info("Received response: " + response.toString());
+
+
+      setCategories(transactions,
+          response
+      );
+
+
+    } catch (Exception e) {
+      log.error("Could not categorize transactions", e);
+    }
+
+  }
+
+  /**
+   * Parses the response from the OpenAI API.
+   *
+   * @param response The response to parse.
+   * @return A map of the index of the transaction and the category it was classified as.
+   */
+  private HashMap<Integer, Optional<SsbPurchaseCategory>> parseResponse(String response) {
+
+    log.info("Parsing response");
+
+    HashMap<Integer, Optional<SsbPurchaseCategory>> categoryConnections = new HashMap<>();
+    String[] pairs = response
+        .substring(1, response.length() - 1)
+        .trim()
+        .split("\\|");
+    log.info("Amount of pairs: " + pairs.length);
+    for (String pair : pairs) {
+      try {
+        String[] parts = pair.split("§");
+        Integer index = Integer.parseInt(parts[0]);
+        SsbPurchaseCategory category = SsbPurchaseCategory.valueOf(parts[1]);
+        categoryConnections.put(index, Optional.of(category));
+      } catch (Exception e) {
+        log.error("Could not parse pair: " + pair + " because: " + e.getMessage());
+      }
+    }
+
+    return categoryConnections;
+  }
+
+  /**
+   * Sets the categories of the transactions.
+   *
+   * @param transactions The transactions to set the categories of.
+   * @param response     The response from the OpenAI API.
+   */
+  private void setCategories(List<Transaction> transactions, String response) {
+    HashMap<Integer, Optional<SsbPurchaseCategory>> categoryConnections = parseResponse(response);
+    for (int i = 0; i < transactions.size(); i++) {
+      Transaction transaction = transactions.get(i);
+      Optional<SsbPurchaseCategory> category = categoryConnections.get(i);
+
+      if (category != null && category.isPresent()) {
+        transaction.setCategory(category.get());
+        log.info(
+            transaction.getDescription() + " was categorized as: " + transaction.getCategory());
+      } else {
         transaction.setCategory(SsbPurchaseCategory.OTHER);
+        log.error("There was no category to set for: " + transaction.getDescription());
       }
     }
   }
 
-  /**
-   * Checks if a transaction is a food purchase, and categorizes it if so.
-   *
-   * @param transaction the transaction to check.
-   * @return the category of the transaction.
-   */
-  private Optional<SsbPurchaseCategory> checkIfFood(Transaction transaction) {
-    String[] foodStores = {"rema", "kiwi", "meny", "joker", "bunnpris", "coop", "ica", "spar",
-        "kiwi"};
-    String lowercaseDescription = transaction.getDescription().toLowerCase();
-    for (String store : foodStores) {
-      if (lowercaseDescription.contains(store)) {
-        return Optional.of(SsbPurchaseCategory.FOOD);
-      }
-    }
-    return Optional.empty();
-  }
 }

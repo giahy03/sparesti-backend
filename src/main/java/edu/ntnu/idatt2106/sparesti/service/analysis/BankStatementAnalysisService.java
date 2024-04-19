@@ -2,9 +2,9 @@ package edu.ntnu.idatt2106.sparesti.service.analysis;
 
 import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbIncomeQuartile;
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbLivingStatus;
-import edu.ntnu.idatt2106.sparesti.model.analysis.SsbPurchaseCategory;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbIncomeQuartile;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,10 +33,13 @@ public class BankStatementAnalysisService {
    * @return The analysis of the bank statement.
    */
   public BankStatementAnalysis analyze(BankStatement bankStatement, double monthlyIncomeAfterTaxes,
-                                       SsbLivingStatus livingStatus,
-                                       SsbIncomeQuartile incomeQuartile) {
+                                       @NonNull SsbLivingStatus livingStatus,
+                                       @NonNull SsbIncomeQuartile incomeQuartile) {
+
+
 
     categorizeTransactions(bankStatement);
+
     HashMap<SsbPurchaseCategory, Double> expectedUsage =
         ssbDataService.getExpectedUsage(monthlyIncomeAfterTaxes, livingStatus, incomeQuartile);
 
@@ -59,8 +62,9 @@ public class BankStatementAnalysisService {
    * @param bankStatement The bank statement to categorize.
    */
   private void categorizeTransactions(BankStatement bankStatement) {
-    bankStatement.getTransactions()
-        .forEach(transaction -> transactionService.categorize(transaction));
+    transactionService.categorizeTransactions(
+        bankStatement.getTransactions()
+    );
   }
 
   /**

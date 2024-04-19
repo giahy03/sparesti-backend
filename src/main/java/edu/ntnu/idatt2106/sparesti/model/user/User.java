@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.List;
@@ -74,6 +75,12 @@ public class User implements UserDetails {
   @NonNull
   private String lastName;
 
+  @Enumerated(EnumType.STRING)
+  @Schema(description = "The user's role.")
+  @Column(name = "role", nullable = false)
+  @NonNull
+  private Role role;
+
   @Schema(description = "The user's saving goals.")
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private Set<SavingGoal> goals;
@@ -82,11 +89,9 @@ public class User implements UserDetails {
   @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
   private Set<Badge> badges;
 
-  @Enumerated(EnumType.STRING)
-  @Schema(description = "The user's role.")
-  @Column(name = "role", nullable = false)
-  @NonNull
-  private Role role;
+  @Schema(description = "The user's additional information.")
+  @OneToOne(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private UserInfo userInfo;
 
   /**
    * Retrieves the roles/authorities associated with this user.

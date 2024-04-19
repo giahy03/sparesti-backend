@@ -4,7 +4,7 @@ import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
-import edu.ntnu.idatt2106.sparesti.repositories.UserRepository;
+import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;

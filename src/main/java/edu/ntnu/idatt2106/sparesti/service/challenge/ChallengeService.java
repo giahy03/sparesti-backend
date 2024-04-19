@@ -12,7 +12,7 @@ import edu.ntnu.idatt2106.sparesti.mapper.SavingChallengeMapper;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
-import edu.ntnu.idatt2106.sparesti.repositories.UserRepository;
+import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
 import java.security.Principal;
 import java.util.ArrayList;
