@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
 import edu.ntnu.idatt2106.sparesti.dto.user.UserDetailsDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.FirstNameChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.IncomeChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.LastNameChangeDto;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -141,7 +143,7 @@ public class UserController {
    */
   @Operation(summary = "Change user's living status")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "User fist name successfully updated."),
+          @ApiResponse(responseCode = "200", description = "Living status successfully updated."),
           @ApiResponse(responseCode = "500", description = "Internal server error.",
                   content = @Content)
   })
@@ -179,5 +181,28 @@ public class UserController {
     UserDetailsDto userDetails = userService.getUserDetails(username);
     log.info("User information for {} successfully retrieved.", username);
     return new ResponseEntity<>(userDetails, HttpStatus.OK);
+  }
+
+  /**
+   * REST-endpoint for adding additional user information of the currently logged-in user.
+   *
+   * @param userInfoDto The DTO containing the user information.
+   * @param principal The principal object representing the currently authenticated user.
+   * @return A ResponseEntity with status OK if the operation is successful.
+   */
+  @Operation(summary = "Register additional user information.")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Information successfully registered."),
+          @ApiResponse(responseCode = "500", description = "Internal server error.",
+                  content = @Content)
+  })
+  @PostMapping(path = "/info")
+  public ResponseEntity<Void> registerUserInformation(@RequestBody UserInfoDto userInfoDto,
+                                                      Principal principal) {
+    String email = principal.getName();
+    log.info("Attempting to register additional user information for user with email {}.", email);
+    userService.addUserInfo(userInfoDto, email);
+    log.info("User information for {} successfully registered.", email);
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 }
