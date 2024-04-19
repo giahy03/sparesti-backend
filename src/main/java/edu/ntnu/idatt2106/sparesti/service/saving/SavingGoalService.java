@@ -1,9 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.service.saving;
 
-import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributionDto;
-import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
-import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
-import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalCreationRequestDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.*;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
@@ -16,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -106,45 +101,35 @@ public class SavingGoalService {
 
 
     /**
-     * Updates the current tile of the saving goal based on how many days the user is into the goal,
-     * which equals the number of days from start today's date is.
+     * Updates the current tile of the saving goal.
      *
      * @param principal The authenticated user
-     * @param savingGoalIdDto DTO representing a saving goal object
-     * @return the number of days away today's date is from the start date of the saving goal
+     * @param updateValueDto DTO representing a saving goal object
+     * @return the current tile number after update
      */
-    public int updateCurrentTile(Principal principal, SavingGoalIdDto savingGoalIdDto) {
+    public int updateCurrentTile(Principal principal, SavingGoalUpdateValueDto updateValueDto) {
 
-        SavingGoal savingGoal = savingGoalRepository.findById(savingGoalIdDto.getId()).orElseThrow();
-
-        long daysIntoChallenge;
-        if (LocalDate.now().isAfter(savingGoal.getEndDate())) {
-            daysIntoChallenge = ChronoUnit.DAYS.between(savingGoal.getStartDate(), savingGoal.getEndDate());
-        } else {
-            daysIntoChallenge = ChronoUnit.DAYS.between(savingGoal.getStartDate(), LocalDate.now());
-        }
-
-        savingGoal.setCurrentTile((int) daysIntoChallenge);
+        SavingGoal savingGoal = savingGoalRepository.findById(updateValueDto.getId()).orElseThrow();
+        savingGoal.setCurrentTile(updateValueDto.getValue());
         savingGoalRepository.save(savingGoal);
 
-        return savingGoalRepository.findById(savingGoalIdDto.getId()).get().getCurrentTile();
+        return savingGoalRepository.findById(updateValueDto.getId()).get().getCurrentTile();
     }
 
     /**
      * Updates the number of lives of the mascot.
      *
      * @param principal The authenticated user
-     * @param savingGoalIdDto DTO containing the unique saving goal id
+     * @param updateValueDto DTO containing the unique saving goal id
      * @return the number of lives left for the mascot after updating
      */
-    public int editLives(Principal principal, SavingGoalIdDto savingGoalIdDto) {
+    public int editLives(Principal principal, SavingGoalUpdateValueDto updateValueDto) {
 
-        // Temporarily just decrement:  If more than 3 days since active -1, if game success +1
-        SavingGoal savingGoal = savingGoalRepository.findById(savingGoalIdDto.getId()).orElseThrow();
-        int lives = savingGoal.getLives() -1;
-        savingGoal.setLives(lives);
+        SavingGoal savingGoal = savingGoalRepository.findById(updateValueDto.getId()).orElseThrow();
+        savingGoal.setLives(updateValueDto.getValue());
         savingGoalRepository.save(savingGoal);
-        return savingGoalRepository.findById(savingGoalIdDto.getId()).get().getLives();
+
+        return savingGoalRepository.findById(updateValueDto.getId()).get().getLives();
     }
 
 

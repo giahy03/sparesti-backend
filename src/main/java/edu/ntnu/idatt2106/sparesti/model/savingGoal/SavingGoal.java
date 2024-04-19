@@ -42,11 +42,11 @@ public class SavingGoal {
     @NonNull
     private GoalDifficulty difficulty;
 
-    @Column(name = "startDate", nullable = false)
+    @Column(name = "start_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private LocalDate startDate;
 
-    @Column(name = "endDate", nullable = false)
+    @Column(name = "end_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private LocalDate endDate;
 
@@ -56,13 +56,16 @@ public class SavingGoal {
     @Column(name = "goal_progress")
     private double progress;
 
-    @Column(name = "lives")    // Set to eg. 3 at creation?
+    @Column(name = "lives")
     private int lives;
 
-    @Column(name = "currentTile")   // Calculate from today's date and start date
+    @Column(name = "current_tile")
     private int currentTile;
 
-    @Column(name = "achieved")   // Calculate from amount and progress
-    private boolean achieved;
+/*    @Column(name = "achieved")   // Calculate from amount and progress, not needed in db
+    private boolean achieved;*/
 
+    public boolean isAchieved() {
+        return progress >= amount;
+    }
 }

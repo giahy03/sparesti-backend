@@ -27,7 +27,7 @@ public class SavingGoalMapper {
                 .amount(savingGoal.getAmount())
                 .progress(savingGoal.getProgress())
                 .lives(savingGoal.getLives())
-                .currentTile(savingGoal.getLives())
+                .currentTile(savingGoal.getCurrentTile())
                 .achieved(savingGoal.isAchieved())
                 .build();
     }
@@ -42,9 +42,8 @@ public class SavingGoalMapper {
                 .endDate(savingGoalCreationRequestDto.getEndDate())
                 .amount(savingGoalCreationRequestDto.getAmount())
                 .progress(savingGoalCreationRequestDto.getProgress())
-                .lives(savingGoalCreationRequestDto.getLives())     // Set to 3 upon creation?
-                .currentTile(savingGoalCreationRequestDto.getCurrentTile())   // 'update' upon creation
-                .achieved(false)    // 'Calculate' from amount and progress
+                .lives(savingGoalCreationRequestDto.getLives())
+                .currentTile(savingGoalCreationRequestDto.getCurrentTile())
                 .build();
     }
 

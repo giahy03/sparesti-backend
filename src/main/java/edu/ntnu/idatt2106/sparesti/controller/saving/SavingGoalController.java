@@ -1,10 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.controller.saving;
 
-import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalCreationRequestDto;
-import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.*;
 import edu.ntnu.idatt2106.sparesti.service.saving.SavingGoalService;
-import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributionDto;
-import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -65,14 +62,14 @@ public class SavingGoalController {
 
 
     /**
-     * Get a list containing the ID number of all the goals.
+     * Get a list containing the ID number of all the goals along with their title.
      *
      * @param principal The authenticated user
      * @return ResponseEntity containing a list of saving goal ids or a null response with a status code if something went wrong
      */
-    @Operation(summary = "Retrieve a list with the ids of all saving goals belonging to the user.")
+    @Operation(summary = "Retrieve a list with the id and title of all saving goals belonging to the user.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "A list of saving goal ids was retried from the database.",
+            @ApiResponse(responseCode = "200", description = "A list of saving goal ids and titles was retried from the database.",
             content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = SavingGoalDto.class))
             }),
@@ -140,10 +137,10 @@ public class SavingGoalController {
 
 
     /**
-     * Update the number of lives of the mascot. The updated number of lives is returned.
+     * Update the number of lives of the mascot.
      *
      * @param principal The authenticated user
-     * @param savingGoalIdDto The unique id of the goal
+     * @param updateValueDto The unique id of the goal
      * @return ResponseEntity containing a message indicating the status of the update of the mascot life, or a
      *          null response with a status code if something went wrong
      */
@@ -156,21 +153,20 @@ public class SavingGoalController {
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
     @PutMapping("/goal/lives")
-    public ResponseEntity<String> lives(Principal principal, @RequestBody  SavingGoalIdDto savingGoalIdDto) {
-        log.info("Attempting to edit pig lives of goal: " + savingGoalIdDto.getId());
-        int lives = savingGoalService.editLives(principal, savingGoalIdDto);
+    public ResponseEntity<String> lives(Principal principal, @RequestBody SavingGoalUpdateValueDto updateValueDto) {
+        log.info("Attempting to edit pig lives of goal: " + updateValueDto.getId());
+        int lives = savingGoalService.editLives(principal, updateValueDto);
         log.info("Number of lives successfully updated to: " + lives);
-        return new ResponseEntity<>("Lives updated successfully", HttpStatus.OK);
 
+        return new ResponseEntity<>("Lives updated successfully", HttpStatus.OK);
     }
 
 
     /**
-     * Update the current tile based on today's date. The new tile value is returned and represents the number
-     * of days since saving goal start.
+     * Update the current tile number.
      *
      * @param principal The authenticated user
-     * @param savingGoalIdDto The unique id of the goal
+     * @param updateValueDto The unique id of the goal
      * @return ResponseEntity containing a message indicating the status of updating the current tile, or a
      *          null response with a status code if something went wrong
      */
@@ -183,18 +179,17 @@ public class SavingGoalController {
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
     @PutMapping("/goal/tile")
-    public ResponseEntity<String> tile(Principal principal, @RequestBody  SavingGoalIdDto savingGoalIdDto) {
-        log.info("Attempting to update current tile of goal: " + savingGoalIdDto.getId());
-        int tile = savingGoalService.updateCurrentTile(principal, savingGoalIdDto);
+    public ResponseEntity<String> tile(Principal principal, @RequestBody  SavingGoalUpdateValueDto updateValueDto) {
+        log.info("Attempting to update current tile of goal: " + updateValueDto.getId());
+        int tile = savingGoalService.updateCurrentTile(principal, updateValueDto);
         log.info("Current tile has been successfully updated to: " + tile);
-        return new ResponseEntity<>("Current tile updated successfully", HttpStatus.OK);
 
+        return new ResponseEntity<>("Current tile updated successfully", HttpStatus.OK);
     }
 
 
     /**
-     * Add a newly saved amount to the goal of the given id. The amount is added to the goal's progress and the new
-     * progress amount is returned.
+     * Add a newly saved amount to the progress of the goal of the given id.
      *
      * @param principal The authenticated user
      * @param savingGoalContributionDto DTO containing the goal id and the saved amount to add to the goal's progress
