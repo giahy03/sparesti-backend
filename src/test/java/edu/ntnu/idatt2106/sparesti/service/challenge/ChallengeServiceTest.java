@@ -102,4 +102,14 @@ class ChallengeServiceTest {
     assertEquals(expected, actual);
   }
 
+//  @Test
+//  void Service_UpdateChallenge_UpdatesChallenge() {
+//    //Arrange
+//    when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(ChallengeUtility.createUserA()));
+//    when(challengeRepository.findById(1L)).thenReturn(Optional.of(challenge));
+//    ChallengeDto challengeDto = ChallengeUtility.createSavingChallengeDto();
+//
+//    //Act
+//    assertDoesNotThrow(() -> challengeService.updateChallenge(principal, 1L, challengeDto));
+//  }
 }
