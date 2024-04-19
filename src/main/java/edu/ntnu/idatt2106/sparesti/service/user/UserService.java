@@ -1,10 +1,13 @@
 package edu.ntnu.idatt2106.sparesti.service.user;
 
-import edu.ntnu.idatt2106.sparesti.dto.user.edit.FirstNameChangeDto;
-import edu.ntnu.idatt2106.sparesti.dto.user.edit.LastNameChangeDto;
-import edu.ntnu.idatt2106.sparesti.dto.user.edit.PasswordChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.UserDetailsDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.edit.FirstNameChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.edit.IncomeChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.edit.LastNameChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.edit.LivingStatusChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.edit.PasswordChangeDto;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
+import edu.ntnu.idatt2106.sparesti.model.analysis.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.validation.validators.UserValidator;
@@ -76,6 +79,39 @@ public class UserService {
     UserValidator.validateFirstName(lastNameChangeDto.getNewLastName());
 
     user.setLastName(lastNameChangeDto.getNewLastName());
+
+    userRepository.save(user);
+  }
+
+  /**
+   * Edits the user's income.
+   *
+   * @param incomeChangeDto The DTO containing new income.
+   * @param email The email of the user.
+   */
+  public void editIncome(@NonNull IncomeChangeDto incomeChangeDto, @NonNull String email) {
+    User user = findUser(email);
+
+    user.getUserInfo().setIncome(incomeChangeDto.getNewIncome());
+
+    userRepository.save(user);
+  }
+
+  /**
+   * Edits the last name of the user.
+   *
+   * @param livingStatusChangeDto The DTO containing new last name.
+   * @param email The email of the user.
+   */
+  public void editLivingStatus(@NonNull LivingStatusChangeDto livingStatusChangeDto,
+                               @NonNull String email) {
+
+    User user = findUser(email);
+
+    SsbLivingStatus newLivingStatus = SsbLivingStatus.fromInteger(
+            livingStatusChangeDto.getNewLivingStatus());
+
+    user.getUserInfo().setLivingStatus(newLivingStatus);
 
     userRepository.save(user);
   }
