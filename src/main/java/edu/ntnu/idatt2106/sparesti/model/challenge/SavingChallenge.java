@@ -18,7 +18,6 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "saving_challenge")
 @SuperBuilder
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -30,8 +29,4 @@ public class SavingChallenge extends Challenge {
   @Column(name = "current_amount", nullable = false)
   private double currentAmount;
 
-  @Override
-  public boolean isCompleted() {
-    return currentAmount >= totalAmount;
-  }
 }
