@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.dto.challenge;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@Builder
 public class ChallengeUpdateRequestDto {
   int currentTiles;
   int lives;

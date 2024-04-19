@@ -53,7 +53,7 @@ public class ChallengeService {
   public List<ChallengePreviewDto> getChallenges(Principal principal, Pageable pageable) {
 
     String username = principal.getName();
-    List<Challenge> challenges = challengesRepository.findAllByUser_Username(username, pageable);
+    List<Challenge> challenges = challengesRepository.findByUser_Email(username, pageable);
     List<ChallengePreviewDto> challengePreviewDto = new ArrayList<>();
 
     for (Challenge challenge : challenges) {
