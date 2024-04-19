@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.repositories;
+package edu.ntnu.idatt2106.sparesti.repositories.user;
 
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import java.util.Optional;
