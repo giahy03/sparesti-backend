@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.exception;
 
+import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException;
+import edu.ntnu.idatt2106.sparesti.exception.challenge.ChallengeNotFoundException;
 import edu.ntnu.idatt2106.sparesti.exception.user.EmailAlreadyExistsException;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import java.time.LocalDateTime;
@@ -119,4 +121,29 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     ErrorResponse errorResponse = new ErrorResponse(errorMessage, LocalDateTime.now());
     return new ResponseEntity<>(errorResponse, status);
   }
+
+  /**
+   * The method handles exceptions from when a user is not authorized to perform the operation.
+   *
+   * @param ex The exception to handle.
+   * @return ResponseEntity containing the ErrorResponse with HTTP status code 401 (UNAUTHORIZED).
+   */
+  @ExceptionHandler(UnauthorizedOperationException.class)
+  public ResponseEntity<ErrorResponse> handleUnauthorizedOperationException(@NonNull Exception ex) {
+    String errorMessage = ex.getMessage();
+    return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.UNAUTHORIZED);
+  }
+
+  /**
+   * The method handles exceptions when challenge is not found.
+   *
+   * @param ex The exception to handle.
+   * @return ResponseEntity containing the ErrorResponse with HTTP status code 404 (NOT_FOUND).
+   */
+  @ExceptionHandler({ChallengeNotFoundException.class})
+  public ResponseEntity<ErrorResponse> handleChallengeNotFoundException(@NonNull Exception ex) {
+    String errorMessage = ex.getMessage();
+    return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.NOT_FOUND);
+  }
+
 }
