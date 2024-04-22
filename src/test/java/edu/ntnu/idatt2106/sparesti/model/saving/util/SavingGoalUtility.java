@@ -9,7 +9,7 @@ import edu.ntnu.idatt2106.sparesti.model.user.User;
 import java.time.LocalDate;
 
 /**
- * Utility class that creates objects to support the testing classes.
+ * Utility class that creates objects to support the testing classes related to saving goals.
  *
  * @author Hanne-Sofie Søreide
  */
@@ -35,7 +35,6 @@ public class SavingGoalUtility {
                 .role(Role.USER)
                 .password("PW")
                 .build();
-
     }
 
 
