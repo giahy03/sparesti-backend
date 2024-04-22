@@ -191,9 +191,14 @@ public class ChallengeService {
       savingChallenge.setLives(challenge.getLives());
       savingChallenge.setCurrentTile(challenge.getCurrentTiles());
       challengesRepository.save(savingChallenge);
-    } else {
-      throw new ChallengeNotFoundException("Challenge with id " + challengeId + " not found");
     }
+
+    else {
+    challengeToUpdate.setLives(challenge.getLives());
+    challengeToUpdate.setCurrentTile(challenge.getCurrentTiles());
+    challengesRepository.save(challengeToUpdate);
+    }
+
   }
 
 }
