@@ -11,6 +11,8 @@ import edu.ntnu.idatt2106.sparesti.model.analysis.openai.OpenAiThreadResponseLis
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +34,8 @@ public class OpenAiService {
 
   private static final int MAX_POLLING_ATTEMPTS = 60;
   public static final int POLLING_INTERVAL = 500;
-  private static final String secretKey =
-      "sk-proj-NxP3gv8a5BLJsrCY52BhT3BlbkFJQWHBRwQlDScUaaQEcqcp";
+  private static final String secretKey = Dotenv.load().get("OPENAI_API_KEY");
+
   public static final String OPENAI_API_URL = "https://api.openai.com/v1";
 
   private final RestTemplate restTemplate = new RestTemplate();

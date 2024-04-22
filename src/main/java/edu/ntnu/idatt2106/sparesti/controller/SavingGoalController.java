@@ -24,7 +24,6 @@ import java.util.List;
  *
  * @author Hanne-Sofie Søreide
  */
-
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -32,7 +31,6 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8082")
 public class SavingGoalController {
 
-    @NonNull
     private final SavingGoalService savingGoalService;
 
     /**
