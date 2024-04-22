@@ -66,6 +66,7 @@ class ChallengeServiceTest {
 
     //Act
     assertDoesNotThrow(() -> challengeService.addChallenge(principal, ChallengeUtility.createSavingChallengeDto()));
+    assertDoesNotThrow(() -> challengeService.addChallenge(principal, ChallengeUtility.createChallengeDto()));
   }
 
   @Test

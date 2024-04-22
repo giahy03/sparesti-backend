@@ -24,9 +24,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        property = "challengeType")
+        property = "challengeType",
+        defaultImpl = ChallengeDto.class)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = SavingChallengeDto.class, name = "SavingChallengeDto")}
+        @JsonSubTypes.Type(value = SavingChallengeDto.class, name = "SavingChallengeDto")
+
+}
 )
 
 public class ChallengeDto {

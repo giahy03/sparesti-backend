@@ -83,7 +83,12 @@ public class ChallengeService {
               savingChallengeMapperImpl.savingChallengeDtoToSavingChallenge(
                       (SavingChallengeDto) challenge, user, challengeMapperImpl);
       challengesRepository.save(savingChallenge);
+    } else {
+      Challenge newChallenge = challengeMapperImpl.challengeDtoToChallenge(challenge);
+      newChallenge.setUser(user);
+      challengesRepository.save(newChallenge);
     }
+
 
   }
 
@@ -161,9 +166,9 @@ public class ChallengeService {
     if (challenge instanceof SavingChallenge) {
       return savingChallengeMapperImpl.savingChallengeDto(
               (SavingChallenge) challenge, challengeMapperImpl);
-    } else {
-      throw new IllegalArgumentException("Not an appropriate challenge type.");
     }
+
+    return challengeMapperImpl.challengeIntoChallengeDto(challenge);
   }
 
 
