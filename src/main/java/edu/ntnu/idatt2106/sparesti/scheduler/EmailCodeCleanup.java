@@ -7,14 +7,14 @@ import org.springframework.stereotype.Component;
 
 /**
  * The class provides functionality for periodically cleaning
- * up expired entities in the database.
+ * up expired email code entities in the database.
  *
  * @author Ramin Samavat
  * @version 1.0
  */
 @Component
 @RequiredArgsConstructor
-public class Cleanup {
+public class EmailCodeCleanup {
 
   private final EmailVerificationService emailVerificationService;
 
