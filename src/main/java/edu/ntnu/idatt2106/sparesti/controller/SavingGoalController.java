@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.controller.saving;
+package edu.ntnu.idatt2106.sparesti.controller;
 
 import edu.ntnu.idatt2106.sparesti.dto.saving.*;
 import edu.ntnu.idatt2106.sparesti.service.saving.SavingGoalService;
@@ -24,7 +24,6 @@ import java.util.List;
  *
  * @author Hanne-Sofie Søreide
  */
-
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -32,7 +31,6 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8082")
 public class SavingGoalController {
 
-    @NonNull
     private final SavingGoalService savingGoalService;
 
     /**
@@ -55,7 +53,7 @@ public class SavingGoalController {
             @RequestBody SavingGoalCreationRequestDto savingGoalCreationRequestDto, Principal principal) {
                     log.info("Adding Saving Goal for user: " + principal.getName());
                     SavingGoalIdDto savingGoalIdDto =
-                            savingGoalService.createSavingGoal(savingGoalCreationRequestDto, principal);
+                            savingGoalService.createSavingGoal(principal, savingGoalCreationRequestDto);
                     log.info("The saving goal '" + savingGoalIdDto.getId() +"' was created and stored");
                     return new ResponseEntity<>(savingGoalIdDto, HttpStatus.CREATED);
     }

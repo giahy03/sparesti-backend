@@ -40,8 +40,8 @@ public class SavingGoalService {
      * @param principal The authenticated user
      * @return The response DTO containing the ID of the created saving goal
      */
-    public SavingGoalIdDto createSavingGoal(SavingGoalCreationRequestDto savingGoalCreationRequestDto,
-                                                          Principal principal) {
+    public SavingGoalIdDto createSavingGoal( Principal principal,
+                                             SavingGoalCreationRequestDto savingGoalCreationRequestDto) {
         String email = principal.getName();
 
         User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
@@ -143,8 +143,7 @@ public class SavingGoalService {
     public double registerSavingContribution(Principal principal, SavingGoalContributionDto savingGoalContributionDto) {
 
         SavingGoal savingGoal = savingGoalRepository.findById(savingGoalContributionDto.getId()).orElseThrow();
-        double newProgress = savingGoal.getProgress() + savingGoalContributionDto.getContribution();
-        savingGoal.setProgress(newProgress);
+        savingGoal.setProgress(savingGoal.getProgress() + savingGoalContributionDto.getContribution());
         savingGoalRepository.save(savingGoal);
 
         return savingGoalRepository.findById(savingGoalContributionDto.getId()).get().getProgress();

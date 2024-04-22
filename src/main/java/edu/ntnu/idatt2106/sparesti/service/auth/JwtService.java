@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.service.auth;
 
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
   // 512 bits encryption key.
-  private static final String SECRET_KEY = "7c69211f63161611be78b3d7a986d873608953a07eece162e80b90adaf7a02f75f34b54e7ef158bbff58a0de78d2ce415d24b85da67d210b9fcb1a48c2fe4352";
+  private static final String SECRET_KEY = Dotenv.load().get("JWT_SECRET");
 
   /**
    * Extract username from JWT token.

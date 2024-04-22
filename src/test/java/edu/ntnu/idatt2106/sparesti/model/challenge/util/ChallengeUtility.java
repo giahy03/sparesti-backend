@@ -2,6 +2,8 @@ package edu.ntnu.idatt2106.sparesti.model.challenge.util;
 
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.SavingChallengeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.LoginRequestDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.RegistrationDto;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
@@ -80,4 +82,19 @@ public class ChallengeUtility {
             .build();
   }
 
+  public static RegistrationDto createRegistrationDtoA() {
+    return RegistrationDto.builder()
+            .email("example@guide.com")
+            .firstName("Example")
+            .lastName("Guide")
+            .password("password")
+            .build();
+  }
+
+  public static LoginRequestDto createLoginDtoA() {
+    return LoginRequestDto.builder()
+            .email("example@guide")
+            .password("password")
+            .build();
+  }
 }
