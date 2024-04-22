@@ -14,4 +14,5 @@ import lombok.Data;
 public class ChallengeUpdateRequestDto {
   int currentTiles;
   int lives;
+  int currentAmount;
 }
