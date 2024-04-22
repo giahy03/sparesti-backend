@@ -47,7 +47,7 @@ public class SavingGoalServiceTest {
     SavingGoalMapper savingGoalMapper;
 
     Principal principal;
-
+    Pageable pageable;
     private SavingGoal goal;
 
 
@@ -61,30 +61,32 @@ public class SavingGoalServiceTest {
     @DisplayName("JUnit test for getSavingGoalById method")
     @Test
     void Service_GetSavingGoal_ReturnSavingGoal() {
-
+        // Arrange
         when(savingGoalRepository.findById(1L)).thenReturn(Optional.of(goal));
         when(savingGoalMapper.mapToSavingGoalDto(goal)).thenReturn(SavingGoalUtility.createSavingGoalDto());
 
+        // Act
         SavingGoalDto savingGoalDto = savingGoalService.getSavingGoalById(SavingGoalUtility.createSavingGoalIdDto());
 
+        // Assert
         assertNotNull(savingGoalDto);
     }
 
-    //@DisplayName("JUnit test for getSavingGoalById method which throws exception")
 
     @DisplayName("JUnit test of getAllGoalIdsByEmail method")
     @Test
     void Service_GetAllGoalIdsByEmail_ReturnsListOfSavingGoalIds() {
 
+        // Arrange
         List<SavingGoal> savingGoalList = new ArrayList<>();
         savingGoalList.add(SavingGoalUtility.createSavingGoalA());
         savingGoalList.add(SavingGoalUtility.createSavingGoalB());
-
-        Pageable pageable = null;
         when(savingGoalRepository.findAllByUser_Username(principal.getName(), pageable)).thenReturn(savingGoalList);
 
+        // Act
         List<SavingGoalIdDto> returnedIds = savingGoalService.getAllGoalIdsByEmail(principal, pageable);
 
+        // Assert
         assertThat(returnedIds.size()).isEqualTo(2);
     }
 
@@ -93,12 +95,13 @@ public class SavingGoalServiceTest {
     @Test
     void Service_AddSavingGoal_AddSavingGoal() {
 
+        // Arrange
         User user = SavingGoalUtility.createUserA();
-
         when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(user));
         when(savingGoalMapper.mapToSavingGoal(SavingGoalUtility.createSavingGoalCreationRequestDto(), user)).thenReturn(goal);
         when(savingGoalRepository.save(goal)).thenReturn(goal);
 
+        // Act and assert
         assertDoesNotThrow(() -> savingGoalService.createSavingGoal(principal, SavingGoalUtility.createSavingGoalCreationRequestDto()));
         assertNotNull(savingGoalService.createSavingGoal(principal, SavingGoalUtility.createSavingGoalCreationRequestDto()));
     }
@@ -106,42 +109,48 @@ public class SavingGoalServiceTest {
     @DisplayName("JUnit test for deleteSavingGoal method")
     @Test
     void Service_DeleteSavingGoal_DeleteSavingGoal() {
+        // Act and assert
         assertDoesNotThrow(() -> savingGoalService.deleteSavingGoal(principal, SavingGoalUtility.createSavingGoalIdDto()));
     }
-
 
 
 
     @DisplayName("JUnit test for editLives method")
     @Test
     void Service_EditLives_EditLives() {
+
+        // Arrange
         when(savingGoalRepository.findById(1L)).thenReturn(Optional.ofNullable(goal));
         SavingGoalUpdateValueDto savingGoalUpdateValueDto = SavingGoalUtility.createSavingGoalUpdateValueDto();
 
+        // Act and assert
         assertDoesNotThrow(() -> savingGoalService.editLives(principal, savingGoalUpdateValueDto));
-        //assertTrue(savingGoalService.editLives(principal, savingGoalUpdateValueDto) is int);
+        //assertTrue(Integer.class.isInstance(savingGoalService.editLives(principal, savingGoalUpdateValueDto)));
     }
 
     @DisplayName("JUnit test for updateCurrentTile method")
     @Test
     void Service_UpdateTile_UpdateTile() {
 
+        // Arrange
         when(savingGoalRepository.findById(1L)).thenReturn(Optional.ofNullable(goal));
         SavingGoalUpdateValueDto savingGoalUpdateValueDto = SavingGoalUtility.createSavingGoalUpdateValueDto();
 
+        // Act and assert
         assertDoesNotThrow(() -> savingGoalService.updateCurrentTile(principal, savingGoalUpdateValueDto));
-
+        //assertTrue(Integer.class.isInstance(savingGoalService.updateCurrentTile(principal, savingGoalUpdateValueDto)));
     }
 
     @DisplayName("JUnit test for registerSavingContribution method")
     @Test
     void Service_RegisterSavingContribution_RegisterSavingContribution() {
 
+        // Arrange
         when(savingGoalRepository.findById(1L)).thenReturn(Optional.ofNullable(goal));
         SavingGoalContributionDto savingGoalContributionDto = SavingGoalUtility.createSavingGoalContributionDto();
 
+        // Act and assert
         assertDoesNotThrow(() -> savingGoalService.registerSavingContribution(principal, savingGoalContributionDto));
-
     }
 
 }

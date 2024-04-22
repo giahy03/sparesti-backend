@@ -97,4 +97,16 @@ public class SavingGoalTest {
         assertEquals(expectedUser.getEmail(), goal.getUser().getEmail());
 
     }
+
+    @DisplayName("JUnit test for the setters expecting exceptions setting Null")
+    @Test
+    public void Goal_SetGoalWithNull_ThrowsException() {
+        // Act and Assert
+        assertThrows(NullPointerException.class, () -> goal.setUser(null));
+        assertThrows(NullPointerException.class, () -> goal.setGoalName(null));
+        assertThrows(NullPointerException.class, () -> goal.setDifficulty(null));
+        assertThrows(NullPointerException.class, () -> goal.setStartDate(null));
+        assertThrows(NullPointerException.class, () -> goal.setEndDate(null));
+    }
+
 }
