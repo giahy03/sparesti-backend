@@ -24,7 +24,6 @@ import java.util.List;
  *
  * @author Hanne-Sofie Søreide
  */
-
 @RestController
 @RequiredArgsConstructor
 @Slf4j

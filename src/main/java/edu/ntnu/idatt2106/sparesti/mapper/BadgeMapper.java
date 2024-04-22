@@ -19,6 +19,8 @@ public class BadgeMapper {
                 .badgeId(badge.getBadgeId())
                 .achievement(badge.getAchievement().getCategory())
                 .threshold(badge.getLevel())
+                .level(badge.getLevel())
+                .achievementDate(badge.getAchievedDate())
                 .build();
     }
 

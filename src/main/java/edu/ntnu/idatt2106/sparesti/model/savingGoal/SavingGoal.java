@@ -62,6 +62,7 @@ public class SavingGoal {
     @Column(name = "current_tile")
     private int currentTile;
 
+    // Legge inn LocalDate da mål ble nådd, og om null er den ikke oppnådd?
 /*    @Column(name = "achieved")   // Calculate from amount and progress, not needed in db
     private boolean achieved;*/
 

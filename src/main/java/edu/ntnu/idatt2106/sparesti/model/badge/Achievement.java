@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.badge;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,26 +32,34 @@ import java.util.Set;
 public class Achievement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "The unique identifier of the achievement.")
     @Column(name = "achievement_id")
     private Long achievementId;
 
+    // Skal være en-veis?: Nå achievement fra badge, men ikke badges fra achievement?
+    @Schema(description = "The set of badges representing this achievement.")
     @OneToMany(mappedBy="achievement")
     private Set<Badge> badges;
 
     @Enumerated(EnumType.STRING)
+    @Schema(description = "The category that the achievement belongs to.")
     @Column(name = "category", nullable = false)
     @NonNull
     private AchievementCategory category;
 
+    // Denne er lik lengden på listen over thresholds
+    @Schema(description = "The number of levels the achievement is divided into.")
     @Column(name = "no_of_levels", nullable = false)
     private int noOfLevels;
 
+    @Schema(description = "Description of the achievement.")
     @Column(name = "description", nullable = false)
     @NonNull
     private String description;
 
     @ElementCollection
     @NonNull
+    @Schema(description = "The threshold of the achievable levels of the achievement.")
     @CollectionTable(
         name = "thresholds",
         joinColumns = @JoinColumn(name = "achievement_id")
