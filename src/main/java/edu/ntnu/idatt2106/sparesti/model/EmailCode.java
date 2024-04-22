@@ -7,7 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,5 +57,5 @@ public class EmailCode {
   @Schema(description = "The expiry timestamp of the code.")
   @Setter(AccessLevel.NONE)
   @NonNull
-  private LocalDate expiryTimestamp;
+  private LocalDateTime expiryTimestamp;
 }
