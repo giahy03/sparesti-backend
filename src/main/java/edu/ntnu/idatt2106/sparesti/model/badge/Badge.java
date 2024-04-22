@@ -28,7 +28,7 @@ public abstract class Badge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "badge_id")
-    private Long badge_id;
+    private Long badgeId;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
@@ -38,10 +38,10 @@ public abstract class Badge {
     @JoinColumn(name = "achievement_id", nullable = false)
     private Achievement achievement;
 
-    @Column(name = "achieved", nullable = false)
+    @Column(name = "achieved_date", nullable = false)
     @NonNull
     @Temporal(TemporalType.DATE)
-    private Date achieved;
+    private Date achievedDate;
 
     @Column(name = "level", nullable = false)
     private int level;

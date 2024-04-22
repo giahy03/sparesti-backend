@@ -31,7 +31,8 @@ import java.util.Set;
 public class Achievement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long achievement_id;
+    @Column(name = "achievement_id")
+    private Long achievementId;
 
     @OneToMany(mappedBy="achievement")
     private Set<Badge> badges;
@@ -49,6 +50,7 @@ public class Achievement {
     private String description;
 
     @ElementCollection
+    @NonNull
     @CollectionTable(
         name = "thresholds",
         joinColumns = @JoinColumn(name = "achievement_id")
