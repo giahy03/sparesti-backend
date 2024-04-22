@@ -2,9 +2,11 @@ package edu.ntnu.idatt2106.sparesti.exception;
 
 import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException;
 import edu.ntnu.idatt2106.sparesti.exception.challenge.ChallengeNotFoundException;
-import edu.ntnu.idatt2106.sparesti.exception.user.EmailAlreadyExistsException;
+import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
+import edu.ntnu.idatt2106.sparesti.exception.email.VerificationCodeExpiredException;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -34,18 +36,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
   /**
-   * The method handles exceptions related to username or email already existing.
-   *
-   * @param ex The exception to handle.
-   * @return ResponseEntity containing the ErrorResponse with HTTP status code 409 (CONFLICT).
-   */
-  @ExceptionHandler(EmailAlreadyExistsException.class)
-  public ResponseEntity<ErrorResponse> handleConflict(@NonNull Exception ex) {
-    String errorMessage = ex.getMessage();
-    return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.CONFLICT);
-  }
-
-  /**
    * The method handles situations where a null pointer exception occurs.
    *
    * @param ex The exception to handle.
@@ -58,12 +48,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   /**
-   * The method handles situations where an illegal argument exception occurs.
+   * The method handles situations where IllegalArgumentException or
+   * VerificationCodeExpiredException occurs.
    *
    * @param ex The exception to handle.
    * @return ResponseEntity containing the ErrorResponse with HTTP status code 400 (BAD_REQUEST).
    */
-  @ExceptionHandler(IllegalArgumentException.class)
+  @ExceptionHandler({IllegalArgumentException.class, VerificationCodeExpiredException.class})
   public ResponseEntity<ErrorResponse> handleIllegalArgumentException(@NonNull Exception ex) {
     String errorMessage = ex.getMessage();
     return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.BAD_REQUEST);
@@ -82,15 +73,43 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   /**
-   * The method handles exceptions when a user is not found.
+   * The method handles exceptions from when a user is not authorized to perform the operation.
+   *
+   * @param ex The exception to handle.
+   * @return ResponseEntity containing the ErrorResponse with HTTP status code 401 (UNAUTHORIZED).
+   */
+  @ExceptionHandler(UnauthorizedOperationException.class)
+  public ResponseEntity<ErrorResponse> handleUnauthorizedOperationException(@NonNull Exception ex) {
+    String errorMessage = ex.getMessage();
+    return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.UNAUTHORIZED);
+  }
+
+  /**
+   * The method handles exceptions when a user, a challenge or an element is not found.
    *
    * @param ex The exception to handle.
    * @return ResponseEntity containing the ErrorResponse with HTTP status code 404 (NOT_FOUND).
    */
-  @ExceptionHandler(UserNotFoundException.class)
+  @ExceptionHandler({
+          UserNotFoundException.class,
+          NoSuchElementException.class,
+          ChallengeNotFoundException.class,
+  })
   public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(@NonNull Exception ex) {
     String errorMessage = ex.getMessage();
     return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.NOT_FOUND);
+  }
+
+  /**
+   * The method handles exceptions related to username or email already existing.
+   *
+   * @param ex The exception to handle.
+   * @return ResponseEntity containing the ErrorResponse with HTTP status code 409 (CONFLICT).
+   */
+  @ExceptionHandler(EmailAlreadyExistsException.class)
+  public ResponseEntity<ErrorResponse> handleConflict(@NonNull Exception ex) {
+    String errorMessage = ex.getMessage();
+    return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.CONFLICT);
   }
 
   /**
@@ -121,29 +140,4 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     ErrorResponse errorResponse = new ErrorResponse(errorMessage, LocalDateTime.now());
     return new ResponseEntity<>(errorResponse, status);
   }
-
-  /**
-   * The method handles exceptions from when a user is not authorized to perform the operation.
-   *
-   * @param ex The exception to handle.
-   * @return ResponseEntity containing the ErrorResponse with HTTP status code 401 (UNAUTHORIZED).
-   */
-  @ExceptionHandler(UnauthorizedOperationException.class)
-  public ResponseEntity<ErrorResponse> handleUnauthorizedOperationException(@NonNull Exception ex) {
-    String errorMessage = ex.getMessage();
-    return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.UNAUTHORIZED);
-  }
-
-  /**
-   * The method handles exceptions when challenge is not found.
-   *
-   * @param ex The exception to handle.
-   * @return ResponseEntity containing the ErrorResponse with HTTP status code 404 (NOT_FOUND).
-   */
-  @ExceptionHandler({ChallengeNotFoundException.class})
-  public ResponseEntity<ErrorResponse> handleChallengeNotFoundException(@NonNull Exception ex) {
-    String errorMessage = ex.getMessage();
-    return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.NOT_FOUND);
-  }
-
 }

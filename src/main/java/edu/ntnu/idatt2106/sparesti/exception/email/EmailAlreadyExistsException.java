@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.exception.user;
+package edu.ntnu.idatt2106.sparesti.exception.email;
 
 /**
  * The class represents a custom exception to indicate that an email
