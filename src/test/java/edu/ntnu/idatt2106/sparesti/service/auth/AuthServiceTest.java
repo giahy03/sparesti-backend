@@ -22,6 +22,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+/**
+ * Test class for the AuthService class.
+ * The AuthService class is responsible for registering new users and authenticating existing users within the database.
+ *
+ * @see AuthService
+ * @author Jeffrey Yaw Annor Tabiri
+ * @version 1.0
+ *  * <p>
+ *  * The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/test/java/edu/ntnu/idatt2105/quizapp/services/user/AuthenticationServiceTest.java">...</a>
+ *  * </p>
+ */
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
