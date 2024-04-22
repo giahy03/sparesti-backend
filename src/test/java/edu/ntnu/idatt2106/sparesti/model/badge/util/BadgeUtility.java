@@ -1,7 +1,9 @@
 package edu.ntnu.idatt2106.sparesti.model.badge.util;
 
 
+import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
+import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;
 import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
@@ -71,6 +73,17 @@ public class BadgeUtility {
                 .build();
     }
 
+    public static Badge createBadgeB() {
+
+        return Badge.builder()
+                .id(2L)
+                .user(createUserA())
+                .achievement(createAchievementA())
+                .achievedDate(LocalDate.of(2024, 4, 5))
+                .level(2)
+                .build();
+    }
+
     public static BadgePreviewDto createBadgePreviewDto() {
 
         return BadgePreviewDto.builder()
@@ -79,6 +92,22 @@ public class BadgeUtility {
                 .threshold(createAchievementA().getThresholds().get(2))
                 .achievementDate(LocalDate.of(2024, 4, 3))
                 .level(2)
+                .build();
+    }
+
+    public static BadgeCreateDto createBadgeCreateDto() {
+
+        return BadgeCreateDto.builder()
+                .achievement(createAchievementA())
+                .threshold(200)
+                .achievementDate(LocalDate.of(2024, 4, 10))
+                .level(1)
+                .build();
+    }
+
+    public static BadgeIdDto createBadgeIdDto() {
+        return BadgeIdDto.builder()
+                .id(1L)
                 .build();
     }
 

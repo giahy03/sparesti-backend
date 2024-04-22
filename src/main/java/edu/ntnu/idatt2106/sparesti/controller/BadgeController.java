@@ -106,7 +106,7 @@ public class BadgeController {
     @DeleteMapping("/badge")
     public ResponseEntity<String> deleteBadge(Principal principal, @RequestBody BadgeIdDto badgeIdDto) {
         log.info("Attempting to delete goal: " + badgeIdDto.getId());
-        badgeService.deleteBadge(principal, badgeIdDto);
+        badgeService.deleteBadgeById(principal, badgeIdDto);
         log.info("Goal deleted: " + badgeIdDto.getId());
         return new ResponseEntity<>("Deleted successfully", HttpStatus.OK);
     }

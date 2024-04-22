@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.mapper;
 
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
-import edu.ntnu.idatt2106.sparesti.dto.badge.CreateBadgeDto;
+import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class BadgeMapper {
                 .build();
     }
 
-    public Badge mapToBadge(CreateBadgeDto createBadgeDto, User user) {
+    public Badge mapToBadge(BadgeCreateDto createBadgeDto, User user) {
 
         return Badge.builder()
                 .user(user)
