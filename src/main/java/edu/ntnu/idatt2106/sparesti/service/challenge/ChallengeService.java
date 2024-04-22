@@ -190,6 +190,7 @@ public class ChallengeService {
     if (challengeToUpdate instanceof SavingChallenge savingChallenge) {
       savingChallenge.setLives(challenge.getLives());
       savingChallenge.setCurrentTile(challenge.getCurrentTiles());
+      savingChallenge.setCurrentAmount(challenge.getCurrentAmount());
       challengesRepository.save(savingChallenge);
     }
 

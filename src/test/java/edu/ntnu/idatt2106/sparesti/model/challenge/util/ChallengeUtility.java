@@ -92,6 +92,7 @@ public class ChallengeUtility {
     return ChallengeUpdateRequestDto.builder()
             .currentTiles(1)
             .lives(2)
+            .currentAmount(20)
             .build();
   }
 
