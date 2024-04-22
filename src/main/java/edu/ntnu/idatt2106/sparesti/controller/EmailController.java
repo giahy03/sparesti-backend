@@ -106,7 +106,7 @@ public class EmailController {
           @ApiResponse(responseCode = "409", description = "Email already exists."),
           @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
-  @GetMapping("verify-existence")
+  @GetMapping("/verify-existence")
   public ResponseEntity<Void> verifyExistence(@RequestParam String email) {
     log.info("Verifying existence of email {}.", email);
     emailVerificationService.verifyEmailExist(email);
