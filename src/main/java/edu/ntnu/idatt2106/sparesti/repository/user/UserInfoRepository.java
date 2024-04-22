@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.repositories.user;
+package edu.ntnu.idatt2106.sparesti.repository.user;
 
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
