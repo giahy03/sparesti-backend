@@ -68,7 +68,7 @@ public class AuthService {
     }
 
     emailVerificationService.verifyEmailCode(registrationDto.getEmail(),
-            registrationDto.getEmailCode());
+            registrationDto.getEmailVerificationCode());
 
     UserValidator.validatePassword(registrationDto.getPassword());
     UserValidator.validateEmail(registrationDto.getEmail());
