@@ -73,7 +73,6 @@ public class Challenge {
 
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
-  @NonNull
   private User user;
 
 }
