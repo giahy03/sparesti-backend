@@ -97,6 +97,7 @@ public class ChallengeUtility {
 
   public static RegistrationDto createRegistrationDtoA() {
     return RegistrationDto.builder()
+            .emailVerificationCode("123456")
             .email("example@guide.com")
             .firstName("Example")
             .lastName("Guide")
