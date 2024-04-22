@@ -3,15 +3,9 @@ package edu.ntnu.idatt2106.sparesti.model.badge;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.experimental.SuperBuilder;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * Badge is an abstract class that represents a stored Badge entity.
@@ -21,12 +15,12 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "badges")  // lagres kanskje heller som en userstat tabell?
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public abstract class Badge {
+public class Badge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "The unique identifier for the badge.")

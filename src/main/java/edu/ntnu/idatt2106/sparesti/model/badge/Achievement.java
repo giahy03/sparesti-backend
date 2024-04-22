@@ -33,10 +33,9 @@ public class Achievement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "The unique identifier of the achievement.")
-    @Column(name = "achievement_id")
-    private Long achievementId;
+    @Column(name = "id")
+    private int id;
 
-    // Skal være en-veis?: Nå achievement fra badge, men ikke badges fra achievement?
     @Schema(description = "The set of badges representing this achievement.")
     @OneToMany(mappedBy="achievement")
     private Set<Badge> badges;
@@ -47,10 +46,10 @@ public class Achievement {
     @NonNull
     private AchievementCategory category;
 
-    // Denne er lik lengden på listen over thresholds
+/*    // Denne er lik lengden på listen over thresholds, men taper ikke mye på å lagre for hver achievement (er begrenset antall)
     @Schema(description = "The number of levels the achievement is divided into.")
     @Column(name = "no_of_levels", nullable = false)
-    private int noOfLevels;
+    private int noOfLevels;*/
 
     @Schema(description = "Description of the achievement.")
     @Column(name = "description", nullable = false)
@@ -66,5 +65,9 @@ public class Achievement {
     )
     @Column( name = "threshold")
     private List<Integer> thresholds;
+
+    public int getNumberOfLevels() {
+        return thresholds.size();
+    }
 
 }
