@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2106.sparesti.config;
 
-import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -33,11 +33,12 @@ public class ApplicationConfig {
    * The method defines a custom UserDetailsService bean to load user details for authentication.
    *
    * @return An implementation of UserDetailsService.
+   * @throws UsernameNotFoundException If used based on username it not found.
    */
   @Bean
   public UserDetailsService userDetailsService() {
     return username -> userRepository.findUserByEmailIgnoreCase(username).orElseThrow(() ->
-            new UserNotFoundException("User with email " + username + " not found."));
+            new UsernameNotFoundException("User with email " + username + " not found."));
   }
 
   /**
