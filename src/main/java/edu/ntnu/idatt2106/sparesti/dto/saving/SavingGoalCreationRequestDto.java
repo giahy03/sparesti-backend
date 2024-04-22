@@ -22,8 +22,8 @@ public class SavingGoalCreationRequestDto {
     private String goalName;
     private double amount;
     private double progress;
-    private int lives;         // Default 3 at creation?
-    private int currentTile;    // Set to number of days from start date upon creation
+    private int lives;
+    private int currentTile;
     @NotNull
     private LocalDate startDate;
     @NotNull

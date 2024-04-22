@@ -29,6 +29,7 @@ public class SavingGoal {
     private Long id;
 
     @ManyToOne
+    @NonNull
     @Schema(description = "The unique identifier for the user.")
     @JoinColumn(name="user_id", nullable = false)
     private User user;
@@ -43,10 +44,12 @@ public class SavingGoal {
     private GoalDifficulty difficulty;
 
     @Column(name = "start_date", nullable = false)
+    @NonNull
     @Temporal(TemporalType.DATE)
     private LocalDate startDate;
 
     @Column(name = "end_date", nullable = false)
+    @NonNull
     @Temporal(TemporalType.DATE)
     private LocalDate endDate;
 

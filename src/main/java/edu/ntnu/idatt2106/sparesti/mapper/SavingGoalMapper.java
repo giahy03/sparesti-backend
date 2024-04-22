@@ -5,7 +5,6 @@ import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@RequiredArgsConstructor
 public class SavingGoalMapper {
 
     public SavingGoalDto mapToSavingGoalDto(SavingGoal savingGoal) {
