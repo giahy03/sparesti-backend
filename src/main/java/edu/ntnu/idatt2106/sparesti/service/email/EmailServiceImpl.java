@@ -1,15 +1,27 @@
 package edu.ntnu.idatt2106.sparesti.service.email;
 
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-@Service
+/**
+ * Service implementation that encapsulates logic for sending emails.
+ * It extends {@link EmailService} and uses {@link JavaMailSender} to send emails via SMTP.
+ *
+ * @author Jeff Tabiri
+ * @author Ramtin Samavart
+ * @version 1.0
+ * @see EmailService
+ * @see JavaMailSender
+ */
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
@@ -19,36 +31,20 @@ public class EmailServiceImpl implements EmailService {
   private String sender;
 
   /**
-   * Sends an email to the recipient.
+   * The method sends an email to the recipient.
    *
    * @param emailDetailsDto the details of the email to be sent.
-   * @return a string indicating the status of the email.
+   * @throws MailException if there is an error sending the email.
    */
   @Override
-  public String sendEmail(EmailDetailsDto emailDetailsDto) {
+  public void sendEmail(@NonNull EmailDetailsDto emailDetailsDto) throws MailException {
 
     SimpleMailMessage message = new SimpleMailMessage();
+    message.setFrom(sender);
+    message.setTo(emailDetailsDto.getRecipient());
+    message.setText(emailDetailsDto.getBody());
+    message.setSubject(emailDetailsDto.getSubject());
 
-    try {
-      message.setFrom(sender);
-      message.setTo(emailDetailsDto.getRecipient());
-      message.setText(emailDetailsDto.getBody());
-      message.setSubject(emailDetailsDto.getSubject());
-
-      mailSender.send(message);
-      log.info("Email sent to: " + emailDetailsDto.getRecipient());
-
-      return "Mail sent successfully!";
-
-    } catch (Exception e) {
-      log.error("Error sending email: ", e);
-      return "Mail not sent!";
-    }
+    mailSender.send(message);
   }
-
-  @Override
-  public String sendEmailWithAttachment(EmailDetailsDto emailDetailsDto) {
-    return null;
-  }
-
 }
