@@ -9,8 +9,7 @@ import java.time.LocalDate;
 
 /**
  * DTO to represent a badge achieved by the user.
- * The DTO only contains the fields of interest to display the badge
- * at the front-end.
+ * The DTO only contains the fields of interest to display the badge at the front-end.
  *
  * @author Hanne-Sofie Søreide
  */

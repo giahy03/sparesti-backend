@@ -14,7 +14,7 @@ import java.time.LocalDate;
  * @author Hanne-Sofie Søreide
  */
 @Entity
-@Table(name = "badges")  // lagres kanskje heller som en userstat tabell?
+@Table(name = "badges")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,7 +25,7 @@ public class Badge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "The unique identifier for the badge.")
     @Column(name = "badge_id")
-    private Long badgeId;
+    private Long id;
 
     @ManyToOne
     @Schema(description = "The user to whom the badge belongs.")

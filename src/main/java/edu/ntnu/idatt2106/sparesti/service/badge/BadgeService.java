@@ -38,7 +38,7 @@ public class BadgeService {
     }
 
     /**
-     * Retrieve a list containing the ID number of all the goals belonging to the authenticated user.
+     * Retrieve a list containing preview DTOs of all the badges belonging to the authenticated user.
      *
      * @param principal The authenticated user
      * @return List of DTOs representing the badges achieved by the user
@@ -83,7 +83,7 @@ public class BadgeService {
         Badge savedBadge = badgeRepository.save(createdBadge);
 
         return BadgeIdDto.builder()
-                .id(savedBadge.getBadgeId())
+                .id(savedBadge.getId())
                 .build();
     }
 

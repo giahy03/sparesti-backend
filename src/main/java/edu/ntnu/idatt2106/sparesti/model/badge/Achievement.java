@@ -33,7 +33,7 @@ public class Achievement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "The unique identifier of the achievement.")
-    @Column(name = "id")
+    @Column(name = "achievement_id")
     private int id;
 
     @Schema(description = "The set of badges representing this achievement.")
@@ -46,7 +46,7 @@ public class Achievement {
     @NonNull
     private AchievementCategory category;
 
-/*    // Denne er lik lengden på listen over thresholds, men taper ikke mye på å lagre for hver achievement (er begrenset antall)
+/*    // lik lengden på listen over thresholds
     @Schema(description = "The number of levels the achievement is divided into.")
     @Column(name = "no_of_levels", nullable = false)
     private int noOfLevels;*/

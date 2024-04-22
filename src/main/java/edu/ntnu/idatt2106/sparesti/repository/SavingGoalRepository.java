@@ -15,10 +15,9 @@ import java.util.Optional;
  *
  * @author Hanne-Sofie Søreide
  */
-
 @Repository
 public interface SavingGoalRepository extends JpaRepository<SavingGoal, Long> {
-    Optional<SavingGoal> findById(long goalId);
+    Optional<SavingGoal> findById(long id);
 
     List<SavingGoal> findAllByUser_Username(String email, Pageable pageable);
 

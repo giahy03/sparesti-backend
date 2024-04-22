@@ -20,7 +20,7 @@ public class BadgeMapper {
 
     public BadgePreviewDto mapToBadgePreviewDto(Badge badge) {
         return BadgePreviewDto.builder()
-                .badgeId(badge.getBadgeId())
+                .badgeId(badge.getId())
                 .achievement(badge.getAchievement().getCategory())
                 .threshold(badge.getLevel())
                 .level(badge.getLevel())
