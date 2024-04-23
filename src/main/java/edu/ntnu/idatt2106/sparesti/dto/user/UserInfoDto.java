@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.dto.user;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@Builder
 public class UserInfoDto {
   private double income;
   private int livingStatus;

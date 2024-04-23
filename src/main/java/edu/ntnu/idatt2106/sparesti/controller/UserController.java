@@ -82,7 +82,7 @@ public class UserController {
                                                  Principal principal) {
     String email = principal.getName();
     log.info("Changing first name for user with email {}.", email);
-    userService.editFistName(firstNameChangeDto, email);
+    userService.editFirstName(firstNameChangeDto, email);
     log.info("First name for {} successfully updated.", email);
     return new ResponseEntity<>(HttpStatus.OK);
   }

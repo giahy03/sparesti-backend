@@ -5,10 +5,13 @@ import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.SavingChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.LoginRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.RegistrationDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -20,10 +23,28 @@ public class ChallengeUtility {
             .email("example@guide")
             .firstName("Example")
             .role(Role.USER)
+            .userInfo(createUserInfoA())
             .lastName("Guide")
             .password("password")
             .build();
   }
+
+  public static UserInfoDto createUserInfoDtoA() {
+    return UserInfoDto.builder()
+            .income(1000)
+            .livingStatus(1)
+            .build();
+  }
+
+
+  public static UserInfo createUserInfoA() {
+    return UserInfo.builder()
+            .id(1L)
+            .income(1000)
+            .livingStatus(SsbLivingStatus.fromInteger(1))
+            .build();
+  }
+
 
   public static User createUserB() {
     return User.builder()

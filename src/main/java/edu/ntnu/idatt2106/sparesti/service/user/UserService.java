@@ -65,7 +65,7 @@ public class UserService {
    * @param firstNameChangeDto The DTO containing new first name.
    * @param email The email of the user.
    */
-  public void editFistName(@NonNull FirstNameChangeDto firstNameChangeDto, @NonNull String email) {
+  public void editFirstName(@NonNull FirstNameChangeDto firstNameChangeDto, @NonNull String email) {
     User user = findUser(email);
 
     UserValidator.validateFirstName(firstNameChangeDto.getNewFirstName());
