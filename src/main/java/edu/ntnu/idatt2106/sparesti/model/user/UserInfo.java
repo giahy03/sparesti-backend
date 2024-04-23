@@ -43,7 +43,7 @@ public class UserInfo {
   @Setter(AccessLevel.NONE)
   private Long id;
 
-  @Schema(description = "The user's income.")
+  @Schema(description = "The user's monthly income after taxes")
   @Column(name = "income")
   private double income;
 

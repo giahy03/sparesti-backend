@@ -16,24 +16,25 @@ import org.apache.pdfbox.text.PDFTextStripper;
  */
 @Slf4j
 public abstract class BankStatementReader {
-    public abstract BankStatement readStatement(Path fileLocation);
+  public abstract BankStatement readStatement(File file);
 
-    /**
-     * Just for testing purposes. Should not be used in production.
-     * @param fileLocation The location of the file to read.
-     */
-    public void logStatementFully(Path fileLocation) {
-        try (PDDocument document = Loader.loadPDF(new File(fileLocation.toString()))) {
-            log.info("Reading SpareBank1 statement from file:" + fileLocation.toString());
-            List<Transaction> transactions = new ArrayList<>();
+  /**
+   * Just for testing purposes. Should not be used in production.
+   *
+   * @param fileLocation The location of the file to read.
+   */
+  public void logStatementFully(Path fileLocation) {
+    try (PDDocument document = Loader.loadPDF(new File(fileLocation.toString()))) {
+      log.info("Reading SpareBank1 statement from file:" + fileLocation.toString());
+      List<Transaction> transactions = new ArrayList<>();
 
-            String text = new PDFTextStripper().getText(document);
-            String[] splitText = text.split("\n");
-            for (int i = 0; i < splitText.length; i++) {
-                log.info("i: " + i + ", " + splitText[i]);
-            }
-        } catch (Exception e) {
-            log.error("Error reading SpareBank1 statement from file:" + fileLocation.toString(), e);
-        }
+      String text = new PDFTextStripper().getText(document);
+      String[] splitText = text.split("\n");
+      for (int i = 0; i < splitText.length; i++) {
+        log.info("i: " + i + ", " + splitText[i]);
+      }
+    } catch (Exception e) {
+      log.error("Error reading SpareBank1 statement from file:" + fileLocation.toString(), e);
     }
+  }
 }

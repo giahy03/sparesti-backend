@@ -1,13 +1,16 @@
 package edu.ntnu.idatt2106.sparesti.filehandling;
 
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
-import java.nio.file.Path;
+import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Reader for HandelsBanken bank pdf statements.
+ */
 @Slf4j
 public class HandelsBankenReader extends BankStatementReader {
   @Override
-  public BankStatement readStatement(Path fileLocation) {
+  public BankStatement readStatement(File fileLocation) {
     throw new IllegalArgumentException("Method not implemented yet");
   }
 }
