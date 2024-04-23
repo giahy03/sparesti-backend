@@ -14,6 +14,7 @@ import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserInfoRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
 import edu.ntnu.idatt2106.sparesti.validation.validators.UserValidator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,9 @@ public class UserService {
 
   //Password encoder to hash passwords in a database.
   private final PasswordEncoder passwordEncoder;
+
+  //Provides services related to email verification.
+  private final EmailVerificationService emailVerificationService;
 
   /**
    * The method edits the password of the user.
@@ -155,6 +159,21 @@ public class UserService {
     userInfo.setUser(user);
 
     userInfoRepository.save(userInfo);
+  }
+
+  /**
+   * The method deletes a user by email.
+   *
+   * @param email The email of the user to be deleted.
+   * @param verificationCode The verification code used to authenticate the deletion request.
+   */
+  public void deleteUserByEmail(@NonNull String email, @NonNull String verificationCode) {
+
+    emailVerificationService.verifyEmailCode(email, verificationCode);
+
+    User user = findUser(email);
+
+    userRepository.delete(user);
   }
 
   /**
