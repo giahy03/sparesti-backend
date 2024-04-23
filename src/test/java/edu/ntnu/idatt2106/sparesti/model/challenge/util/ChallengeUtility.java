@@ -6,6 +6,7 @@ import edu.ntnu.idatt2106.sparesti.dto.challenge.SavingChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.LoginRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.RegistrationDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
+import edu.ntnu.idatt2106.sparesti.model.EmailCode;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
@@ -14,7 +15,8 @@ import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 public class ChallengeUtility {
 
@@ -133,4 +135,13 @@ public class ChallengeUtility {
             .password("password")
             .build();
   }
+
+  public static EmailCode createEmailCodeA() {
+    return EmailCode.builder()
+            .email("example@guide")
+            .verificationCode("123456")
+            .expiryTimestamp(LocalDateTime.of(2021, 12, 31, 23, 59, 59))
+            .build();
+  }
+
 }
