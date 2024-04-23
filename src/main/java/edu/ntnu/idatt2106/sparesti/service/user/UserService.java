@@ -158,7 +158,7 @@ public class UserService {
    * @return The user with the given email.
    * @throws UserNotFoundException If the user with the given email is not found.
    */
-  private User findUser(@NonNull String email) throws UserNotFoundException {
+  public User findUser(@NonNull String email) throws UserNotFoundException {
     return userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
             new UserNotFoundException("User with email " + email + " not found."));
   }
