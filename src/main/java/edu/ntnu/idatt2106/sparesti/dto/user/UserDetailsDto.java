@@ -23,5 +23,5 @@ public class UserDetailsDto {
   private double income;
 
   @NonNull
-  private String livingStatus;;
+  private String livingStatus;
 }
