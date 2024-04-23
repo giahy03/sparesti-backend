@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.service.email;
 
+import edu.ntnu.idatt2106.sparesti.dto.email.EmailCodeExpirationDto;
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
 import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
 import edu.ntnu.idatt2106.sparesti.exception.email.VerificationCodeExpiredException;
@@ -61,7 +62,7 @@ public class EmailVerificationService {
    * @param code  the verification code.
    * @return the email dto which is to be sent.
    */
-  public EmailDetailsDto buildEmailDto(String email, String code) {
+  private EmailDetailsDto buildEmailDto(String email, String code) {
     return EmailDetailsDto.builder()
         .recipient(email)
         .subject("Verification code")
@@ -76,7 +77,7 @@ public class EmailVerificationService {
    * @param code  the verification code.
    * @return the email code dto, which is to be saved.
    */
-  public EmailCode buildEmailCode(String email, String code) {
+  private EmailCode buildEmailCode(String email, String code) {
     return EmailCode.builder()
         .email(email)
         .verificationCode(code)
@@ -88,8 +89,9 @@ public class EmailVerificationService {
    * Sends the verification token to the given email.
    *
    * @param email the email to send the verification token to.
+   * @return A DTO containing the expiration time for the email code.
    */
-  public void sendCodeToEmail(String email) {
+  public EmailCodeExpirationDto sendCodeToEmail(String email) {
     String token = generateVerificationToken();
     EmailDetailsDto emailDetailsDto = buildEmailDto(email, token);
     EmailCode emailCode = buildEmailCode(email, token);
@@ -99,6 +101,8 @@ public class EmailVerificationService {
 
     emailCodeRepository.save(emailCode);
     emailService.sendEmail(emailDetailsDto);
+
+    return new EmailCodeExpirationDto(emailCode.getExpiryTimestamp());
   }
 
   /**
