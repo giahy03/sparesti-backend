@@ -67,18 +67,18 @@ public class BadgeService {
     /**
      * Create a badge and store it in the database.
      *
-     * @param createBadgeDto DTO containing the information needed to create a badge
+     * @param badgeCreateDto DTO containing the information needed to create a badge
      * @param principal The authenticated user
      * @return The response DTO containing the ID of the created badge
      */
-    public BadgeIdDto createBadge(BadgeCreateDto createBadgeDto,
+    public BadgeIdDto createBadge(BadgeCreateDto badgeCreateDto,
                                   Principal principal) {
         String email = principal.getName();
 
         User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
                 new UserNotFoundException("User with email " + email + " not found"));
 
-        Badge createdBadge = badgeMapper.mapToBadge(createBadgeDto, user);
+        Badge createdBadge = badgeMapper.mapToBadge(badgeCreateDto, user);
 
         Badge savedBadge = badgeRepository.save(createdBadge);
 

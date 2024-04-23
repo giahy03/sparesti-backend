@@ -100,7 +100,7 @@ public class BadgeUtility {
         return BadgeCreateDto.builder()
                 .achievement(createAchievementA())
                 .threshold(200)
-                .achievementDate(LocalDate.of(2024, 4, 10))
+                .achievementDate(LocalDate.of(2024, 4, 3))
                 .level(1)
                 .build();
     }
