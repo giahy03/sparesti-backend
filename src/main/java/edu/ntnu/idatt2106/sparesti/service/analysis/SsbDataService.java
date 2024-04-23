@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106.sparesti.dto.ssb.response.SsbConsumptionApiResponseDto
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbIncomeQuartile;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
+import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.http.HttpEntity;
@@ -24,18 +25,15 @@ public class SsbDataService {
   /**
    * Returns the expected usage of the given demography.
    *
-   * @param monthlyIncomeAfterTaxes the monthly income after taxes
-   * @param livingStatus            the living status
-   * @param incomeQuartile          the income quartile
+   * @param userInfo the user information
    * @return the expected usage of the given demography
    */
-  public HashMap<SsbPurchaseCategory, Double> getExpectedUsage(double monthlyIncomeAfterTaxes,
-                                                               SsbLivingStatus livingStatus,
-                                                               SsbIncomeQuartile incomeQuartile
+  public HashMap<SsbPurchaseCategory, Double> getExpectedUsage(UserInfo userInfo
   ) {
 
     HashMap<SsbPurchaseCategory, Double> expectedUsage = new HashMap<>();
-    List<Double> data = retrieveDataFromSsbApi(livingStatus, incomeQuartile);
+    List<Double> data = retrieveDataFromSsbApi(userInfo.getLivingStatus(),
+        SsbIncomeQuartile.from(userInfo.getIncome()));
 
     List<SsbPurchaseCategory> categories = List.of(SsbPurchaseCategory.values());
 
@@ -44,7 +42,7 @@ public class SsbDataService {
     }
 
     for (int i = 0; i < categories.size(); i++) {
-      expectedUsage.put(categories.get(i), (data.get(i) * monthlyIncomeAfterTaxes) / 100);
+      expectedUsage.put(categories.get(i), (data.get(i) * userInfo.getIncome()) / 100);
     }
 
     return expectedUsage;

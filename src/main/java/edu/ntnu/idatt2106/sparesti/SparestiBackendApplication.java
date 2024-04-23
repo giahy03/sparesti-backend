@@ -1,9 +1,12 @@
 package edu.ntnu.idatt2106.sparesti;
 
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
+
+
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,32 +18,32 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 public class SparestiBackendApplication {
 
-	@Autowired
-	UserRepository userRepository;
-
-
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(SparestiBackendApplication.class, args);
 	}
 
 	@Bean
-	CommandLineRunner runner() {
+	CommandLineRunner runner(UserRepository userRepository) {
 		return args -> {
 			System.out.println("Creating default user");
 
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 			User user = User.builder()
-							.email("admin@example.com")
-							.firstName("Admin")
-							.lastName("Admin")
-							.password(passwordEncoder.encode("password"))
-							.role(Role.USER)
-							.build();
+					.email("admin@example.com")
+					.firstName("Admin")
+					.lastName("Admin")
+					.password(passwordEncoder.encode("password"))
+					.role(Role.USER)
+					.build();
+			user.setUserInfo(UserInfo.builder()
+					.livingStatus(SsbLivingStatus.LIVING_ALONE)
+					.income(10000)
+					.user(user)
+					.build());
 
 			userRepository.save(user);
+
 		};
 
 

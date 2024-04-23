@@ -7,11 +7,11 @@ import static org.mockito.Mockito.when;
 
 import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
-import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbIncomeQuartile;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
+import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import java.time.MonthDay;
 import java.time.YearMonth;
 import java.util.HashMap;
@@ -51,8 +51,11 @@ public class BankStatementAnalysisServiceTest {
     BankStatement bankStatement =
         new BankStatement("11112233333", transactions, YearMonth.now());
 
-    when(ssbDataService.getExpectedUsage(0.0, SsbLivingStatus.LIVING_ALONE,
-        SsbIncomeQuartile.QUARTILE_1)).thenReturn(testExpectedUsage);
+    UserInfo userInfo = UserInfo.builder()
+        .income(0.0)
+        .livingStatus(SsbLivingStatus.LIVING_ALONE)
+        .build();
+    when(ssbDataService.getExpectedUsage(userInfo)).thenReturn(testExpectedUsage);
 
     doAnswer(invocation -> {
       List<Transaction> transactions1 = invocation.getArgument(0);
@@ -65,8 +68,7 @@ public class BankStatementAnalysisServiceTest {
     //act
 
     BankStatementAnalysis bankStatementAnalysis =
-        bankStatementAnalysisService.analyze(bankStatement, 0.0, SsbLivingStatus.LIVING_ALONE,
-            SsbIncomeQuartile.QUARTILE_1);
+        bankStatementAnalysisService.analyze(bankStatement, userInfo);
 
     //assert
 

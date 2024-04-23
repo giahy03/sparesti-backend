@@ -65,7 +65,7 @@ public class UserService {
    * @param firstNameChangeDto The DTO containing new first name.
    * @param email The email of the user.
    */
-  public void editFistName(@NonNull FirstNameChangeDto firstNameChangeDto, @NonNull String email) {
+  public void editFirstName(@NonNull FirstNameChangeDto firstNameChangeDto, @NonNull String email) {
     User user = findUser(email);
 
     UserValidator.validateFirstName(firstNameChangeDto.getNewFirstName());
@@ -132,7 +132,13 @@ public class UserService {
    */
   public UserDetailsDto getUserDetails(@NonNull String email) {
     User user = findUser(email);
-    return new UserDetailsDto(user.getFirstName(), user.getLastName());
+    UserInfo userInfo = user.getUserInfo();
+    return UserDetailsDto.builder()
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
+        .income(userInfo.getIncome())
+        .livingStatus(userInfo.getLivingStatus().getStatus())
+        .build();
   }
 
   /**

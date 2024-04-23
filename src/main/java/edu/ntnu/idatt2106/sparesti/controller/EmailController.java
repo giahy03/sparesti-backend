@@ -1,10 +1,13 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
+import edu.ntnu.idatt2106.sparesti.dto.email.EmailCodeExpirationDto;
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailVerificationDto;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailServiceImpl;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +46,8 @@ public class EmailController {
    */
   @Operation(summary = "Send email")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Email successfully sent."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.")
+      @ApiResponse(responseCode = "200", description = "Email successfully sent."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
   @PostMapping()
   public ResponseEntity<Void> sendEmail(@RequestBody EmailDetailsDto emailDetailsDto) {
@@ -62,15 +65,18 @@ public class EmailController {
    */
   @Operation(summary = "Verify email verification code")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Email successfully verified."),
-          @ApiResponse(responseCode = "400", description = "Invalid verification code."),
-          @ApiResponse(responseCode = "404", description = "Email not found."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.")
+      @ApiResponse(responseCode = "200", description = "Email successfully verified."),
+      @ApiResponse(responseCode = "400", description = "Invalid verification code."),
+      @ApiResponse(responseCode = "404", description = "Email not found."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
   @PostMapping("/verification/verify")
-  public ResponseEntity<Void> verifyEmailCode(@RequestBody EmailVerificationDto emailVerificationDto) {
+  public ResponseEntity<Void> verifyEmailCode(
+      @RequestBody EmailVerificationDto emailVerificationDto) {
+
     log.info("Verifying email {}.", emailVerificationDto.getEmail());
-    emailVerificationService.verifyEmailCode(emailVerificationDto.getEmail(), emailVerificationDto.getVerificationCode());
+    emailVerificationService.verifyEmailCode(emailVerificationDto.getEmail(),
+        emailVerificationDto.getVerificationCode());
     log.info("Email {} verified.", emailVerificationDto.getEmail());
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -83,15 +89,17 @@ public class EmailController {
    */
   @Operation(summary = "Send verification email")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Verification email successfully sent."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.")
+      @ApiResponse(responseCode = "200", description = "Verification email successfully sent.",
+          content = { @Content(mediaType = "application/json",
+              schema = @Schema(implementation = EmailCodeExpirationDto.class))}),
+      @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
   @GetMapping("/verification/code")
-  public ResponseEntity<Void> sendEmailCode(@RequestParam String email) {
+  public ResponseEntity<EmailCodeExpirationDto> sendEmailCode(@RequestParam String email) {
     log.info("Sending verification email to: {}", email);
-    emailVerificationService.sendCodeToEmail(email);
+    EmailCodeExpirationDto emailCodeExpirationDto = emailVerificationService.sendCodeToEmail(email);
     log.info("Verification email sent to: {}", email);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return new ResponseEntity<>(emailCodeExpirationDto, HttpStatus.OK);
   }
 
   /**
@@ -102,9 +110,9 @@ public class EmailController {
    */
   @Operation(summary = "Verify email existence")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Email does not exist."),
-          @ApiResponse(responseCode = "409", description = "Email already exists."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.")
+      @ApiResponse(responseCode = "200", description = "Email does not exist."),
+      @ApiResponse(responseCode = "409", description = "Email already exists."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
   @GetMapping("/verify-existence")
   public ResponseEntity<Void> verifyExistence(@RequestParam String email) {

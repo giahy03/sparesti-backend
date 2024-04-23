@@ -2,10 +2,10 @@ package edu.ntnu.idatt2106.sparesti.service.analysis;
 
 import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
-import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbIncomeQuartile;
-import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
+import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
+import edu.ntnu.idatt2106.sparesti.repository.BankStatementRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,26 +22,22 @@ import org.springframework.stereotype.Service;
 public class BankStatementAnalysisService {
   @NonNull SsbDataService ssbDataService;
   @NonNull TransactionService transactionService;
+  private final BankStatementRepository bankStatementRepository;
 
   /**
    * Analyzes a bank statement and compares it to the expected usage of the given demography.
    *
-   * @param bankStatement           The bank statement to analyze.
-   * @param monthlyIncomeAfterTaxes The monthly income after taxes.
-   * @param livingStatus            The living status.
-   * @param incomeQuartile          The income quartile.
+   * @param bankStatement The bank statement to analyze.
+   * @param userInfo      The user information to compare the bank statement to.
    * @return The analysis of the bank statement.
    */
-  public BankStatementAnalysis analyze(BankStatement bankStatement, double monthlyIncomeAfterTaxes,
-                                       @NonNull SsbLivingStatus livingStatus,
-                                       @NonNull SsbIncomeQuartile incomeQuartile) {
-
+  public BankStatementAnalysis analyze(BankStatement bankStatement, UserInfo userInfo) {
 
 
     categorizeTransactions(bankStatement);
 
     HashMap<SsbPurchaseCategory, Double> expectedUsage =
-        ssbDataService.getExpectedUsage(monthlyIncomeAfterTaxes, livingStatus, incomeQuartile);
+        ssbDataService.getExpectedUsage(userInfo);
 
     HashMap<SsbPurchaseCategory, Double> actualUsage = getActualUsage(bankStatement);
 
@@ -53,7 +49,16 @@ public class BankStatementAnalysisService {
       analysisItems.add(analysisItem);
     });
 
-    return new BankStatementAnalysis(analysisItems);
+    BankStatementAnalysis bankStatementAnalysis = new BankStatementAnalysis(analysisItems);
+
+    bankStatementAnalysis.getAnalysisItems().forEach(
+        analysisItem -> {
+          analysisItem.setBankStatementAnalysis(bankStatementAnalysis);
+
+        });
+
+
+    return bankStatementAnalysis;
   }
 
   /**
