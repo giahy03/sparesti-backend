@@ -12,7 +12,7 @@ import edu.ntnu.idatt2106.sparesti.mapper.SavingChallengeMapper;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
-import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -190,10 +190,16 @@ public class ChallengeService {
     if (challengeToUpdate instanceof SavingChallenge savingChallenge) {
       savingChallenge.setLives(challenge.getLives());
       savingChallenge.setCurrentTile(challenge.getCurrentTiles());
+      savingChallenge.setCurrentAmount(challenge.getCurrentAmount());
       challengesRepository.save(savingChallenge);
-    } else {
-      throw new ChallengeNotFoundException("Challenge with id " + challengeId + " not found");
     }
+
+    else {
+    challengeToUpdate.setLives(challenge.getLives());
+    challengeToUpdate.setCurrentTile(challenge.getCurrentTiles());
+    challengesRepository.save(challengeToUpdate);
+    }
+
   }
 
 }

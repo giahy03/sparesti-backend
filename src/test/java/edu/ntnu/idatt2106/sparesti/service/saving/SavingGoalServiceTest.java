@@ -8,7 +8,7 @@ import edu.ntnu.idatt2106.sparesti.mapper.SavingGoalMapper;
 import edu.ntnu.idatt2106.sparesti.model.saving.util.SavingGoalUtility;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
-import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SavingGoalRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

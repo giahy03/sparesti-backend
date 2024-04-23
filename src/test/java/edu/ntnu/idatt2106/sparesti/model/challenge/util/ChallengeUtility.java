@@ -113,11 +113,13 @@ public class ChallengeUtility {
     return ChallengeUpdateRequestDto.builder()
             .currentTiles(1)
             .lives(2)
+            .currentAmount(20)
             .build();
   }
 
   public static RegistrationDto createRegistrationDtoA() {
     return RegistrationDto.builder()
+            .emailVerificationCode("123456")
             .email("example@guide.com")
             .firstName("Example")
             .lastName("Guide")

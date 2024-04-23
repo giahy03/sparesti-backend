@@ -3,11 +3,12 @@ package edu.ntnu.idatt2106.sparesti.service.auth;
 import edu.ntnu.idatt2106.sparesti.dto.user.AuthenticationDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.LoginRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.RegistrationDto;
-import edu.ntnu.idatt2106.sparesti.exception.user.EmailAlreadyExistsException;
+import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
-import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
 import edu.ntnu.idatt2106.sparesti.validation.validators.UserValidator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,9 @@ public class AuthService {
   //Password encoder to hash passwords in a database.
   private final PasswordEncoder passwordEncoder;
 
+  //Provides services related to email verification.
+  private final EmailVerificationService emailVerificationService;
+
   /**
    * Registers a new user based on the provided registration information from the DTO.
    *
@@ -62,6 +66,9 @@ public class AuthService {
     if (userRepository.findUserByEmailIgnoreCase(registrationDto.getEmail()).isPresent()) {
       throw new EmailAlreadyExistsException();
     }
+
+    emailVerificationService.verifyEmailCode(registrationDto.getEmail(),
+            registrationDto.getEmailVerificationCode());
 
     UserValidator.validatePassword(registrationDto.getPassword());
     UserValidator.validateEmail(registrationDto.getEmail());

@@ -18,6 +18,9 @@ public class RegistrationDto {
   private String password;
 
   @NonNull
+  private String emailVerificationCode;
+
+  @NonNull
   private String email;
 
   @NonNull
