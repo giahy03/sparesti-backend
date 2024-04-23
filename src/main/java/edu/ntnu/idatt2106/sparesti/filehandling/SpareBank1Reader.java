@@ -23,23 +23,29 @@ import org.springframework.data.util.Pair;
 @Slf4j
 public class SpareBank1Reader extends BankStatementReader {
 
+  BankStatement readStatementFromPath(Path fileLocation) {
+    log.info("Reading SpareBank1 statement from file:" + fileLocation.toString());
+
+    return readStatement(fileLocation.toFile());
+
+  }
+
   /**
    * Reads a bank statement from SpareBank1. And creates a {@link BankStatement} object.
    *
-   * @param fileLocation The location of the file to read.
+   * @param file The file to read.
    * @return The parsed bank statement.
    */
   @Override
-  public BankStatement readStatement(Path fileLocation) {
+  public BankStatement readStatement(File file) {
 
     try {
-      log.info("Reading SpareBank1 statement from file:" + fileLocation.toString());
 
       List<Transaction> transactions = new ArrayList<>();
       String accountNumber;
       YearMonth yearMonth;
 
-      PDDocument document = Loader.loadPDF(new File(fileLocation.toString()));
+      PDDocument document = Loader.loadPDF(file);
       String text = new PDFTextStripper().getText(document);
       String[] splitText = text.split("\n");
 
@@ -47,15 +53,13 @@ public class SpareBank1Reader extends BankStatementReader {
       int lineIndex = 0;
       Pair<Optional<String>, Integer> accountAndDateLine =
           skipUntilFind("kontoutskrift", splitText, lineIndex);
-      String[] accountAndDateLineSplit = accountAndDateLine.getFirst()
-          .orElseThrow()
-          .split(" ");
+      String[] accountAndDateLineSplit = accountAndDateLine.getFirst().orElseThrow().split(" ");
       accountNumber = accountAndDateLineSplit[5];
 
       String statementYearMonthString = accountAndDateLineSplit[8];
       String[] yearMonthSplit = statementYearMonthString.split("\\.");
-      yearMonth = YearMonth.of(Integer.parseInt(yearMonthSplit[2]),
-          Integer.parseInt(yearMonthSplit[1]));
+      yearMonth =
+          YearMonth.of(Integer.parseInt(yearMonthSplit[2]), Integer.parseInt(yearMonthSplit[1]));
 
 
       lineIndex = accountAndDateLine.getSecond();
@@ -84,10 +88,10 @@ public class SpareBank1Reader extends BankStatementReader {
         }
         transactions.add(transaction);
       }
-
+      log.info("finalised reading SpareBank1 statement from file:" + file.getName());
       return new BankStatement(accountNumber, transactions, yearMonth);
     } catch (Exception e) {
-      log.error("Error reading SpareBank1 statement from file:" + fileLocation.toString(), e);
+      log.error("Error reading SpareBank1 statement from file:" + file.toString(), e);
       return null;
     }
   }
@@ -108,9 +112,8 @@ public class SpareBank1Reader extends BankStatementReader {
     MonthDay monthDay = MonthDay.parse(formatedDateString, formatter);
 
     String description = String.join(" ", Arrays.copyOfRange(splitLine, 0, splitLine.length - 2));
-    double amount = Double.parseDouble(splitLine[splitLine.length - 2]
-        .replaceAll("\\.", "")
-        .replaceAll(",", "."));
+    double amount = Double.parseDouble(
+        splitLine[splitLine.length - 2].replaceAll("\\.", "").replaceAll(",", "."));
 
     return new Transaction(monthDay, description, amount, incoming);
   }
@@ -122,7 +125,7 @@ public class SpareBank1Reader extends BankStatementReader {
    * @param splitText     The text to search through.
    * @param lineIndex     The current index of the splitText.
    * @return A pair containing the found line and the index of the next line. If the line is not
-   *    found the first element of the pair will be empty.
+   *        found the first element of the pair will be empty.
    */
   public Pair<Optional<String>, Integer> skipUntilFind(String textToContain, String[] splitText,
                                                        int lineIndex) {
