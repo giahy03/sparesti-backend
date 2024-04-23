@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
+import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -52,7 +53,6 @@ public class User implements UserDetails {
   @Schema(description = "The unique identifier for the user")
   @Column(name = "user_id")
   @Setter(AccessLevel.NONE)
-  @Getter(AccessLevel.NONE)
   private Long userId;
 
   @Schema(description = "The user's email address.")
@@ -92,6 +92,10 @@ public class User implements UserDetails {
   @Schema(description = "The user's additional information.")
   @OneToOne(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
   private UserInfo userInfo;
+
+  @Schema(description = "The user's streak.")
+  @OneToOne(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Streak streak;
 
   /**
    * Retrieves the roles/authorities associated with this user.
