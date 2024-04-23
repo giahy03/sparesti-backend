@@ -58,15 +58,22 @@ public class AnalysisItem {
   private BankStatementAnalysis bankStatementAnalysis;
 
   @Override
-  public final boolean equals(Object object) {
+  public boolean equals(Object object) {
     if (this == object) {
       return true;
     }
-    if (object == null) {
+    if (object == null || getClass() != object.getClass()) {
       return false;
     }
     AnalysisItem that = (AnalysisItem) object;
-    return id != null && Objects.equals(id, that.id);
+    return Objects.equals(id, that.id) && purchaseCategory == that.purchaseCategory &&
+        Objects.equals(expectedValue, that.expectedValue) &&
+        Objects.equals(actualValue, that.actualValue);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, purchaseCategory, expectedValue, actualValue);
   }
 }
 
