@@ -1,8 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.mapper;
 
-import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.SavingChallengeDto;
-import edu.ntnu.idatt2106.sparesti.mapper.ChallengeMapper;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import org.mapstruct.Context;
@@ -22,7 +20,6 @@ import org.mapstruct.Mapping;
 public interface SavingChallengeMapper {
 
   @Mapping(target="user", expression="java( user )")
-  @Mapping(target = "isCompleted", ignore = true)
   SavingChallenge savingChallengeDtoToSavingChallenge(SavingChallengeDto challenge, @Context User user, @Context ChallengeMapper challengeMapperImpl);
 
   SavingChallengeDto savingChallengeDto(SavingChallenge savingChallenge, @Context ChallengeMapper challengeMapperImpl);

@@ -2,6 +2,7 @@ package edu.ntnu.idatt2106.sparesti.service.challenge;
 
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
+import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
@@ -19,6 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -107,6 +110,7 @@ class ChallengeServiceTest {
     ChallengeUpdateRequestDto challengeUpdateRequestDto = ChallengeUtility.createChallengeUpdateRequestDto();
 
     //Act
-    assertDoesNotThrow(() -> challengeService.updateChallenge(principal, 1L, challengeUpdateRequestDto));
+    challengeService.updateChallenge(principal, 1L, challengeUpdateRequestDto);
+    verify(challengeRepository).save(any(Challenge.class));
   }
 }

@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.dto.challenge;
 
 import lombok.Data;
+import lombok.NonNull;
 
 /**
  * Represents a preview of a challenge.
@@ -11,8 +12,15 @@ import lombok.Data;
  */
 @Data
 public class ChallengePreviewDto {
+
+  @NonNull
   private Long id;
+
+  @NonNull
   private String title;
+
   private int lives;
+
+  @NonNull
   private String difficulty;
 }
