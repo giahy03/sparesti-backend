@@ -17,7 +17,6 @@ import java.time.LocalDate;
 @Builder
 public class SavingGoalDto {
     private long id;
-    private User user;
     private String goalName;
     private GoalDifficulty difficulty;
     private LocalDate startDate;

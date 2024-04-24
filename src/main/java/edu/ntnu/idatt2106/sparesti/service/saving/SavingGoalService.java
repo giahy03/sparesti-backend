@@ -61,7 +61,7 @@ public class SavingGoalService {
      * Retrieve a list containing the ID number of all the goals belonging to the authenticated user.
      *
      * @param principal The authenticated user
-     * @return List of DTOs containing the id of each goal of the user
+     * @return List of DTOs containing the id and title of each goal of the user
      */
     public List<SavingGoalIdDto> getAllGoalIdsByEmail(Principal principal, Pageable pageable) {
 
