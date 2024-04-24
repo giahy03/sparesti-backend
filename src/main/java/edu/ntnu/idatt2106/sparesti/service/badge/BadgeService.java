@@ -5,6 +5,8 @@ import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
+import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
+import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
@@ -71,7 +73,7 @@ public class BadgeService {
      * @param principal The authenticated user
      * @return The response DTO containing the ID of the created badge
      */
-    public BadgeIdDto createBadge(BadgeCreateDto badgeCreateDto,
+    public BadgePreviewDto createBadge(BadgeCreateDto badgeCreateDto,
                                   Principal principal) {
         String email = principal.getName();
 
@@ -82,9 +84,16 @@ public class BadgeService {
 
         Badge savedBadge = badgeRepository.save(createdBadge);
 
-        return BadgeIdDto.builder()
-                .id(savedBadge.getId())
-                .build();
+        return badgeMapper.mapToBadgePreviewDto(savedBadge);
+    }
+
+
+    /**
+     * Return a DTO representing the achievement that the badge belongs to.
+     *
+     */
+    public Achievement getAchievementOfCategory(AchievementCategory achievementCategory, Principal principal) {
+        return achievementRepository.findByCategory(achievementCategory).orElseThrow();
     }
 
 }

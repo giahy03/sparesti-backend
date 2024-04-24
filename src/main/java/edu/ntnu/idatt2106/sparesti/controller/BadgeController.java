@@ -1,14 +1,18 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
+import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;
+import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
+import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
+import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
+import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
 import edu.ntnu.idatt2106.sparesti.service.badge.BadgeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -32,8 +36,9 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8082")
 public class BadgeController {
 
-    @NonNull
     private final BadgeService badgeService;
+    private final AchievementRepository achievementRepository;
+    private final BadgeMapper badgeMapper;
 
     /**
      * Get a badge of a given id.
@@ -52,13 +57,44 @@ public class BadgeController {
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
     @GetMapping("/badge")
-    public ResponseEntity<BadgePreviewDto> getGoalById(@RequestBody BadgeIdDto badgeIdDto) {
+    public ResponseEntity<BadgePreviewDto> getBadgeById(@RequestBody BadgeIdDto badgeIdDto) {
         log.info("Returning Badge: " + badgeIdDto.getId());
         BadgePreviewDto badgeDto = badgeService.getBadgeById(badgeIdDto);
         log.info("Returning Badge: " + badgeDto.getAchievement().toString().toLowerCase() + " - Level: " + badgeDto.getLevel());
         return new ResponseEntity<>(badgeDto, HttpStatus.OK);
     }
 
+
+    /**
+     * Get a badge of a given id.
+     *
+     * @param badgeCreateRequestDto The unique id of the saving goal
+     * @return ResponseEntity containing the retrieved badge, or an error message
+     */
+    @Operation(summary = "Create badge for user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The badge was found and returned",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = BadgePreviewDto.class))
+                    }),
+            @ApiResponse(responseCode = "400", description = "The badge was not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
+    })
+    @PostMapping("/badge")
+    public ResponseEntity<BadgePreviewDto> createBadge(@RequestBody BadgeCreateRequestDto badgeCreateRequestDto, Principal principal) {
+        log.info("Creating Badge of: " + badgeCreateRequestDto.getAchievement() + " achievement for user: " + principal.getName());
+
+        Achievement achievement = badgeService.getAchievementOfCategory(badgeCreateRequestDto.getAchievement(), principal);
+
+        BadgeCreateDto badgeCreateDto = badgeMapper.mapToBadgeCreateDto(badgeCreateRequestDto, achievement);
+
+        BadgePreviewDto badgeDto = badgeService.createBadge(badgeCreateDto, principal);
+
+        log.info("Saved Badge: " + badgeDto.getAchievement().toString() + " - Level: " + badgeDto.getLevel());
+
+        return new ResponseEntity<>(badgeDto, HttpStatus.OK);
+    }
 
 
     /**

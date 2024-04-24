@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @Builder
 public class BadgeCreateDto {
     private Achievement achievement;
-    private int threshold;
     private LocalDate achievementDate;
     private int level;
 }

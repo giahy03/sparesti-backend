@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.service.badge;
 
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;
+import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
@@ -105,14 +106,16 @@ public class BadgeServiceTest {
 
         // Arrange
         User user = BadgeUtility.createUserA();
-        BadgeCreateDto badgeToCreate = BadgeUtility.createBadgeCreateDto();
+        BadgeCreateDto badgeCreateDto = BadgeUtility.createBadgeCreateDto();
         when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(user));
-        when(badgeMapper.mapToBadge(badgeToCreate, user)).thenReturn(badge);
+        when(badgeMapper.mapToBadge(badgeCreateDto, user)).thenReturn(badge);
         when(badgeRepository.save(badge)).thenReturn(badge);
+        when(badgeMapper.mapToBadgePreviewDto(badge)).thenReturn(BadgeUtility.createBadgePreviewDto());
 
         // Act and assert
-        assertDoesNotThrow(() -> badgeService.createBadge(badgeToCreate, principal));
-        assertNotNull(badgeService.createBadge(badgeToCreate, principal));
+        assertDoesNotThrow(() -> badgeService.createBadge(badgeCreateDto, principal));
+        assertNotNull(badgeService.createBadge(badgeCreateDto, principal));
+
     }
 
 }
