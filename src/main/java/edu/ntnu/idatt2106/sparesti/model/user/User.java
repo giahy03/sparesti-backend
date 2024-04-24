@@ -2,6 +2,7 @@ package edu.ntnu.idatt2106.sparesti.model.user;
 
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
+import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
@@ -96,6 +97,10 @@ public class User implements UserDetails {
   @Schema(description = "The user's streak.")
   @OneToOne(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
   private Streak streak;
+
+  @Schema(description = "The user's bank statements.")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  private List<BankStatement> bankStatements;
 
   /**
    * Retrieves the roles/authorities associated with this user.

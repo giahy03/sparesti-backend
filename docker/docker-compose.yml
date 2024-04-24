@@ -1,0 +1,33 @@
+version: '3.3'
+
+services:
+
+  backend:
+    container_name: sparesti-backend
+    build:
+      context: .
+      dockerfile: "Dockerfile"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      spring.datasource.url: "jdbc:mysql://mysql:3307/sparesti"
+
+  mysql:
+    container_name: database
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'sparesti'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3307:3306'
+    expose:
+      - '3307'
+    volumes:
+      - my-db:/var/lib/mysql
+
+volumes:
+  my-db:
