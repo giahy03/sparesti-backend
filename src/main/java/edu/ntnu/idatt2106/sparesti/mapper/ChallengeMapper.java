@@ -22,4 +22,5 @@ public interface ChallengeMapper {
   ChallengePreviewDto challengeIntoChallengePreviewDto(Challenge challenge);
 
   ChallengeDto challengeIntoChallengeDto(Challenge challenge);
+
 }
