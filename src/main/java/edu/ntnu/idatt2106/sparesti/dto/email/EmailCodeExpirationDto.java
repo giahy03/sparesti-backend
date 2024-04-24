@@ -13,5 +13,5 @@ import lombok.NonNull;
 @Data
 public class EmailCodeExpirationDto {
   @NonNull
-  public LocalDateTime expirationTimestamp;
+  private LocalDateTime expirationTimestamp;
 }

@@ -18,11 +18,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -48,14 +50,13 @@ public class UserController {
    */
   @Operation(summary = "Change user password")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "User password successfully updated."),
-          @ApiResponse(responseCode = "400", description = "Invalid password from user."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.",
-                  content = @Content)
+      @ApiResponse(responseCode = "200", description = "User password successfully updated."),
+      @ApiResponse(responseCode = "400", description = "Invalid password from user."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
   })
   @PutMapping(path = "/password")
   public ResponseEntity<Void> changePassword(@RequestBody PasswordChangeDto passwordChangeDto,
-                                                 Principal principal) {
+                                             Principal principal) {
     String email = principal.getName();
     log.info("Changing password for user with email {}.", email);
     userService.editPassword(passwordChangeDto, email);
@@ -72,14 +73,13 @@ public class UserController {
    */
   @Operation(summary = "Change user's first name")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "User fist name successfully updated."),
-          @ApiResponse(responseCode = "400", description = "Invalid first name from user."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.",
-                  content = @Content)
+      @ApiResponse(responseCode = "200", description = "User fist name successfully updated."),
+      @ApiResponse(responseCode = "400", description = "Invalid first name from user."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
   })
   @PutMapping(path = "/first-name")
   public ResponseEntity<Void> changeFirstName(@RequestBody FirstNameChangeDto firstNameChangeDto,
-                                                 Principal principal) {
+                                              Principal principal) {
     String email = principal.getName();
     log.info("Changing first name for user with email {}.", email);
     userService.editFirstName(firstNameChangeDto, email);
@@ -96,14 +96,13 @@ public class UserController {
    */
   @Operation(summary = "Change user's last name")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "User last name successfully updated."),
-          @ApiResponse(responseCode = "400", description = "Invalid last name from user."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.",
-                  content = @Content)
+      @ApiResponse(responseCode = "200", description = "User last name successfully updated."),
+      @ApiResponse(responseCode = "400", description = "Invalid last name from user."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
   })
   @PutMapping(path = "/last-name")
   public ResponseEntity<Void> changeLastName(@RequestBody LastNameChangeDto lastNameChangeDto,
-                                                 Principal principal) {
+                                             Principal principal) {
     String email = principal.getName();
     log.info("Changing last name for user with email {}.", email);
     userService.editLastName(lastNameChangeDto, email);
@@ -120,13 +119,12 @@ public class UserController {
    */
   @Operation(summary = "Change user's income")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "User income successfully updated."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.",
-                  content = @Content)
+      @ApiResponse(responseCode = "200", description = "User income successfully updated."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
   })
   @PutMapping(path = "/income")
   public ResponseEntity<Void> changeIncome(@RequestBody IncomeChangeDto incomeChangeDto,
-                                             Principal principal) {
+                                           Principal principal) {
     String email = principal.getName();
     log.info("Changing income for user with email {}.", email);
     userService.editIncome(incomeChangeDto, email);
@@ -143,13 +141,12 @@ public class UserController {
    */
   @Operation(summary = "Change user's living status")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Living status successfully updated."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.",
-                  content = @Content)
+      @ApiResponse(responseCode = "200", description = "Living status successfully updated."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
   })
   @PutMapping(path = "/living-status")
   public ResponseEntity<Void> changeLivingStatus(@RequestBody
-                                                   LivingStatusChangeDto livingStatusChangeDto,
+                                                 LivingStatusChangeDto livingStatusChangeDto,
                                                  Principal principal) {
     String email = principal.getName();
     log.info("Changing living status for user with email {}.", email);
@@ -166,13 +163,13 @@ public class UserController {
    */
   @Operation(summary = "Retrieve user details")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200",
-                  description = "User information successfully retrieved.",
-                  content = {@Content(mediaType = "application/json",
-                          schema = @Schema(implementation = UserDetailsDto.class))}
-          ),
-          @ApiResponse(responseCode = "500", description = "Internal server error.",
-                  content = @Content)
+      @ApiResponse(responseCode = "200",
+          description = "User information successfully retrieved.",
+          content = {@Content(mediaType = "application/json",
+              schema = @Schema(implementation = UserDetailsDto.class))}
+      ),
+      @ApiResponse(responseCode = "500", description = "Internal server error.",
+          content = @Content)
   })
   @GetMapping(path = "/details")
   public ResponseEntity<UserDetailsDto> retrieveUserDetails(Principal principal) {
@@ -187,14 +184,14 @@ public class UserController {
    * REST-endpoint for adding additional user information of the currently logged-in user.
    *
    * @param userInfoDto The DTO containing the user information.
-   * @param principal The principal object representing the currently authenticated user.
+   * @param principal   The principal object representing the currently authenticated user.
    * @return A ResponseEntity with status OK if the operation is successful.
    */
   @Operation(summary = "Register additional user information.")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Information successfully registered."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.",
-                  content = @Content)
+      @ApiResponse(responseCode = "200", description = "Information successfully registered."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.",
+          content = @Content)
   })
   @PostMapping(path = "/info")
   public ResponseEntity<Void> registerUserInformation(@RequestBody UserInfoDto userInfoDto,
@@ -204,5 +201,25 @@ public class UserController {
     userService.addUserInfo(userInfoDto, email);
     log.info("User information for {} successfully registered.", email);
     return new ResponseEntity<>(HttpStatus.CREATED);
+  }
+
+  /**
+   * REST-endpoint for deleting the currently logged-in user.
+   *
+   * @param principal The principal object representing the currently authenticated user.
+   * @return A ResponseEntity with status OK if the operation is successful.
+   */
+  @Operation(summary = "Delete user account")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "User account successfully deleted."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
+  })
+  @DeleteMapping
+  public ResponseEntity<Void> deleteUser(@RequestParam String verificationCode, Principal principal) {
+    String email = principal.getName();
+    log.info("Attempting to delete user with email {}.", email);
+    userService.deleteUserByEmail(email, verificationCode);
+    log.info("User with email {} successfully deleted.", email);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }

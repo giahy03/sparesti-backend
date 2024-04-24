@@ -7,9 +7,9 @@ import edu.ntnu.idatt2106.sparesti.exception.email.VerificationCodeExpiredExcept
 import edu.ntnu.idatt2106.sparesti.model.EmailCode;
 import edu.ntnu.idatt2106.sparesti.repository.EmailCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -110,12 +110,12 @@ public class EmailVerificationService {
    *
    * @param email the email to verify.
    * @param code  the code to verify.
-   * @throws NoSuchElementException If the EmailCode entity is not found.
+   * @throws EntityNotFoundException If the EmailCode entity is not found.
    */
   public void verifyEmailCode(String email, String code) {
 
     EmailCode emailCode = emailCodeRepository.findByEmail(email)
-        .orElseThrow(() -> new NoSuchElementException("Email code not found."));
+        .orElseThrow(() -> new EntityNotFoundException("Email code not found."));
 
     if (!emailCode.getVerificationCode().equals(code)) {
       throw new IllegalArgumentException("Invalid verification code.");

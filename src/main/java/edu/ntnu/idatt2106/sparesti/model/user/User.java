@@ -87,11 +87,11 @@ public class User implements UserDetails {
   private Set<SavingGoal> goals;
 
   @Schema(description = "The user's badges.")
-  @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private Set<Badge> badges;
 
   @Schema(description = "The user's additional information.")
-  @OneToOne(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private UserInfo userInfo;
 
   @Schema(description = "The user's streak.")
