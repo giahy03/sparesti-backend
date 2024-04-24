@@ -156,6 +156,7 @@ public class UserService {
 
     UserInfo userInfo = UserInfoMapper.INSTANCE.toUserInfo(userInfoDto);
 
+    user.setUserInfo(userInfo);
     userInfo.setUser(user);
 
     userInfoRepository.save(userInfo);
