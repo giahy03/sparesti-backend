@@ -77,7 +77,6 @@ public class ChallengeUtility {
             .title("Challenge")
             .startDate(LocalDate.parse("2021-10-10"))
             .endDate(LocalDate.parse("2021-10-20"))
-            .isCompleted(false)
             .currentAmount(0)
             .totalAmount(100)
             .difficulty(Difficulty.EASY)
