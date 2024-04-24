@@ -77,14 +77,18 @@ public class BankStatementController {
       @PathVariable(name = "statementId") Long statementId,
       Principal principal
   ) {
+    log.info(
+        "Analyzing bank statement with id: " + statementId + " for user: " + principal.getName());
 
     BankStatement statement = bankStatementService.getBankStatement(statementId, principal);
 
     if (statement.getAnalysis() != null) {
+      log.info("Bank statement has already been analyzed, returning the analysis");
       return ResponseEntity.ok(
           AnalysisMapper.INSTANCE.bankStatementAnalysisIntoBankStatementAnalysisDto(
               statement.getAnalysis()));
     }
+    log.info("Bank statement has not been analyzed, analyzing now");
 
     User user = userService.findUser(principal.getName());
     UserInfo userInfo = user.getUserInfo();
