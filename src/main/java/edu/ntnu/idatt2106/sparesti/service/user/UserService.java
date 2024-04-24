@@ -12,7 +12,6 @@ import edu.ntnu.idatt2106.sparesti.mapper.UserInfoMapper;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
-import edu.ntnu.idatt2106.sparesti.repository.user.UserInfoRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
 import edu.ntnu.idatt2106.sparesti.validation.validators.UserValidator;
@@ -23,8 +22,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service class that encapsulates the logic for handling user-related operations.
- * It uses the {@link UserRepository} and {@link UserInfoRepository} to perform the
- * operations in the database.
+ * It uses the {@link UserRepository} to perform the operations in the database.
  *
  * @author Ramtin Samavat
  * @version  1.0
