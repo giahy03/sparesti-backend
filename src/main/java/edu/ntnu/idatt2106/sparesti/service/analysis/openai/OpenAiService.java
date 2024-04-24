@@ -5,14 +5,14 @@ import static java.lang.Thread.sleep;
 import edu.ntnu.idatt2106.sparesti.model.analysis.openai.OpenAiMessage;
 import edu.ntnu.idatt2106.sparesti.model.analysis.openai.OpenAiPollResponse;
 import edu.ntnu.idatt2106.sparesti.model.analysis.openai.OpenAiRunRequest;
-import edu.ntnu.idatt2106.sparesti.model.analysis.openai.OpenAiThreadResponse;
 import edu.ntnu.idatt2106.sparesti.model.analysis.openai.OpenAiRunRequestMessages;
+import edu.ntnu.idatt2106.sparesti.model.analysis.openai.OpenAiThreadResponse;
 import edu.ntnu.idatt2106.sparesti.model.analysis.openai.OpenAiThreadResponseList;
+import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.validation.constraints.NotBlank;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.github.cdimascio.dotenv.Dotenv;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -61,8 +61,10 @@ public class OpenAiService {
       log.error("Thread took too long to complete", e);
       throw new SocketTimeoutException("OpenAI api call took too long to complete");
     }
-    OpenAiThreadResponseList openAiThreadResponseList = getResponseMessages(threadResponse.getThreadId());
-    return openAiThreadResponseList.getData().stream().filter(thread -> !thread.getRole().equals("user"))
+    OpenAiThreadResponseList openAiThreadResponseList =
+        getResponseMessages(threadResponse.getThreadId());
+    return openAiThreadResponseList.getData().stream()
+        .filter(thread -> !thread.getRole().equals("user"))
         .toList().getFirst().getContent().getFirst().getText().getValue();
   }
 
@@ -155,9 +157,12 @@ public class OpenAiService {
    * @return the response from the OpenAI API
    * @throws RuntimeException if the request fails
    */
-  private OpenAiThreadResponse createThreadAndSendMessage(String message, String assistantId)
+  private OpenAiThreadResponse createThreadAndSendMessage(@NonNull @NotBlank String message,
+                                                          @NonNull @NotBlank String assistantId)
       throws RuntimeException {
-    log.info("Sending descriptions from OpenAI");
+
+
+    log.info("Sending message from OpenAI");
 
     final String formattedLocation = OPENAI_API_URL + "/threads/runs";
 
@@ -167,10 +172,14 @@ public class OpenAiService {
     OpenAiRunRequestMessages openAiRunRequestMessages = new OpenAiRunRequestMessages(messages);
     OpenAiRunRequest openAiRunRequest = new OpenAiRunRequest(assistantId, openAiRunRequestMessages);
 
-    HttpEntity<Object> requestEntity = new HttpEntity<>(openAiRunRequest, getHeaders());
+    HttpEntity<OpenAiRunRequest> requestEntity = new HttpEntity<>(openAiRunRequest, getHeaders());
 
+    log.info("Sending message to OpenAI" + requestEntity.getBody().toString());
+    log.info("Secret key" + secretKey);
     ResponseEntity<OpenAiThreadResponse> responseEntity =
-        restTemplate.exchange(formattedLocation, HttpMethod.POST, requestEntity,
+        restTemplate.exchange(formattedLocation,
+            HttpMethod.POST,
+            requestEntity,
             OpenAiThreadResponse.class);
 
     if (responseEntity.getStatusCode().is2xxSuccessful()) {
