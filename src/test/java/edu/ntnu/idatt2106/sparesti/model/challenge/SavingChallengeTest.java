@@ -43,7 +43,6 @@ class SavingChallengeTest {
     LocalDate expectedEndDate = LocalDate.parse("2021-10-20");
     int expectedTotalAmount = 100;
     int expectedCurrentAmount = 0;
-    boolean expectedIsComplete = false;
     Difficulty expectedDifficulty = Difficulty.EASY;
     int expectedLives = 3;
     int expectedCurrentTiles = 0;
@@ -54,7 +53,6 @@ class SavingChallengeTest {
     assertEquals(expectedTitle, challenge.getTitle());
     assertEquals(expectedStartDate, challenge.getStartDate());
     assertEquals(expectedEndDate, challenge.getEndDate());
-    assertEquals(expectedIsComplete, challenge.isCompleted());
     assertEquals(expectedTotalAmount, challenge.getTotalAmount());
     assertEquals(expectedCurrentAmount, challenge.getCurrentAmount());
     assertEquals(expectedDifficulty, challenge.getDifficulty());
@@ -72,7 +70,6 @@ class SavingChallengeTest {
     LocalDate expectedEndDate = LocalDate.parse("2023-12-12");
     int expectedTotalAmount = 40;
     int expectedCurrentAmount = 30;
-    boolean expectedIsComplete = true;
     Difficulty expectedDifficulty = Difficulty.EASY;
     int expectedLives = 2;
     int expectedCurrentTiles = 5;
@@ -84,7 +81,6 @@ class SavingChallengeTest {
     challenge.setEndDate(expectedEndDate);
     challenge.setTotalAmount(expectedTotalAmount);
     challenge.setCurrentAmount(expectedCurrentAmount);
-    challenge.setCompleted(expectedIsComplete);
     challenge.setDifficulty(expectedDifficulty);
     challenge.setLives(expectedLives);
     challenge.setCurrentTile(expectedCurrentTiles);
@@ -94,7 +90,6 @@ class SavingChallengeTest {
     assertEquals(expectedTitle, challenge.getTitle());
     assertEquals(expectedStartDate, challenge.getStartDate());
     assertEquals(expectedEndDate, challenge.getEndDate());
-    assertEquals(expectedIsComplete, challenge.isCompleted());
     assertEquals(expectedTotalAmount, challenge.getTotalAmount());
     assertEquals(expectedCurrentAmount, challenge.getCurrentAmount());
     assertEquals(expectedDifficulty, challenge.getDifficulty());
