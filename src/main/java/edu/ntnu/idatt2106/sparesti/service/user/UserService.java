@@ -16,6 +16,7 @@ import edu.ntnu.idatt2106.sparesti.repository.user.UserInfoRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
 import edu.ntnu.idatt2106.sparesti.validation.validators.UserValidator;
+import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -154,12 +155,13 @@ public class UserService {
   public void addUserInfo(@NonNull UserInfoDto userInfoDto, @NonNull String email) {
     User user = findUser(email);
 
-    UserInfo userInfo = UserInfoMapper.INSTANCE.toUserInfo(userInfoDto);
+    if (user.getUserInfo() == null) {
+      UserInfo userInfo = UserInfoMapper.INSTANCE.toUserInfo(userInfoDto);
+      userInfo.setUser(user);
+      user.setUserInfo(userInfo);
+    }
 
-    user.setUserInfo(userInfo);
-    userInfo.setUser(user);
-
-    userInfoRepository.save(userInfo);
+    userRepository.save(user);
   }
 
   /**
@@ -169,11 +171,8 @@ public class UserService {
    * @param verificationCode The verification code used to authenticate the deletion request.
    */
   public void deleteUserByEmail(@NonNull String email, @NonNull String verificationCode) {
-
     emailVerificationService.verifyEmailCode(email, verificationCode);
-
     User user = findUser(email);
-
     userRepository.delete(user);
   }
 
