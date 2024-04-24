@@ -132,7 +132,13 @@ public class UserService {
    */
   public UserDetailsDto getUserDetails(@NonNull String email) {
     User user = findUser(email);
-    return new UserDetailsDto(user.getFirstName(), user.getLastName());
+    UserInfo userInfo = user.getUserInfo();
+    return UserDetailsDto.builder()
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
+        .income(userInfo.getIncome())
+        .livingStatus(userInfo.getLivingStatus().getStatus())
+        .build();
   }
 
   /**
