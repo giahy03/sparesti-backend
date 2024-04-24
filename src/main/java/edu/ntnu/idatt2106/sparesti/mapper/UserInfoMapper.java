@@ -29,11 +29,11 @@ public interface UserInfoMapper {
    * @param userInfoDto UserInfoDto object to be converted.
    * @return UserInfo entity converted from UserInfoDto.
    */
-  @Mappings({ @Mapping(
-          target = "id", ignore = true), @Mapping(
-                  target = "income", source = "income"), @Mapping(
-                          target = "livingStatus", qualifiedByName = "mapLivingStatus"), @Mapping(
-                                  target = "user", ignore = true),
+  @Mappings({
+      @Mapping(target = "id", ignore = true),
+      @Mapping(target = "income", source = "income"),
+      @Mapping(target = "livingStatus", qualifiedByName = "mapLivingStatus"),
+      @Mapping(target = "user", ignore = true),
   })
   UserInfo toUserInfo(UserInfoDto userInfoDto);
 
