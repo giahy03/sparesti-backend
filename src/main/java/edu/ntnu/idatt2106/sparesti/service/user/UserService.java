@@ -16,7 +16,6 @@ import edu.ntnu.idatt2106.sparesti.repository.user.UserInfoRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
 import edu.ntnu.idatt2106.sparesti.validation.validators.UserValidator;
-import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,9 +35,6 @@ public class UserService {
 
   //CRUD operations on User models.
   private final UserRepository userRepository;
-
-  //CRUD operations on UserInfo models.
-  private final UserInfoRepository userInfoRepository;
 
   //Password encoder to hash passwords in a database.
   private final PasswordEncoder passwordEncoder;
