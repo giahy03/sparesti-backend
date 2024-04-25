@@ -8,9 +8,7 @@ import edu.ntnu.idatt2106.sparesti.dto.user.edit.LastNameChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.LivingStatusChangeDto;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
-import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import java.util.Optional;
-import edu.ntnu.idatt2106.sparesti.repository.user.UserInfoRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,9 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-
 
 /**
  * A test for the user-service class which is responsible for handling user-related operations.
@@ -37,8 +33,6 @@ class UserServiceTest {
   private UserService userService;
   @Mock
   private UserRepository userRepository;
-  @Mock
-  private UserInfoRepository userInfoRepository;
 
   User user;
 
@@ -132,7 +126,8 @@ class UserServiceTest {
     user = ChallengeUtility.createUserB();
     UserInfoDto userInfoDto = ChallengeUtility.createUserInfoDtoA();
     when(userRepository.findUserByEmailIgnoreCase(user.getEmail())).thenReturn(Optional.of(user));
-    when(userInfoRepository.save(any(UserInfo.class))).thenReturn(user.getUserInfo());
+    // TODO: UserInfoRepository is removed, fix line under.
+    //when(userInfoRepository.save(any(UserInfo.class))).thenReturn(user.getUserInfo());
 
 
     //Assert

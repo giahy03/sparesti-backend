@@ -54,9 +54,6 @@ public class Challenge {
   @NonNull
   private LocalDate endDate;
 
-  @Column(name = "is_completed", nullable = false)
-  private boolean isCompleted;
-
   @Enumerated(EnumType.STRING)
   @Column(name = "difficulty", nullable = false)
   @NonNull

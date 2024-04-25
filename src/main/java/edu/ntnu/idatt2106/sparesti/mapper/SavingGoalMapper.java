@@ -24,6 +24,7 @@ public class SavingGoalMapper {
                 .endDate(savingGoal.getEndDate())
                 .amount(savingGoal.getAmount())
                 .progress(savingGoal.getProgress())
+                .difficulty(savingGoal.getDifficulty())
                 .lives(savingGoal.getLives())
                 .currentTile(savingGoal.getCurrentTile())
                 .achieved(savingGoal.isAchieved())
