@@ -35,6 +35,7 @@ public abstract class BankStatementReader {
       bankStatement.setTransactions(new ArrayList<>());
 
       String firstPageText = readPageToText(1, file);
+      log.info("First page text: " + firstPageText);
       readFirstPage(firstPageText, bankStatement);
 
       for (int i = 2; i < document.getNumberOfPages() + 1; i++) {
@@ -94,7 +95,7 @@ public abstract class BankStatementReader {
       PDFTextStripper stripper = new PDFTextStripper();
       stripper.setStartPage(pageNumber);
       stripper.setEndPage(pageNumber);
-      return stripper.getText(document).replaceAll("\r", "\n");
+      return stripper.getText(document).replaceAll("\r", "");
     } catch (Exception e) {
       throw new IllegalArgumentException("Invalid pdf file");
     }
