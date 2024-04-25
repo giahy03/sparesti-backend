@@ -23,16 +23,19 @@ import java.time.LocalDate;
 public class Badge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NonNull
     @Schema(description = "The unique identifier for the badge.")
     @Column(name = "badge_id")
     private Long id;
 
     @ManyToOne
+    @NonNull
     @Schema(description = "The user to whom the badge belongs.")
     @JoinColumn(name="user_id", nullable = false)
     private User user;
 
     @ManyToOne
+    @NonNull
     @Schema(description = "The achievement the badge is associated with.")
     @JoinColumn(name = "achievement_id", nullable = false)
     private Achievement achievement;

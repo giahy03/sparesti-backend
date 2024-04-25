@@ -1,0 +1,121 @@
+package edu.ntnu.idatt2106.sparesti.service.badge;
+
+import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;
+import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateRequestDto;
+import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
+import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
+import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
+import edu.ntnu.idatt2106.sparesti.model.badge.util.BadgeUtility;
+import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.repository.BadgeRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
+
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.when;
+
+/**
+ * Test class for badge service class.
+ *
+ * @author Hanne-Sofie Søreide
+ */
+@ExtendWith(MockitoExtension.class)
+public class BadgeServiceTest {
+
+    @InjectMocks
+    BadgeService badgeService;
+
+    @Mock
+    BadgeRepository badgeRepository;
+    @Mock
+    BadgeMapper badgeMapper;
+    @Mock
+    UserRepository userRepository;
+
+    Principal principal;
+    Pageable pageable;
+    private Badge badge;
+
+
+    @BeforeEach
+    void setUp() {
+        badge = BadgeUtility.createBadgeA();
+        principal = () -> "test@test.tea";
+    }
+
+    @DisplayName("Test for getBadgeById")
+    @Test
+    void Badge_getBadgeById_ReturnBadge() {
+
+        // Arrange
+        when(badgeRepository.findById(1L)).thenReturn(Optional.of(badge));
+        when(badgeMapper.mapToBadgePreviewDto(badge)).thenReturn(BadgeUtility.createBadgePreviewDto());
+
+        // Act
+        BadgePreviewDto badgePreviewDto = badgeService.getBadgeById(BadgeUtility.createBadgeIdDto());
+
+        // Assert
+        assertNotNull(badgePreviewDto);
+    }
+
+
+    @DisplayName("Test for getAllBadgesByEmail")
+    @Test
+    void Badge_getAllBadgesByEmail_ReturnBadges() {
+
+        // Arrange
+        List<Badge> badgeList = new ArrayList<>();
+        badgeList.add(BadgeUtility.createBadgeA());
+        badgeList.add(BadgeUtility.createBadgeB());
+
+        when(badgeRepository.findAllByUser_Username(principal.getName(), pageable)).thenReturn(badgeList);
+
+        // Act
+        List<BadgePreviewDto> returnedPreviewBadges = badgeService.getAllBadgesByEmail(principal, pageable);
+
+        // Assert
+        assertThat(returnedPreviewBadges.size()).isEqualTo(2);
+    }
+
+    @DisplayName("Test for deleteBadgeById")
+    @Test
+    void Badge_deleteBadgeById_DeleteBadge() {
+
+        // Act and assert
+        assertDoesNotThrow(() -> badgeService.deleteBadgeById(principal, BadgeUtility.createBadgeIdDto()));
+
+    }
+
+    @DisplayName("Test for createBadge")
+    @Test
+    void Badge_createBadge_CreateBadge() {
+
+        // Arrange
+        User user = BadgeUtility.createUserA();
+        BadgeCreateDto badgeCreateDto = BadgeUtility.createBadgeCreateDto();
+        when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(user));
+        when(badgeMapper.mapToBadge(badgeCreateDto, user)).thenReturn(badge);
+        when(badgeRepository.save(badge)).thenReturn(badge);
+        when(badgeMapper.mapToBadgePreviewDto(badge)).thenReturn(BadgeUtility.createBadgePreviewDto());
+
+        // Act and assert
+        assertDoesNotThrow(() -> badgeService.createBadge(badgeCreateDto, principal));
+        assertNotNull(badgeService.createBadge(badgeCreateDto, principal));
+
+    }
+
+}

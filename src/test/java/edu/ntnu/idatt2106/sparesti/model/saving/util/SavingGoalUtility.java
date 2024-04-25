@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Utility class that creates objects to support the testing classes.
+ * Utility class that creates objects to support the testing classes related to saving goals.
  *
  * @author Hanne-Sofie Søreide
  */
@@ -37,7 +37,6 @@ public class SavingGoalUtility {
                 .role(Role.USER)
                 .password("PW")
                 .build();
-
     }
 
 

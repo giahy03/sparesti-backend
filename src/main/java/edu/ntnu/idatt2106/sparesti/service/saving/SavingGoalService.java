@@ -112,7 +112,7 @@ public class SavingGoalService {
         savingGoal.setCurrentTile(updateValueDto.getValue());
         savingGoalRepository.save(savingGoal);
 
-        return savingGoalRepository.findById(updateValueDto.getId()).get().getCurrentTile();
+        return savingGoalRepository.findById(updateValueDto.getId()).orElseThrow().getCurrentTile();
     }
 
     /**
@@ -128,7 +128,7 @@ public class SavingGoalService {
         savingGoal.setLives(updateValueDto.getValue());
         savingGoalRepository.save(savingGoal);
 
-        return savingGoalRepository.findById(updateValueDto.getId()).get().getLives();
+        return savingGoalRepository.findById(updateValueDto.getId()).orElseThrow().getLives();
     }
 
 
@@ -146,7 +146,7 @@ public class SavingGoalService {
         savingGoal.setProgress(savingGoal.getProgress() + savingGoalContributionDto.getContribution());
         savingGoalRepository.save(savingGoal);
 
-        return savingGoalRepository.findById(savingGoalContributionDto.getId()).get().getProgress();
+        return savingGoalRepository.findById(savingGoalContributionDto.getId()).orElseThrow().getProgress();
     }
 
 }
