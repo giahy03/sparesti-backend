@@ -13,11 +13,15 @@ import org.springframework.data.util.Pair;
 
 /**
  * Class for reading bank statements from different banks.
+ *
+ * @author Tobias Oftedal
  */
 @Slf4j
 public abstract class BankStatementReader {
   public abstract void readFirstPage(String pageText, BankStatement bankStatement);
+
   public abstract void readStandardPage(String pageText, BankStatement bankStatement);
+
   /**
    * Reads a bank statement from SpareBank1. And creates a {@link BankStatement} object.
    *
@@ -35,10 +39,23 @@ public abstract class BankStatementReader {
 
       for (int i = 2; i < document.getNumberOfPages() + 1; i++) {
         String pageText = readPageToText(i, file);
-        readStandardPage(pageText, bankStatement);
+        try {
+          readStandardPage(pageText, bankStatement);
+        } catch (Exception e) {
+          log.error("Error reading SpareBank1 statement from file:" + file, e);
+          throw new IllegalArgumentException(
+              "Error reading SpareBank1 statement from file:" + file + "are you sure the file is "
+                  + "in a valid format?");
+        }
       }
 
-      log.info("finalised reading SpareBank1 statement from file:" + file.getName());
+      log.info("finalised reading statement from file:" + file.getName());
+
+      if (bankStatement.getTransactions().isEmpty()) {
+        throw new IllegalArgumentException(
+            "File is invalid, no transactions found in file:" + file);
+      }
+
       return bankStatement;
     } catch (Exception e) {
       log.error("Error reading SpareBank1 statement from file:" + file.toString(), e);
@@ -53,8 +70,9 @@ public abstract class BankStatementReader {
    */
   public void logStatementFully(Path fileLocation) {
     try (PDDocument document = Loader.loadPDF(new File(fileLocation.toString()))) {
-      log.info("Reading statement from file: " + fileLocation);
-      String text = new PDFTextStripper().getText(document);
+      log.info("logging file: " + fileLocation);
+      PDFTextStripper pdfStripper = new PDFTextStripper();
+      String text = pdfStripper.getText(document);
       String[] splitText = text.split("\n");
       for (int i = 0; i < splitText.length; i++) {
         log.info("i: " + i + ", " + splitText[i]);
@@ -64,18 +82,19 @@ public abstract class BankStatementReader {
     }
   }
 
-  //1-based indexing
-  public String readPageToText(int pageNumber, File file){
+  /**
+   * Reads a page from a pdf file and returns the text.
+   *
+   * @param pageNumber The page number to read.
+   * @param file       The file to read.
+   * @return The text of the page.
+   */
+  public String readPageToText(int pageNumber, File file) {
     try (PDDocument document = Loader.loadPDF(file)) {
-
-      BankStatement bankStatement = new BankStatement();
-      bankStatement.setTransactions(new ArrayList<>());
-
       PDFTextStripper stripper = new PDFTextStripper();
       stripper.setStartPage(pageNumber);
       stripper.setEndPage(pageNumber);
-      return stripper.getText(document)
-          .replaceAll("\r", "\n");
+      return stripper.getText(document).replaceAll("\r", "\n");
     } catch (Exception e) {
       throw new IllegalArgumentException("Invalid pdf file");
     }
@@ -89,10 +108,10 @@ public abstract class BankStatementReader {
    * @param splitText     The text to search through.
    * @param lineIndex     The current index of the splitText.
    * @return A pair containing the found line and the index of the next line. If the line is not
-   * found the first element of the pair will be empty.
+   *        found the first element of the pair will be empty.
    */
   protected Pair<Optional<String>, Integer> skipUntilFind(String textToContain, String[] splitText,
-                                                int lineIndex) {
+                                                          int lineIndex) {
     String foundLine = null;
     for (; lineIndex < splitText.length; lineIndex++) {
       if (splitText[lineIndex].toLowerCase().contains(textToContain)) {
