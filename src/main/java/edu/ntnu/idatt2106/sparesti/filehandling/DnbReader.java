@@ -2,8 +2,6 @@ package edu.ntnu.idatt2106.sparesti.filehandling;
 
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
-import java.nio.file.Path;
-import java.time.LocalDate;
 import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -13,20 +11,22 @@ import org.springframework.data.util.Pair;
 
 /**
  * Reader for HandelsBanken bank statements.
+ *
+ * @author Tobias Offtedal
  */
 @Slf4j
 public class DnbReader extends BankStatementReader {
-  BankStatement readStatementFromPath(Path fileLocation) {
-    log.info("Reading SpareBank1 statement from file:" + fileLocation.toString());
+  private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy");
 
-    return readStatement(fileLocation.toFile());
-  }
-
+  /**
+   * Reads the first page of a DNB bank statement.
+   *
+   * @param pageText      The text of the page.
+   * @param bankStatement The bank statement to read into.
+   */
   @Override
   public void readFirstPage(String pageText, BankStatement bankStatement) {
-
     String[] splitText = pageText.split("\n");
-
     int lineIndex = 0;
     Pair<Optional<String>, Integer> accountLine =
         skipUntilFind("kontoutskrift", splitText, lineIndex);
@@ -34,56 +34,68 @@ public class DnbReader extends BankStatementReader {
     if (accountLine.getFirst().isEmpty()) {
       throw new IllegalArgumentException("Could not find account number in DNB statement");
     }
+
     bankStatement.setAccountNumber(accountLine.getFirst().get().split("\\s+")[2]);
     lineIndex = accountLine.getSecond();
 
+    readTransactions(bankStatement, splitText, lineIndex);
+  }
 
-    skipUntilFind("bruk", splitText, lineIndex);
+  /**
+   * Reads a standard page of a DNB bank statement.
+   *
+   * @param pageText      The text of the page.
+   * @param bankStatement The bank statement to read into.
+   */
+  @Override
+  public void readStandardPage(String pageText, BankStatement bankStatement) {
+    log.debug("Reading new page");
 
+    String[] splitText = pageText.split("\n");
+    int lineIndex = 0;
+    readTransactions(bankStatement, splitText, lineIndex);
+  }
+
+  /**
+   * Reads transactions from a DNB bank statement.
+   *
+   * @param bankStatement The bank statement to read into.
+   * @param splitText     The text of the page split into lines.
+   * @param lineIndex     The index of the line to start reading from.
+   */
+  private void readTransactions(BankStatement bankStatement, String[] splitText, int lineIndex) {
+    Pair<Optional<String>, Integer> lastMetaLine =
+        skipUntilFind("bruk bokføring", splitText, lineIndex);
+    lineIndex = lastMetaLine.getSecond();
+
+    if (lastMetaLine.getFirst().isEmpty()) {
+      throw new IllegalArgumentException("Could not find last line of metadata in the DNB "
+          + "statement");
+    }
 
     String currentString = "";
     for (; lineIndex < splitText.length; lineIndex++) {
-      String line = splitText[lineIndex];
-      currentString = currentString + " " +line;
 
+      String line = splitText[lineIndex];
+
+      currentString = currentString + " " + line;
+
+      if (currentString.isBlank()) {
+        continue;
+      }
       try {
-        parseTransaction(currentString, false);
-        System.out.println(currentString + " was a valid transaction");
+        Transaction parsedTransaction = parseTransaction(currentString, true);
+
+        bankStatement.getTransactions().add(parsedTransaction);
+
+        log.debug(currentString + " was a valid transaction");
         currentString = "";
       } catch (Exception e) {
-        log.info("could not parse: " + e.getMessage());
+        log.debug("could not parse: " + e);
       }
 
     }
-
   }
-
-  @Override
-  public void readStandardPage(String pageText, BankStatement bankStatement) {
-//    if (0 == 0){
-//      return;
-//    }
-//    String[] splitText = pageText.split("\n");
-//
-//    for (String s : splitText) {
-//
-//      String[] splitLine = s.split(" ");
-//
-//      try {
-//        Integer.parseInt(splitLine[splitLine.length - 1]);
-//        Transaction transaction;
-//        if (s.toLowerCase().contains("fra")) {
-//          transaction = parseTransaction(s, true);
-//        } else {
-//          transaction = parseTransaction(s, false);
-//        }
-//        bankStatement.getTransactions().add(transaction);
-//      } catch (Exception e) {
-//        log.info("Error while reading standard page: " + e.getMessage());
-//      }
-//    }
-  }
-
 
   /**
    * Parses a transaction from a line in the SpareBank1 pdf.
@@ -91,26 +103,45 @@ public class DnbReader extends BankStatementReader {
    * @param line     The line to parse.
    * @param incoming Whether the transaction is incoming or outgoing.
    * @return The parsed transaction.
+   * @throws IllegalArgumentException If the line is not a transaction
    */
   private Transaction parseTransaction(String line, boolean incoming) {
-    log.info("Parsing transaction: " + line);
-    String[] splitLine = line.split(" ");
+    //TODO parse the transaction so that incoming is not always false
+    log.debug("Parsing transaction: " + line);
+    String[] splitLine = line.trim().split("\\s+");
 
+    int archiveReference = Integer.parseInt(splitLine[splitLine.length - 1]);
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy");
+    if (archiveReference < 100000000) {
+      throw new IllegalArgumentException("Archive reference too low, was: " + archiveReference);
+    }
 
-    String purchaseDateString = splitLine[0];
-    String bookKeepingDateString = splitLine[1];
+    Transaction transaction = new Transaction();
+    try {
+      String description = String.join(" ",
+          Arrays.copyOfRange(splitLine, 2, splitLine.length - 2));
+      transaction.setDescription(description);
+    } catch (Exception e) {
+      log.info("Error while parsing description: " + e.getMessage());
+    }
+    try {
+      MonthDay date = MonthDay.parse(splitLine[splitLine.length - 2], formatter);
+      transaction.setDate(date);
+    } catch (Exception e) {
+      log.info("Error while parsing date: " + e.getMessage());
+    }
 
-    LocalDate purchaseDate = LocalDate.parse(purchaseDateString, formatter);
-    LocalDate bookKeepingDate = LocalDate.parse(bookKeepingDateString, formatter);
+    try {
+      Double amount = Double.parseDouble(splitLine[splitLine.length - 3]
+          .replaceAll("\\.", "")
+          .replaceAll(",", ".")
+      );
+      transaction.setAmount(amount);
+    } catch (Exception e) {
+      log.info("Error while parsing amount: " + e.getMessage());
+    }
 
-
-    String dateLine = splitLine[1];
-    String transactionSum = splitLine[splitLine.length - 3];
-    Integer archiveReference = Integer.parseInt(splitLine[splitLine.length - 1]);
-
-
-    return null;
+    transaction.setIsIncoming(incoming);
+    return transaction;
   }
 }
