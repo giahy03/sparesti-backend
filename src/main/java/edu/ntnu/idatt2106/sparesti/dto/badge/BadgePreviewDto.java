@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Setter
 @Builder
 public class BadgePreviewDto {
-    private long id;
+    private long badgeId;
     private AchievementCategory achievement;
     private int threshold;
     private LocalDate achievementDate;

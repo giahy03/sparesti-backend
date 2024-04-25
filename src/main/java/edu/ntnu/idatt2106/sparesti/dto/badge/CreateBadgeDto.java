@@ -11,8 +11,9 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-public class BadgeCreateDto {
+public class CreateBadgeDto {
     private Achievement achievement;
+    private int threshold;
     private LocalDate achievementDate;
     private int level;
 }
