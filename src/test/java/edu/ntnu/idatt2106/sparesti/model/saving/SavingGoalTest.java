@@ -30,7 +30,7 @@ public class SavingGoalTest {
 
     @DisplayName("JUnit test for the getter methods")
     @Test
-    void Goal_getters_returnsExpectedValues() {
+    void Goal_getGoal_returnsExpectedValues() {
         // Arrange
         Long expectedId = 1L;
         String expectedName = "Goal";
