@@ -7,6 +7,8 @@ import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Utility class that creates objects to support the testing classes.
@@ -92,7 +94,22 @@ public class SavingGoalUtility {
                 .id(1L)
                 .title("Goal")
                 .build();
+    }
 
+    public static SavingGoalIdDto createSavingGoalIdDto1() {
+
+        return SavingGoalIdDto.builder()
+                .id(2L)
+                .title("Goal")
+                .build();
+    }
+
+    public static SavingGoalIdDto createSavingGoalIdDto2() {
+
+        return SavingGoalIdDto.builder()
+                .id(3L)
+                .title("Goal")
+                .build();
     }
 
     public static SavingGoalUpdateValueDto createSavingGoalUpdateValueDto() {
@@ -110,7 +127,13 @@ public class SavingGoalUtility {
                 .id(1L)
                 .contribution(250.0)
                 .build();
+    }
 
+    public static String createSavingGoalContributionDtoJson() {
+        return  "{"
+                + "\"id\":1,"
+                + "\"contribution\":250.0"
+                + "}";
     }
 
     public static SavingGoalDto createSavingGoalDto() {
@@ -126,7 +149,57 @@ public class SavingGoalUtility {
                 .endDate(LocalDate.of(2024, 4, 30))
                 .difficulty(GoalDifficulty.HARD)
                 .build();
+    }
 
+
+    public static String createSavingGoalIdDtoJson() {
+
+        return  "{"
+                + "\"id\":1,"
+                + "\"title\":\"Goal\""
+                + "}";
+    }
+
+
+    public static String createSavingGoalDtoJson() {
+
+        return  "{"
+                + "\"id\":1,"
+                + "\"goalName\":\"New goal\","
+                + "\"difficulty\":\"HARD\","
+                + "\"startDate\":\"2024-04-10\","
+                + "\"endDate\":\"2024-04-30\","
+                + "\"lives\":8,"
+                + "\"amount\":15000.0,"
+                + "\"progress\":100.0,"
+                + "\"achieved\":false,"
+                + "\"currentTile\":15"
+                + "}";
+    }
+
+    public static String createSavingGoalIdDtoListJson() {
+
+        return  "[" +
+                "{\"id\": 1, \"title\": \"Goal\"}," +
+                "{\"id\": 2, \"title\": \"Goal\"}," +
+                "{\"id\": 3, \"title\": \"Goal\"}" +
+                "]";
+    }
+
+    public static String createSavingGoalCreationRequestDtoJson() {
+
+        return
+                "{"
+                    + "\"goalName\":\"New goal\","
+                    + "\"difficulty\":\"HARD\","
+                    + "\"startDate\":\"2024-04-10\","
+                    + "\"endDate\":\"2024-04-30\","
+                    + "\"lives\":8,"
+                    + "\"amount\":15000.0,"
+                    + "\"progress\":100.0,"
+                    + "\"achieved\":false,"
+                    + "\"currentTile\":15"
+                    + "}";
     }
 
 }

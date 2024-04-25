@@ -7,14 +7,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Pageable;
-
 import java.security.Principal;
 import java.util.List;
 
@@ -75,9 +73,14 @@ public class SavingGoalController {
             @Content)
     })
     @GetMapping("/goals")
-    public ResponseEntity<List<SavingGoalIdDto>> getGoalsByEmail(Principal principal, Pageable pageable) {
+    public ResponseEntity<List<SavingGoalIdDto>> getGoalsByEmail(Principal principal,
+                                                                 @RequestParam int page,
+                                                                 @RequestParam int pageSize)                                                   {
         log.info("Returning list of goals for user: " + principal.getName());
-        List<SavingGoalIdDto> goals = savingGoalService.getAllGoalIdsByEmail(principal, pageable);
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        List<SavingGoalIdDto> goals = savingGoalService.getAllGoalIdsByEmail(principal, pageRequest);
+        log.info("Number of goals being retrieved: " + goals.size());
+
         return new ResponseEntity<>(goals, HttpStatus.OK);
     }
 
@@ -209,7 +212,7 @@ public class SavingGoalController {
         double newProgress = savingGoalService.registerSavingContribution(principal, savingGoalContributionDto);
         log.info("New saved up amount for goal: " + newProgress);
 
-        return new ResponseEntity<>("Amount saved for goal was successfully updated", HttpStatus.OK);
+        return new ResponseEntity<>("Amount saved for goal was successfully updated to: " + newProgress, HttpStatus.OK);
     }
 
 }
