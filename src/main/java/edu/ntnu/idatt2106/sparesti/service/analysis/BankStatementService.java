@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.service.analysis;
 
 import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException;
-import edu.ntnu.idatt2106.sparesti.filehandling.SpareBank1Reader;
+import edu.ntnu.idatt2106.sparesti.filehandling.HandelsBankenReader;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.BankStatementRepository;
@@ -52,7 +52,7 @@ public class BankStatementService {
       throws NoSuchElementException, IOException {
 
 
-    SpareBank1Reader spareBank1Reader = new SpareBank1Reader();
+    HandelsBankenReader spareBank1Reader = new HandelsBankenReader();
     File tempFile = File.createTempFile("bank-statement-", "-" + file.getOriginalFilename());
     file.transferTo(tempFile);
 
