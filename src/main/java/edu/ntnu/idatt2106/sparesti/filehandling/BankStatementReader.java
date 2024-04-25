@@ -75,7 +75,7 @@ public abstract class BankStatementReader {
       stripper.setStartPage(pageNumber);
       stripper.setEndPage(pageNumber);
       return stripper.getText(document)
-          .replaceAll("\t", "\n");
+          .replaceAll("\r", "\n");
     } catch (Exception e) {
       throw new IllegalArgumentException("Invalid pdf file");
     }
