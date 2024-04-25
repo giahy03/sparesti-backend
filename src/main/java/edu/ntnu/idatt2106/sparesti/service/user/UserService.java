@@ -12,8 +12,8 @@ import edu.ntnu.idatt2106.sparesti.mapper.UserInfoMapper;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
-import edu.ntnu.idatt2106.sparesti.repository.user.UserInfoRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
 import edu.ntnu.idatt2106.sparesti.validation.validators.UserValidator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service class that encapsulates the logic for handling user-related operations.
- * It uses the {@link UserRepository} and {@link UserInfoRepository} to perform the
- * operations in the database.
+ * It uses the {@link UserRepository} to perform the operations in the database.
  *
  * @author Ramtin Samavat
  * @version  1.0
@@ -35,11 +34,11 @@ public class UserService {
   //CRUD operations on User models.
   private final UserRepository userRepository;
 
-  //CRUD operations on UserInfo models.
-  private final UserInfoRepository userInfoRepository;
-
   //Password encoder to hash passwords in a database.
   private final PasswordEncoder passwordEncoder;
+
+  //Provides services related to email verification.
+  private final EmailVerificationService emailVerificationService;
 
   /**
    * The method edits the password of the user.
@@ -132,7 +131,13 @@ public class UserService {
    */
   public UserDetailsDto getUserDetails(@NonNull String email) {
     User user = findUser(email);
-    return new UserDetailsDto(user.getFirstName(), user.getLastName());
+    UserInfo userInfo = user.getUserInfo();
+    return UserDetailsDto.builder()
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
+        .income(userInfo.getIncome())
+        .livingStatus(userInfo.getLivingStatus().getStatus())
+        .build();
   }
 
   /**
@@ -144,11 +149,25 @@ public class UserService {
   public void addUserInfo(@NonNull UserInfoDto userInfoDto, @NonNull String email) {
     User user = findUser(email);
 
-    UserInfo userInfo = UserInfoMapper.INSTANCE.toUserInfo(userInfoDto);
+    if (user.getUserInfo() == null) {
+      UserInfo userInfo = UserInfoMapper.INSTANCE.toUserInfo(userInfoDto);
+      userInfo.setUser(user);
+      user.setUserInfo(userInfo);
+    }
 
-    userInfo.setUser(user);
+    userRepository.save(user);
+  }
 
-    userInfoRepository.save(userInfo);
+  /**
+   * The method deletes a user by email.
+   *
+   * @param email The email of the user to be deleted.
+   * @param verificationCode The verification code used to authenticate the deletion request.
+   */
+  public void deleteUserByEmail(@NonNull String email, @NonNull String verificationCode) {
+    emailVerificationService.verifyEmailCode(email, verificationCode);
+    User user = findUser(email);
+    userRepository.delete(user);
   }
 
   /**

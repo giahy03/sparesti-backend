@@ -1,14 +1,15 @@
 package edu.ntnu.idatt2106.sparesti.service.email;
 
+import edu.ntnu.idatt2106.sparesti.dto.email.EmailCodeExpirationDto;
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
 import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
 import edu.ntnu.idatt2106.sparesti.exception.email.VerificationCodeExpiredException;
 import edu.ntnu.idatt2106.sparesti.model.EmailCode;
 import edu.ntnu.idatt2106.sparesti.repository.EmailCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,39 +58,40 @@ public class EmailVerificationService {
   /**
    * Creates an email dto.
    *
-   * @param email the email to send the verification token to.
-   * @param token the verification token.
+   * @param email the email to send the verification code to.
+   * @param code  the verification code.
    * @return the email dto which is to be sent.
    */
-  public EmailDetailsDto buildEmailDto(String email, String token) {
+  private EmailDetailsDto buildEmailDto(String email, String code) {
     return EmailDetailsDto.builder()
-            .recipient(email)
-            .subject("Verification token")
-            .body("Your verification token is: " + token)
-            .build();
+        .recipient(email)
+        .subject("Verification code")
+        .body("Your verification code is: " + code)
+        .build();
   }
 
   /**
    * Creates an email code object to prime it for permanent storage.
    *
-   * @param email the email to send the verification token to.
-   * @param token the verification token.
+   * @param email the email to send the verification code to.
+   * @param code  the verification code.
    * @return the email code dto, which is to be saved.
    */
-  public EmailCode buildEmailCode(String email, String token) {
+  private EmailCode buildEmailCode(String email, String code) {
     return EmailCode.builder()
-            .email(email)
-            .verificationCode(token)
-            .expiryTimestamp(LocalDateTime.now().plusMinutes(15))
-            .build();
+        .email(email)
+        .verificationCode(code)
+        .expiryTimestamp(LocalDateTime.now().plusMinutes(15))
+        .build();
   }
 
   /**
    * Sends the verification token to the given email.
    *
    * @param email the email to send the verification token to.
+   * @return A DTO containing the expiration time for the email code.
    */
-  public void sendCodeToEmail(String email) {
+  public EmailCodeExpirationDto sendCodeToEmail(String email) {
     String token = generateVerificationToken();
     EmailDetailsDto emailDetailsDto = buildEmailDto(email, token);
     EmailCode emailCode = buildEmailCode(email, token);
@@ -99,21 +101,23 @@ public class EmailVerificationService {
 
     emailCodeRepository.save(emailCode);
     emailService.sendEmail(emailDetailsDto);
+
+    return new EmailCodeExpirationDto(emailCode.getExpiryTimestamp());
   }
 
   /**
    * Verifies the email code.
    *
    * @param email the email to verify.
-   * @param token the token to verify.
-   * @throws NoSuchElementException If the EmailCode entity is not found.
+   * @param code  the code to verify.
+   * @throws EntityNotFoundException If the EmailCode entity is not found.
    */
-  public void verifyEmailCode(String email, String token) {
+  public void verifyEmailCode(String email, String code) {
 
     EmailCode emailCode = emailCodeRepository.findByEmail(email)
-            .orElseThrow(() -> new NoSuchElementException("Email code not found."));
+        .orElseThrow(() -> new EntityNotFoundException("Email code not found."));
 
-    if (!emailCode.getVerificationCode().equals(token)) {
+    if (!emailCode.getVerificationCode().equals(code)) {
       throw new IllegalArgumentException("Invalid verification code.");
     }
 

@@ -5,6 +5,7 @@ import edu.ntnu.idatt2106.sparesti.exception.challenge.ChallengeNotFoundExceptio
 import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
 import edu.ntnu.idatt2106.sparesti.exception.email.VerificationCodeExpiredException;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
@@ -85,15 +86,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   /**
-   * The method handles exceptions when a user, a challenge or an element is not found.
+   * The method handles exceptions from when a requested resource is not found.
    *
    * @param ex The exception to handle.
    * @return ResponseEntity containing the ErrorResponse with HTTP status code 404 (NOT_FOUND).
    */
   @ExceptionHandler({
-          UserNotFoundException.class,
-          NoSuchElementException.class,
-          ChallengeNotFoundException.class,
+      UserNotFoundException.class,
+      NoSuchElementException.class,
+      ChallengeNotFoundException.class,
+      EntityNotFoundException.class,
   })
   public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(@NonNull Exception ex) {
     String errorMessage = ex.getMessage();
@@ -129,12 +131,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
    * The method builds a ResponseEntity containing an ErrorResponse based on the given
    * exception and HTTP status.
    *
-   * @param ex The exception to handle.
+   * @param ex     The exception to handle.
    * @param status The HTTP status to set in the response.
    * @return ResponseEntity containing the ErrorResponse with the specified HTTP status.
    */
   private ResponseEntity<ErrorResponse> buildResponseEntityWithErrorResponse(
-          Exception ex, String errorMessage, HttpStatus status) {
+      Exception ex, String errorMessage, HttpStatus status) {
     log.error("{}: {}", ex.getClass().getSimpleName(), ex.getMessage());
     log.debug("Stack Trace:", ex);
     ErrorResponse errorResponse = new ErrorResponse(errorMessage, LocalDateTime.now());

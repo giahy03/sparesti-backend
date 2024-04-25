@@ -14,10 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
-
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -56,9 +53,6 @@ public class Challenge {
   @Column(name = "end_date", nullable = false)
   @NonNull
   private LocalDate endDate;
-
-  @Column(name = "is_completed", nullable = false)
-  private boolean isCompleted;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "difficulty", nullable = false)

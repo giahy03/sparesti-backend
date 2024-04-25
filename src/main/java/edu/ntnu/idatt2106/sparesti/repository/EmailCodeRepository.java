@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106.sparesti.model.EmailCode;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Repository interface for managing EmailCode entities
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Ramtin Samavat
  * @version 1.0
  */
+@Repository
 public interface EmailCodeRepository extends JpaRepository<EmailCode, Long> {
 
   /**
