@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +43,7 @@ public class BadgeController {
     /**
      * Get a badge of a given id.
      *
-     * @param badgeIdDto The unique id of the saving goal
+     * @param badgeIdDto The unique id of the badge
      * @return ResponseEntity containing the retrieved badge, or an error message
      */
     @Operation(summary = "Get a badge by its id")
@@ -66,22 +66,20 @@ public class BadgeController {
 
 
     /**
-     * Get a badge of a given id.
+     * Create a badge object for the user.
      *
-     * @param badgeCreateRequestDto The unique id of the saving goal
-     * @return ResponseEntity containing the retrieved badge, or an error message
+     * @param badgeCreateRequestDto DTO containing the minimum information to create a badge
+     * @return ResponseEntity containing a DTO representing a preview of the created badge, or an error message
      */
     @Operation(summary = "Create badge for user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "The badge was found and returned",
+            @ApiResponse(responseCode = "200", description = "The badge was successfully created and returned",
                     content = {
                             @Content(mediaType = "application/json", schema = @Schema(implementation = BadgePreviewDto.class))
                     }),
-            @ApiResponse(responseCode = "400", description = "The badge was not found",
-                    content = @Content),
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
-    @PostMapping("/badge")
+    @PostMapping("/badges")
     public ResponseEntity<BadgePreviewDto> createBadge(@RequestBody BadgeCreateRequestDto badgeCreateRequestDto, Principal principal) {
         log.info("Creating Badge of: " + badgeCreateRequestDto.getAchievement() + " achievement for user: " + principal.getName());
 
@@ -113,9 +111,13 @@ public class BadgeController {
             @Content)
     })
     @GetMapping("/badges")
-    public ResponseEntity<List<BadgePreviewDto>> getGoalsByEmail(Principal principal, Pageable pageable) {
-        log.info("Returning list of Badges from database: " + principal.getName());
-        List<BadgePreviewDto> badges = badgeService.getAllBadgesByEmail(principal, pageable);
+    public ResponseEntity<List<BadgePreviewDto>> getBadgesByEmail(Principal principal,
+                                                                 @RequestParam int page,
+                                                                 @RequestParam int pageSize
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        log.info("Returning list of badges from database: " + principal.getName());
+        List<BadgePreviewDto> badges = badgeService.getAllBadgesByEmail(principal, pageRequest);
         return new ResponseEntity<>(badges, HttpStatus.OK);
     }
 
