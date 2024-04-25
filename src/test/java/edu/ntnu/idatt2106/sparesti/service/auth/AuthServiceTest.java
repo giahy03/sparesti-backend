@@ -7,7 +7,7 @@ import edu.ntnu.idatt2106.sparesti.exception.user.EmailAlreadyExistsException;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
-import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

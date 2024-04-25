@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.config;
 
-import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

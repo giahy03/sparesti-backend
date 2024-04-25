@@ -6,7 +6,7 @@ import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.badge.util.BadgeUtility;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
-import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.BadgeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

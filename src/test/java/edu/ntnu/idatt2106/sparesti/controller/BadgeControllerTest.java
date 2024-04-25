@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
 import edu.ntnu.idatt2106.sparesti.model.badge.util.BadgeUtility;
-import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.repositories.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
 import edu.ntnu.idatt2106.sparesti.service.auth.JwtService;
 import edu.ntnu.idatt2106.sparesti.service.badge.BadgeService;
