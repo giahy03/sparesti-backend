@@ -1,25 +1,41 @@
 package edu.ntnu.idatt2106.sparesti.service.analysis;
 
+import edu.ntnu.idatt2106.sparesti.dto.analysis.TransactionDto;
 import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException;
 import edu.ntnu.idatt2106.sparesti.filehandling.HandelsBankenReader;
+import edu.ntnu.idatt2106.sparesti.mapper.TransactionMapper;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
+import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.BankStatementRepository;
+import edu.ntnu.idatt2106.sparesti.repository.TransactionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Service class for the BankStatement entity.
+ *
+ * @version 1.0
+ * @author Jeffrey Yaw Annor Tabiri
+ * @author Tobias Oftedal
  */
 @Slf4j
 @Service
@@ -29,6 +45,8 @@ public class BankStatementService {
   private final UserRepository userRepository;
   @NonNull
   private final BankStatementRepository bankStatementRepository;
+  @NonNull
+  private final TransactionRepository transactionRepository;
 
   /**
    * Saves a bank statement.
@@ -105,4 +123,41 @@ public class BankStatementService {
         .orElseThrow(() -> new NoSuchElementException("User not found"));
     return bankStatementRepository.findAllByUser(user);
   }
+
+  public Set<String> getAllAccountNumbers(Principal principal) {
+    User user = userRepository.findUserByEmailIgnoreCase(principal.getName())
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+    List<BankStatement> bankStatements = bankStatementRepository.findAllByUser(user);
+
+    Set<String> accountNumbers = new  HashSet<String>();
+
+    for (BankStatement bankStatement : bankStatements) {
+      accountNumbers.add(bankStatement.getAccountNumber());
+    }
+
+    return accountNumbers;
+  }
+
+  public List<TransactionDto> getTransactions(String accountNumber, Principal principal, int pageNumber, int pageSize) {
+
+    PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+    List<Transaction> bankStatement = transactionRepository
+            .findByBankStatement_AccountNumberAndBankStatement_User_Email
+                    (accountNumber, principal.getName(), pageRequest);
+
+    List<TransactionDto> transactionDtoList = new ArrayList<>();
+
+    for (Transaction transaction : bankStatement) {
+      Month month = transaction.getDate().getMonth(); // Assuming getMonth() returns the month (0-indexed)
+      int day = transaction.getDate().getDayOfMonth(); // Assuming getDay() returns the day of the month
+      int year = transaction.getBankStatement().getTimestamp().getYear();
+
+      TransactionDto transactionDto = TransactionMapper.INSTANCE.transactionToTransactionDto(transaction);
+      transactionDto.setFullDate(LocalDate.of(year, month, day));
+      transactionDtoList.add(transactionDto);
+    }
+    return transactionDtoList;
+  }
+
 }
