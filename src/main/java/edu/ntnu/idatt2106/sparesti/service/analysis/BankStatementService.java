@@ -9,6 +9,7 @@ import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.BankStatementRepository;
 import edu.ntnu.idatt2106.sparesti.repository.TransactionRepository;
+import edu.ntnu.idatt2106.sparesti.repository.TransactionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +71,7 @@ public class BankStatementService {
       throws NoSuchElementException, IOException {
 
 
-    SpareBank1Reader spareBank1Reader = new SpareBank1Reader();
+    HandelsBankenReader spareBank1Reader = new HandelsBankenReader();
     File tempFile = File.createTempFile("bank-statement-", "-" + file.getOriginalFilename());
     file.transferTo(tempFile);
 

@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Class representing a transaction in a bank statement.
@@ -26,6 +27,7 @@ import lombok.Setter;
 @Table(name = "transactions")
 @Entity
 @NoArgsConstructor
+@ToString
 public class Transaction {
 
   @Id
