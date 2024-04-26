@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106.sparesti.controller.analysis;
 
 import edu.ntnu.idatt2106.sparesti.dto.analysis.BankStatementAnalysisDto;
 import edu.ntnu.idatt2106.sparesti.dto.analysis.BankStatementDto;
+import edu.ntnu.idatt2106.sparesti.exception.analysis.ExternalApiException;
 import edu.ntnu.idatt2106.sparesti.mapper.AnalysisMapper;
 import edu.ntnu.idatt2106.sparesti.mapper.BankStatementMapper;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
@@ -76,7 +77,7 @@ public class BankStatementController {
   public ResponseEntity<BankStatementAnalysisDto> analyseBankStatement(
       @PathVariable(name = "statementId") Long statementId,
       Principal principal
-  ) {
+  ) throws ExternalApiException, NullPointerException {
     log.info(
         "Analyzing bank statement with id: " + statementId + " for user: " + principal.getName());
 
@@ -123,7 +124,8 @@ public class BankStatementController {
    * @return a list of bank statements
    */
   @GetMapping("/")
-  public ResponseEntity<List<BankStatementDto>> getAllStatementsForUser(Principal principal) {
+  public ResponseEntity<List<BankStatementDto>> getAllStatementsForUser(Principal principal)
+      throws NullPointerException {
     List<BankStatement> bankStatements = bankStatementService.getAllBankStatements(principal);
     List<BankStatementDto> bankStatementDtoList =
         bankStatements
