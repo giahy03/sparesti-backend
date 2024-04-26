@@ -12,6 +12,7 @@ import edu.ntnu.idatt2106.sparesti.repository.TransactionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.Month;
@@ -76,7 +77,7 @@ public class BankStatementService {
 
     BankStatement bankStatement = spareBank1Reader.readStatement(tempFile);
 
-    tempFile.delete();
+    Files.delete(tempFile.toPath());
 
     User user = userRepository.findUserByEmailIgnoreCase(principal.getName())
         .orElseThrow(() -> new NoSuchElementException("User not found"));

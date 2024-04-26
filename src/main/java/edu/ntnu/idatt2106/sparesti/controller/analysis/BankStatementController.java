@@ -4,6 +4,7 @@ package edu.ntnu.idatt2106.sparesti.controller.analysis;
 import edu.ntnu.idatt2106.sparesti.dto.analysis.BankStatementAnalysisDto;
 import edu.ntnu.idatt2106.sparesti.dto.analysis.BankStatementDto;
 import edu.ntnu.idatt2106.sparesti.dto.analysis.TransactionDto;
+import edu.ntnu.idatt2106.sparesti.exception.analysis.ExternalApiException;
 import edu.ntnu.idatt2106.sparesti.mapper.AnalysisMapper;
 import edu.ntnu.idatt2106.sparesti.mapper.BankStatementMapper;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
@@ -17,7 +18,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Set;
-
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +34,10 @@ import org.springframework.web.multipart.MultipartFile;
  * Controller for managing bank statements.
  * This controller is responsible for handling requests related to bank statements.
  *
- * @version 1.0
- * @since 1.0
  * @author Tobias Oftedal
  * @author Jeffrey Yaw Tabiri
+ * @version 1.0
+ * @since 1.0
  */
 @Slf4j
 @RestController
@@ -86,7 +86,7 @@ public class BankStatementController {
   public ResponseEntity<BankStatementAnalysisDto> analyseBankStatement(
       @PathVariable(name = "statementId") Long statementId,
       Principal principal
-  ) {
+  ) throws ExternalApiException, NullPointerException {
     log.info(
         "Analyzing bank statement with id: " + statementId + " for user: " + principal.getName());
 
@@ -133,7 +133,8 @@ public class BankStatementController {
    * @return a list of bank statements
    */
   @GetMapping("/")
-  public ResponseEntity<List<BankStatementDto>> getAllStatementsForUser(Principal principal) {
+  public ResponseEntity<List<BankStatementDto>> getAllStatementsForUser(Principal principal)
+      throws NullPointerException {
     List<BankStatement> bankStatements = bankStatementService.getAllBankStatements(principal);
     List<BankStatementDto> bankStatementDtoList =
         bankStatements
@@ -154,18 +155,21 @@ public class BankStatementController {
    * Endpoint for getting transactions.
    *
    * @param accountNumber is the account number we want to get the transactions from.
-   * @param principal is the user of the application.
-   * @param page is the page that you should extract.
-   * @param pageSize is the amount of transaction to view for each request.
+   * @param principal     is the user of the application.
+   * @param page          is the page that you should extract.
+   * @param pageSize      is the amount of transaction to view for each request.
    * @return a list of transactionDto.
    */
   @GetMapping("/transactions/{accountNumber}")
   public ResponseEntity<List<TransactionDto>> getTransactions(@PathVariable String accountNumber,
-                                                              Principal principal, @RequestParam int page,
+                                                              Principal principal,
+                                                              @RequestParam int page,
                                                               @RequestParam int pageSize) {
 
-    log.info("Getting transactions for account: " + accountNumber + " for user: " + principal.getName());
-    List<TransactionDto> transactions = bankStatementService.getTransactions(accountNumber, principal, page, pageSize);
+    log.info(
+        "Getting transactions for account: " + accountNumber + " for user: " + principal.getName());
+    List<TransactionDto> transactions =
+        bankStatementService.getTransactions(accountNumber, principal, page, pageSize);
     log.info("Found " + transactions.size() + " transactions");
     return ResponseEntity.ok(transactions);
   }
