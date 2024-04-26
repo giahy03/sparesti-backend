@@ -7,7 +7,9 @@ import edu.ntnu.idatt2106.sparesti.dto.analysis.TransactionDto;
 import edu.ntnu.idatt2106.sparesti.exception.analysis.ExternalApiException;
 import edu.ntnu.idatt2106.sparesti.mapper.AnalysisMapper;
 import edu.ntnu.idatt2106.sparesti.mapper.BankStatementMapper;
+import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
@@ -16,8 +18,10 @@ import edu.ntnu.idatt2106.sparesti.service.analysis.BankStatementService;
 import edu.ntnu.idatt2106.sparesti.service.user.UserService;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +29,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -174,4 +180,67 @@ public class BankStatementController {
     return ResponseEntity.ok(transactions);
   }
 
+  /**
+   * Get analyses for a user for a specified month and year.
+   *
+   * @param month     the month to get analyses for
+   * @param year      the year to get analyses for
+   * @param principal the user to get analyses for
+   * @return a list of analyses
+   */
+  @GetMapping("/analyses")
+  public ResponseEntity<List<BankStatementAnalysisDto>> getAnalysesForUserForSpecifiedMonthYear(
+      @RequestParam int month,
+      @RequestParam int year,
+      Principal principal) {
+
+
+    List<BankStatement> bankStatements = bankStatementService.getAllBankStatements(principal);
+    List<BankStatementAnalysisDto> analyses = bankStatements.stream()
+        .filter(bankStatement -> bankStatement.getAnalysis() != null)
+        .filter(bankStatement -> bankStatement.getTimestamp().equals(YearMonth.of(year, month)))
+        .map(BankStatement::getAnalysis)
+        .map(AnalysisMapper.INSTANCE::bankStatementAnalysisIntoBankStatementAnalysisDto)
+        .toList();
+
+    return ResponseEntity.ok(analyses);
+  }
+
+  /**
+   * Update the analysis of a bank statement.
+   * @param bankStatementAnalysisDto the analysis to update
+   * @param principal the user that owns the bank statement
+   * @return the updated analysis
+   */
+  @PutMapping("/analyses")
+  public ResponseEntity<BankStatementAnalysisDto> updateAnalysis(
+      @RequestBody BankStatementAnalysisDto bankStatementAnalysisDto,
+      Principal principal
+  ) {
+
+    BankStatementAnalysis savedAnalysis = bankStatementService.getAllBankStatements(principal)
+        .stream()
+        .filter(analysis -> analysis.getId().equals(bankStatementAnalysisDto.getId()))
+        .map(BankStatement::getAnalysis)
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Analysis not found"));
+
+    savedAnalysis.setAnalysisItems(
+        bankStatementAnalysisDto.getAnalysisItems()
+            .stream()
+            .map(analysisItemDto -> {
+              AnalysisItem item = new AnalysisItem(
+                  SsbPurchaseCategory.valueOf(analysisItemDto.getCategory()),
+                  analysisItemDto.getExpectedValue(),
+                  analysisItemDto.getActualValue());
+              item.setBankStatementAnalysis(savedAnalysis);
+              return item;
+            })
+            .toList()
+    );
+    bankStatementService.saveBankStatement(savedAnalysis.getBankStatement());
+    return null;
+  }
+
 }
+
