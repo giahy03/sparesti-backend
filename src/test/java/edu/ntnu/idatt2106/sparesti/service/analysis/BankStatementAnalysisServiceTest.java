@@ -14,6 +14,7 @@ import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import java.time.MonthDay;
 import java.time.YearMonth;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class BankStatementAnalysisServiceTest {
+class BankStatementAnalysisServiceTest {
   @InjectMocks
   private BankStatementAnalysisService bankStatementAnalysisService;
   @Mock
@@ -33,7 +34,8 @@ public class BankStatementAnalysisServiceTest {
   private TransactionService transactionService;
 
   @Test
-  void givenValidBankStatement_whenCalculateActualUsage_thenCostIs100ForFood0ForOther() {
+  void givenValidBankStatement_whenCalculateActualUsage_thenCostIs100ForFood0ForOther()
+      throws Exception {
 
     //arrange
     HashMap<SsbPurchaseCategory, Double> testExpectedUsage = new HashMap<>();
@@ -74,9 +76,9 @@ public class BankStatementAnalysisServiceTest {
 
     for (AnalysisItem analysisItem : bankStatementAnalysis.getAnalysisItems()) {
       if (analysisItem.getPurchaseCategory().equals(SsbPurchaseCategory.FOOD)) {
-        assertEquals(analysisItem.getExpectedValue(), 100);
+        assertEquals(100, analysisItem.getExpectedValue());
       } else {
-        assertEquals(analysisItem.getExpectedValue(), 0.0);
+        assertEquals(0.0, analysisItem.getExpectedValue());
       }
     }
   }
@@ -93,7 +95,7 @@ public class BankStatementAnalysisServiceTest {
         new BankStatement("11112233333", transactions, YearMonth.now());
 
     //act
-    HashMap<SsbPurchaseCategory, Double> actualUsage =
+    EnumMap<SsbPurchaseCategory, Double> actualUsage =
         bankStatementAnalysisService.getActualUsage(bankStatement);
 
 
@@ -101,9 +103,9 @@ public class BankStatementAnalysisServiceTest {
     assertEquals(actualUsage.size(), SsbPurchaseCategory.values().length);
     for (SsbPurchaseCategory category : SsbPurchaseCategory.values()) {
       if (category.equals(SsbPurchaseCategory.FOOD)) {
-        assertEquals(actualUsage.get(category), 100.0);
+        assertEquals(100.0, actualUsage.get(category));
       } else {
-        assertEquals(actualUsage.get(category), 0.0);
+        assertEquals(0.0, actualUsage.get(category));
       }
     }
   }
