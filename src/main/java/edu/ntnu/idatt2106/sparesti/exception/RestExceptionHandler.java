@@ -5,6 +5,8 @@ import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException
 import edu.ntnu.idatt2106.sparesti.exception.challenge.ChallengeNotFoundException;
 import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
 import edu.ntnu.idatt2106.sparesti.exception.email.VerificationCodeExpiredException;
+import edu.ntnu.idatt2106.sparesti.exception.stock.StockNotFoundException;
+import edu.ntnu.idatt2106.sparesti.exception.stock.StockProcessingException;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
@@ -99,6 +101,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
       NoSuchElementException.class,
       ChallengeNotFoundException.class,
       EntityNotFoundException.class,
+      StockNotFoundException.class,
   })
   public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(@NonNull Exception ex) {
     String errorMessage = ex.getMessage();
@@ -121,12 +124,24 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
    * The method handles exceptions related to external API calls.
    *
    * @param ex The exception to handle.
-   * @return ResponseEntity containing the ErrorResponse with HTTP status code 500
-   *        (INTERNAL_SERVER_ERROR).
+   * @return ResponseEntity containing ErrorResponse with HTTP status 500 (INTERNAL_SERVER_ERROR).
    */
   @ExceptionHandler(ExternalApiException.class)
   public ResponseEntity<ErrorResponse> handleExternalApiException(@NonNull Exception ex) {
     String errorMessage = ex.getMessage();
+    return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  /**
+   * The method handles exceptions related to processing stock data.
+   *
+   * @param ex The exception to handle.
+   * @return ResponseEntity containing ErrorResponse with HTTP status 500 (INTERNAL_SERVER_ERROR).
+   */
+  @ExceptionHandler(StockProcessingException.class)
+  public ResponseEntity<ErrorResponse> handleStockProcessException(@NonNull Exception ex) {
+    String errorMessage = "Failed to process stock data due to a server error."
+        + " Please try again later.";
     return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 

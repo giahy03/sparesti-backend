@@ -20,6 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 /**
  * Security configuration class responsible for defining security
  * rules and filters for the application.
+ *
  * <p>
  * The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/config/SecurityConfig.java">...</a>
  * </p>
@@ -32,7 +33,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private static final String[] WHITELIST_URL = {"/api/v1/auth/**", "/api/v1/email/**"};
+  private static final String[] WHITELIST_URL = {
+      "/api/v1/auth/**",
+      "/api/v1/email/**",
+      "/api/v1/stock/**"
+  };
 
   private final JwtAuthFilter jwtAuthFilter;
 
@@ -49,14 +54,14 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.cors(Customizer.withDefaults())
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(WHITELIST_URL).permitAll()
-                    .anyRequest().authenticated())
-            .sessionManagement(
-                    (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(WHITELIST_URL).permitAll()
+            .anyRequest().authenticated())
+        .sessionManagement(
+            (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authenticationProvider(authenticationProvider)
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
