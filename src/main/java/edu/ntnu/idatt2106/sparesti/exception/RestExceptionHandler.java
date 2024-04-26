@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.exception;
 
+import edu.ntnu.idatt2106.sparesti.exception.analysis.ExternalApiException;
 import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException;
 import edu.ntnu.idatt2106.sparesti.exception.challenge.ChallengeNotFoundException;
 import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
@@ -25,10 +26,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * an appropriate error response.
  *
  * <p>
- * The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/exception/RestExceptionHandler.java">...</a>
+ * The code is inspired by Ramtin Samavat's GitHub repository:
+ * <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/exception/RestExceptionHandler.java">...</a>
  * </p>
  *
  * @author Ramtin Samavat
+ * @author Tobias Oftedal
  * @version 1.0
  */
 @Slf4j
@@ -112,6 +115,19 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<ErrorResponse> handleConflict(@NonNull Exception ex) {
     String errorMessage = ex.getMessage();
     return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.CONFLICT);
+  }
+
+  /**
+   * The method handles exceptions related to external API calls.
+   *
+   * @param ex The exception to handle.
+   * @return ResponseEntity containing the ErrorResponse with HTTP status code 500
+   *        (INTERNAL_SERVER_ERROR).
+   */
+  @ExceptionHandler(ExternalApiException.class)
+  public ResponseEntity<ErrorResponse> handleExternalApiException(@NonNull Exception ex) {
+    String errorMessage = ex.getMessage();
+    return buildResponseEntityWithErrorResponse(ex, errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   /**
