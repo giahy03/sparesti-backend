@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +31,6 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8082")
 public class BadgeController {
 
-    @NonNull
     private final BadgeService badgeService;
 
     /**
@@ -106,7 +104,7 @@ public class BadgeController {
     @DeleteMapping("/badge")
     public ResponseEntity<String> deleteBadge(Principal principal, @RequestBody BadgeIdDto badgeIdDto) {
         log.info("Attempting to delete goal: " + badgeIdDto.getId());
-        badgeService.deleteBadge(principal, badgeIdDto);
+        badgeService.deleteBadgeById(principal, badgeIdDto);
         log.info("Goal deleted: " + badgeIdDto.getId());
         return new ResponseEntity<>("Deleted successfully", HttpStatus.OK);
     }

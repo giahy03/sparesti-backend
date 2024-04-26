@@ -7,19 +7,11 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-/**
- * DTO to represent a badge achieved by the user.
- * The DTO only contains the fields of interest to display the badge at the front-end.
- *
- * @author Hanne-Sofie Søreide
- */
 @Getter
 @Setter
 @Builder
-public class BadgePreviewDto {
-    private long id;
+public class BadgeCreateRequestDto {
     private AchievementCategory achievement;
-    private int threshold;
     private LocalDate achievementDate;
     private int level;
 }
