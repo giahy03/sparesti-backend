@@ -103,6 +103,11 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   private List<BankStatement> bankStatements;
 
+  @Schema(description = "The user's achievement stats.")
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private AchievementStats stats;
+
+
   /**
    * Retrieves the roles/authorities associated with this user.
    *

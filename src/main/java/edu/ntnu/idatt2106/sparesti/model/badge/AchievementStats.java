@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106.sparesti.model.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.mapping.ToOne;
 
 /**
  * The class keeps track of the relevant statistics for possible badges for the user.
@@ -27,7 +28,7 @@ public class AchievementStats {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @NonNull
     @Schema(description = "The user to whom the stats belong")
     @JoinColumn(name="user", nullable = false)
