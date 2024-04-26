@@ -60,8 +60,8 @@ public class Achievement {
     @NonNull
     @Schema(description = "The threshold of the achievable levels of the achievement.")
     @CollectionTable(
-        name = "thresholds",
-        joinColumns = @JoinColumn(name = "achievement_id")
+            name = "thresholds",
+            joinColumns = @JoinColumn(name = "achievement_id")
     )
     @Column( name = "threshold")
     private List<Integer> thresholds;

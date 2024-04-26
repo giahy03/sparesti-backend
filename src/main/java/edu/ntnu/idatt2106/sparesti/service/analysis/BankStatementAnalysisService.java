@@ -1,28 +1,33 @@
 package edu.ntnu.idatt2106.sparesti.service.analysis;
 
+import edu.ntnu.idatt2106.sparesti.exception.analysis.ExternalApiException;
 import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
-import edu.ntnu.idatt2106.sparesti.repository.BankStatementRepository;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
  * Analyzes a bank statement and compares it to the expected usage of the given demography.
+ *
+ * @author Tobias Oftedal
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BankStatementAnalysisService {
   @NonNull SsbDataService ssbDataService;
   @NonNull TransactionService transactionService;
-  private final BankStatementRepository bankStatementRepository;
 
   /**
    * Analyzes a bank statement and compares it to the expected usage of the given demography.
@@ -31,15 +36,25 @@ public class BankStatementAnalysisService {
    * @param userInfo      The user information to compare the bank statement to.
    * @return The analysis of the bank statement.
    */
-  public BankStatementAnalysis analyze(BankStatement bankStatement, UserInfo userInfo) {
+  public BankStatementAnalysis analyze(@NonNull BankStatement bankStatement,
+                                       @NonNull UserInfo userInfo)
+      throws ExternalApiException, NullPointerException {
+    HashMap<SsbPurchaseCategory, Double> expectedUsage;
+    try {
+      expectedUsage =
+          ssbDataService.getExpectedUsage(userInfo);
+    } catch (Exception e) {
+      throw new ExternalApiException("Error while fetching expected usage from SSB.");
+    }
+
+    try {
+      categorizeTransactions(bankStatement);
+    } catch (Exception e) {
+      throw new ExternalApiException("There was an error categorizing transactions using openai.");
+    }
 
 
-    categorizeTransactions(bankStatement);
-
-    HashMap<SsbPurchaseCategory, Double> expectedUsage =
-        ssbDataService.getExpectedUsage(userInfo);
-
-    HashMap<SsbPurchaseCategory, Double> actualUsage = getActualUsage(bankStatement);
+    EnumMap<SsbPurchaseCategory, Double> actualUsage = getActualUsage(bankStatement);
 
     List<AnalysisItem> analysisItems = new ArrayList<>();
     Arrays.stream(SsbPurchaseCategory.values()).forEach(category -> {
@@ -52,13 +67,12 @@ public class BankStatementAnalysisService {
     BankStatementAnalysis bankStatementAnalysis = new BankStatementAnalysis(analysisItems);
 
     bankStatementAnalysis.getAnalysisItems().forEach(
-        analysisItem -> {
-          analysisItem.setBankStatementAnalysis(bankStatementAnalysis);
-
-        });
+        analysisItem -> analysisItem.setBankStatementAnalysis(bankStatementAnalysis));
 
 
     return bankStatementAnalysis;
+
+
   }
 
   /**
@@ -66,7 +80,9 @@ public class BankStatementAnalysisService {
    *
    * @param bankStatement The bank statement to categorize.
    */
-  private void categorizeTransactions(BankStatement bankStatement) {
+  private void categorizeTransactions(@NonNull BankStatement bankStatement)
+      throws NullPointerException,
+      SocketTimeoutException, IndexOutOfBoundsException {
     transactionService.categorizeTransactions(
         bankStatement.getTransactions()
     );
@@ -78,8 +94,10 @@ public class BankStatementAnalysisService {
    * @param bankStatement The bank statement to analyze.
    * @return The actual usage of the bank statement, per category.
    */
-  protected HashMap<SsbPurchaseCategory, Double> getActualUsage(BankStatement bankStatement) {
-    HashMap<SsbPurchaseCategory, Double> actualUsage = new HashMap<>();
+  protected EnumMap<SsbPurchaseCategory, Double> getActualUsage(
+      @NonNull BankStatement bankStatement)
+      throws NullPointerException {
+    EnumMap<SsbPurchaseCategory, Double> actualUsage = new EnumMap<>(SsbPurchaseCategory.class);
     Arrays.stream(SsbPurchaseCategory.values()).forEach(category -> actualUsage.put(category, 0.0));
 
     bankStatement.getTransactions().forEach(transaction -> {
