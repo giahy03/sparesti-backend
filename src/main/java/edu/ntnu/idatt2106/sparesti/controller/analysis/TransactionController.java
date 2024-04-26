@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.controller.analysis;
 
 import edu.ntnu.idatt2106.sparesti.dto.analysis.TransactionDto;
-import edu.ntnu.idatt2106.sparesti.service.TransactionService;
+import edu.ntnu.idatt2106.sparesti.service.analysis.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
