@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 
 /**
+ * Service class to handle operations related to the achievement stats of the user.
+ * The service checks the relevant data and updated the corresponding property of the
+ * user's achievement stat object.
  *
  * @author Hanne-Sofie Søreide
  */
@@ -34,13 +37,20 @@ public class AchievementStatsService {
 
         AchievementCategory category = checkForAchievementDto.getAchievement();
 
+        String email = principal.getName();
+
+        User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
+                new UserNotFoundException("User with email " + email + " not found"));
+
+        AchievementStats achievementStats = achievementStatsRepository.findAchievementStatsByUserEmail(user.getEmail()).orElseThrow();
+
         switch (category) {
-            case SAVING_STREAK -> checkSavingStreak(principal);
-            case CHALLENGE_STREAK -> checkChallengeStreak(principal);
-            case AMOUNT_SAVED -> checkTotalSaved(principal);
-            case NUMBER_OF_CHALLENGES_COMPLETED -> checkChallengesCompreted(principal);
-            case NUMBER_OF_SAVING_GOALS_ACHIEVED -> checkGoalsCompleted(principal);
-            case EDUCATION -> checkEducation(principal);
+            case SAVING_STREAK -> checkSavingStreak(user, achievementStats);
+            case CHALLENGE_STREAK -> checkChallengeStreak(user, achievementStats);
+            case AMOUNT_SAVED -> checkTotalSaved(user, achievementStats);
+            case NUMBER_OF_CHALLENGES_COMPLETED -> checkChallengesCompreted(user, achievementStats);
+            case NUMBER_OF_SAVING_GOALS_ACHIEVED -> checkGoalsCompleted(user, achievementStats);
+            case EDUCATION -> checkEducation(user, achievementStats);
 
         }
 
@@ -57,50 +67,32 @@ public class AchievementStatsService {
     }
 
 
-    private boolean checkSavingStreak(Principal principal) {
+    private boolean checkSavingStreak(User user, AchievementStats achievementStats) {
 
-        String email = principal.getName();
-
-        User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
-                new UserNotFoundException("User with email " + email + " not found"));
-
-
-        AchievementStats achievementStats = achievementStatsRepository.findAchievementStatsByUserEmail(email).orElseThrow();
-
-        // Return level achieved.
-        int streak = user.getStreak().getNumberOfDays();
-
-        int oldStreak = achievementStats.getStreak();
-
-        if (streak > oldStreak) {
-            achievementStats.setStreak(streak);
-            return true;
-        } else {
-            return false;
-        }
+        return false;
 
     }
 
 
-    private boolean checkTotalSaved(Principal principal) {
+    private boolean checkTotalSaved(User user, AchievementStats achievementStats) {
 
         return false;
     }
 
 
-    private boolean checkChallengeStreak(Principal principal) {
+    private boolean checkChallengeStreak(User user, AchievementStats achievementStats) {
         return false;
     }
 
-    private boolean checkGoalsCompleted(Principal principal) {
+    private boolean checkGoalsCompleted(User user, AchievementStats achievementStats) {
         return false;
     }
 
-    private boolean checkEducation(Principal principal) {
+    private boolean checkEducation(User user, AchievementStats achievementStats) {
         return false;
     }
 
-    private boolean checkChallengesCompreted(Principal principal) {
+    private boolean checkChallengesCompreted(User user, AchievementStats achievementStats) {
         return false;
     }
 

@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 /**
+ * Controller class for handling requests related to achievement stats of the user.
  *
  * @author Hanne-Sofie Søreide
  */
-
-
 
 @RestController
 @RequiredArgsConstructor

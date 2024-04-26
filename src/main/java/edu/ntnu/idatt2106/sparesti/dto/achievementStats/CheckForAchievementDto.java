@@ -11,6 +11,8 @@ import java.time.LocalDate;
 /**
  * A Dto containing the type of achievement to check if the user
  * has qualified for a new badge.
+ *
+ * @author Hanne-Sofie Søredie
  */
 
 @Getter
