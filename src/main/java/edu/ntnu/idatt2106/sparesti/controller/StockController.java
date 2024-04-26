@@ -1,8 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.ntnu.idatt2106.sparesti.dto.stock.StockDataDto;
-import edu.ntnu.idatt2106.sparesti.dto.user.AuthenticationDto;
 import edu.ntnu.idatt2106.sparesti.service.stock.StockService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,7 +47,7 @@ public class StockController {
       @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
   @GetMapping("/{symbol}")
-  public ResponseEntity<StockDataDto> getDailyStockData(@PathVariable String symbol){
+  public ResponseEntity<StockDataDto> getDailyStockData(@PathVariable String symbol) {
     log.info("Attempting to retrieve stock data for symbol {}", symbol);
     StockDataDto stockDataDto = stockService.getStockData(symbol);
     log.info("Stock data for symbol {} retrieved.", symbol);
