@@ -2,13 +2,12 @@ package edu.ntnu.idatt2106.sparesti.service.analysis;
 
 import edu.ntnu.idatt2106.sparesti.dto.analysis.TransactionDto;
 import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException;
-import edu.ntnu.idatt2106.sparesti.filehandling.SpareBank1Reader;
+import edu.ntnu.idatt2106.sparesti.filehandling.HandelsBankenReader;
 import edu.ntnu.idatt2106.sparesti.mapper.TransactionMapper;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.BankStatementRepository;
-import edu.ntnu.idatt2106.sparesti.repository.TransactionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.TransactionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import java.io.File;
