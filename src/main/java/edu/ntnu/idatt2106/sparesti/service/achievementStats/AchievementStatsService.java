@@ -235,11 +235,6 @@ public class AchievementStatsService {
                 .findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(principal.getName(), AchievementCategory.SAVING_STREAK)
                 .getLevel();
 
-        int maxLevel = getAchievementOfCategory(AchievementCategory.SAVING_STREAK).getNumberOfLevels();
-
-        if (currentLevel == maxLevel) return 0;
-
-
         List<Integer> thresholds = getAchievementOfCategory(AchievementCategory.SAVING_STREAK)
                 .getThresholds();
 
@@ -263,10 +258,6 @@ public class AchievementStatsService {
                 .findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(principal.getName(), AchievementCategory.AMOUNT_SAVED)
                 .getLevel();
 
-        int maxLevel = getAchievementOfCategory(AchievementCategory.AMOUNT_SAVED).getNumberOfLevels();
-
-        if (currentLevel == maxLevel) return 0;
-
         List<Integer> thresholds = getAchievementOfCategory(AchievementCategory.AMOUNT_SAVED)
                 .getThresholds();
 
@@ -287,15 +278,9 @@ public class AchievementStatsService {
      */
     private int checkGoalsCompleted(Principal principal, User user) {
 
-
         int currentLevel = badgeRepository
                 .findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(principal.getName(), AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED)
                 .getLevel();
-
-        int maxLevel = getAchievementOfCategory(AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED)
-                .getNumberOfLevels();
-
-        if (currentLevel == maxLevel) return 0;
 
         List<Integer> thresholds = getAchievementOfCategory(AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED)
                 .getThresholds();
@@ -304,6 +289,7 @@ public class AchievementStatsService {
 
         return calculatedLevel > currentLevel ? calculatedLevel : 0;
     }
+
 
     /**
      * Checks if the user qualifies for a new badge related to the education achievement with the current user stats.
@@ -322,6 +308,7 @@ public class AchievementStatsService {
         }
     }
 
+
     /**
      * Checks if the user qualifies for a new badge related to the number of completed challenges with the current
      * user stats. If so, an int representing the level of the new badge is returned.
@@ -336,9 +323,8 @@ public class AchievementStatsService {
                 .findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(principal.getName(), AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
                 .getLevel();
 
-        int maxLevel = getAchievementOfCategory(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED).getNumberOfLevels();
-
-        if (currentLevel == maxLevel) return 0;
+        // int maxLevel = getAchievementOfCategory(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED).getNumberOfLevels();
+        // if (currentLevel == maxLevel) return 0;
 
         List<Integer> thresholds = getAchievementOfCategory(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
                 .getThresholds();
@@ -358,13 +344,12 @@ public class AchievementStatsService {
      * @return The level that the particular value corresponds to, given the thresholds.
      */
     private int findLevel(List<Integer> thresholds, int value) {
-        int level = 0;
         for (int i = 0; i < thresholds.size(); i++) {
-            if (thresholds.get(i) <= value) {
-                level = i+1;
+            if (thresholds.get(i) > value) {
+                return i;
             }
         }
-        return level;
+        return 0;
     }
 
 
@@ -377,14 +362,11 @@ public class AchievementStatsService {
      * @return The level that the particular value corresponds to, given the thresholds.
      */
     private int findLevel(List<Integer> thresholds, double value) {
-        int level = 0;
         for (int i = 0; i < thresholds.size(); i++) {
-            if (thresholds.get(i) <= value) {
-                level = i+1;
+            if (thresholds.get(i) > value) {
+                return i;
             }
         }
-        return level;
+        return 0;
     }
-
-
 }
