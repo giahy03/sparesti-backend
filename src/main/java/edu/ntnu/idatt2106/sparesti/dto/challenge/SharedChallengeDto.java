@@ -22,8 +22,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonTypeName("SavingChallengeDto")
-public class SavingChallengeDto extends ChallengeDto {
-    private double totalAmount;
-    private double currentAmount;
+@JsonTypeName("SharedChallengeDto")
+public class SharedChallengeDto extends ChallengeDto {
+    private long sharedChallengeId;
 }
