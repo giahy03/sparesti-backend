@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106.sparesti.controller;
 
 import edu.ntnu.idatt2106.sparesti.dto.achievementStats.CheckForAchievementDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
+import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.service.achievementStats.AchievementStatsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,20 +34,14 @@ public class AchievementStatsController {
     @PutMapping("/stat")
     public ResponseEntity<BadgePreviewDto> checkForAchievement(Principal principal, @RequestBody CheckForAchievementDto checkForAchievementDto) {
 
-        boolean achievementMade = achievementStatsService.checkAchievement(checkForAchievementDto, principal);
+        int level = achievementStatsService.checkAchievement(checkForAchievementDto, principal);
 
-/*
-        if (achievementMade) {
-
-            //BadgePreviewDto badgePreviewDto achievementStatsService.
-
-            return new ResponseEntity<>(badgePreviewDto, HttpStatus.CREATED);
-
+        if (level > 0) {
+            BadgePreviewDto createdBadge = achievementStatsService.createBadge(checkForAchievementDto, principal, level);
+            return new ResponseEntity<>(createdBadge, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.OK);
-        }*/
-
-        return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
     }
 
 
