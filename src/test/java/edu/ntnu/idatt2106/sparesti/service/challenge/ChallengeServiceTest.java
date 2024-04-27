@@ -3,7 +3,7 @@ package edu.ntnu.idatt2106.sparesti.service.challenge;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
-import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
@@ -44,11 +44,11 @@ class ChallengeServiceTest {
 
   Principal principal;
 
-  private SavingChallenge challenge;
+  private SharedChallenge challenge;
 
   @BeforeEach
   void setUp() {
-    challenge = ChallengeUtility.createSavingChallenge();
+    challenge = ChallengeUtility.createSharedChallengeA();
     principal = () -> "example@guide";
   }
 
