@@ -19,8 +19,8 @@ public class ChallengePreviewDto {
   @NonNull
   private String title;
 
-  private int lives;
-
   @NonNull
   private String difficulty;
+
+  private String challengeType;
 }
