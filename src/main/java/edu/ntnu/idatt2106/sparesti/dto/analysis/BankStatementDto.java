@@ -14,4 +14,5 @@ public class BankStatementDto {
   private String accountNumber;
   private YearMonth timestamp;
   private boolean analysisIsPresent;
+  private String fileName;
 }

@@ -22,7 +22,10 @@ public interface BankStatementMapper {
       @Mapping(target = "accountNumber", source = "accountNumber"),
       @Mapping(target = "timestamp", source = "timestamp"),
       @Mapping(target = "analysisIsPresent", source = "analysis", qualifiedByName =
-          "analysisIsPresent")})
+          "analysisIsPresent"),
+      @Mapping(target = "fileName", source = "fileName")
+  }
+  )
   BankStatementDto bankStatementIntoBankStatementDto(BankStatement bankStatement);
 
   /**
