@@ -3,12 +3,16 @@ package edu.ntnu.idatt2106.sparesti.controller;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
+import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengeDto;
+import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.service.challenge.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.security.Principal;
 import java.util.List;
+
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -180,6 +184,35 @@ public class ChallengeController {
 
     log.info("Challenge successfully updated with id {}", challengeId);
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  /**
+   * Join a shared challenge with a join code.
+   *
+   * @param principal the user that wants to join the shared challenge.
+   * @param joinCode the join code of the shared challenge.
+   * @return ResponseEntity containing the status of the operation.
+   */
+  @GetMapping("/shared-challenge/{joinCode}")
+  public ResponseEntity<String> joinSharedChallenge(Principal principal, @PathVariable String joinCode) {
+    log.info("Joining shared challenge for user: {}", principal.getName());
+    challengeService.joinSharedChallenge(principal, joinCode);
+    log.info("Shared challenge successfully joined with join code {}", joinCode);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  /**
+  * Get participating users for a shared challenge.
+  *
+  * @param principal the user that wants to get the participating users.
+  * @return ResponseEntity containing the participating users.
+  */
+  @GetMapping("/shared-challenge/{joinCode}")
+  public ResponseEntity<List<SharedChallengePreviewDto>> getParticipatingUsers(Principal principal, @PathVariable String joinCode) {
+    log.info("Getting participating users for shared challenge with join code: {}", joinCode);
+    List<SharedChallengePreviewDto> sharedChallengeDto = challengeService.getParticipatingUsers(principal, joinCode);
+    log.info("Participating users successfully retrieved for challenge with id: {}", joinCode);
+    return new ResponseEntity<>(sharedChallengeDto, HttpStatus.OK);
   }
 
 }
