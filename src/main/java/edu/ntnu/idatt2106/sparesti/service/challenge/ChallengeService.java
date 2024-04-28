@@ -4,18 +4,21 @@ import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengeDto;
+import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException;
 import edu.ntnu.idatt2106.sparesti.mapper.ChallengeMapper;
 import edu.ntnu.idatt2106.sparesti.mapper.SharedChallengeMapper;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
-import edu.ntnu.idatt2106.sparesti.repository.EmailCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import java.security.Principal;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -41,15 +44,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChallengeService {
 
-  private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-  private static final int LENGTH = 6;
-
+  private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  private static final int LENGTH = 8;
   private static final SecureRandom random = new SecureRandom();
 
   private final ChallengesRepository challengesRepository;
 
   private final SharedChallengeRepository sharedChallengeRepository;
+
   private final ChallengeMapper challengeMapperImpl = Mappers.getMapper(ChallengeMapper.class);
   private final SharedChallengeMapper sharedChallengeMapperImpl =
           Mappers.getMapper(SharedChallengeMapper.class);
@@ -72,7 +74,6 @@ public class ChallengeService {
             .collect(Collectors.toList());
   }
 
-  public Challenge
 
 
   /**
@@ -81,13 +82,11 @@ public class ChallengeService {
    *
    * @return the generated token.
    */
-  private String generateVerificationToken() {
+  private String generateJoinCode() {
     StringBuilder token = new StringBuilder(LENGTH);
-
     for (int i = 0; i < LENGTH; i++) {
       token.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
     }
-
     return token.toString();
   }
 
@@ -135,25 +134,42 @@ public class ChallengeService {
   private void addSharedChallengeToUser(ChallengeDto challengeDto, User user) {
     SharedChallenge sharedChallenge = sharedChallengeMapperImpl.sharedChallengeDtoToSharedChallenge((SharedChallengeDto) challengeDto, challengeMapperImpl);
     sharedChallenge.setUser(user);
-    sharedChallenge.setSharedChallengeCode();
-    sharedChallenge.setSharedId(sharedChallengeRepository.count() + 1);
+    sharedChallenge.setSharedChallengeCode(generateSharedChallengeCode());
+    challengesRepository.save(sharedChallenge);
+  }
+
+  private SharedChallengeCode generateSharedChallengeCode() {
+    return SharedChallengeCode.builder()
+            .joinCode(generateJoinCode())
+            .build();
+  }
+
+  public void joinSharedChallenge(Principal principal, String joinCode) {
+    SharedChallenge sharedChallenge = sharedChallengeRepository.findSharedChallengeBySharedChallengeCode_JoinCode(joinCode).getFirst();
+    if (sharedChallenge == null) {
+      throw new NoSuchElementException("Challenge not found");
+    }
+
+    User user = userRepository.findUserByEmailIgnoreCase(principal.getName()).orElseThrow(() ->
+            new UsernameNotFoundException("User Not Found with -> username or email: " + principal.getName()));
+
+    SharedChallenge.builder()
+            .title(sharedChallenge.getTitle())
+            .difficulty(sharedChallenge.getDifficulty())
+            .endDate(sharedChallenge.getEndDate())
+            .startDate(sharedChallenge.getStartDate())
+            .description(sharedChallenge.getDescription())
+            .progress(Progress.IN_PROGRESS)
+            .user(user)
+            .sharedChallengeCode(sharedChallenge.getSharedChallengeCode())
+            .build();
+
     challengesRepository.save(sharedChallenge);
   }
 
 
-  /**
-   * Share a shared challenge for a specified user.
-   *
-   * @param challengeDto is the challenge we want to share.
-   * @param user is the user we want to share the challenge for.
-   * @param sharedId is the id of the shared challenge.
-   */
-  public void shareChallengeForUser(ChallengeDto challengeDto, User user, long sharedId) {
-    SharedChallenge sharedChallenge = sharedChallengeMapperImpl.sharedChallengeDtoToSharedChallenge((SharedChallengeDto) challengeDto, challengeMapperImpl);
-    sharedChallenge.setUser(user);
-    sharedChallenge.setSharedId(sharedId);
-    challengesRepository.save(sharedChallenge);
-  }
+
+
 
 
   /**
@@ -212,13 +228,6 @@ public class ChallengeService {
     }
   }
 
-  public ChallengeDto getSharedChallengeRepository(Principal principal, long challengeId) {
-    Challenge challenge = checkForChallenge(challengeId);
-    checkForUser(principal.getName());
-    checkValidity(challenge, principal.getName());
-    return sharedChallengeMapperImpl.sharedChallengeToSharedChallengeDto((SharedChallenge) challenge, challengeMapperImpl);
-  }
-
 
 
   /**
@@ -239,6 +248,7 @@ public class ChallengeService {
     challengesRepository.save(foundChallenge);
   }
 
+
   /**
    * Check if the challenge exists.
    *
@@ -250,4 +260,19 @@ public class ChallengeService {
             .orElseThrow(() -> new NoSuchElementException("Challenge not found"));
   }
 
+  public List<SharedChallengePreviewDto> getParticipatingUsers(Principal principal, String joinCode) {
+    List<SharedChallenge> sharedChallenge = sharedChallengeRepository.findSharedChallengeBySharedChallengeCode_JoinCode(joinCode);
+    List<SharedChallengePreviewDto> sharedChallengeDto = new ArrayList<>();
+
+    checkForUser(principal.getName());
+    for (SharedChallenge challenge : sharedChallenge) {
+      SharedChallengePreviewDto sharedChallengePreviewDto = SharedChallengePreviewDto.builder()
+              .firstName(challenge.getUser().getFirstName())
+              .lastName(challenge.getUser().getLastName())
+              .progress(challenge.getProgress())
+              .build();
+      sharedChallengeDto.add(sharedChallengePreviewDto);
+    }
+    return sharedChallengeDto;
+  }
 }
