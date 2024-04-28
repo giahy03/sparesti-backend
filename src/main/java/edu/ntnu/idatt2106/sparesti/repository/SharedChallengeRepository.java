@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SharedChallengeRepository extends JpaRepository<SharedChallenge, Long> {
-  List<SharedChallenge> findSharedChallengeBySharedId (Long sharedId);
-
+  List<SharedChallenge> findSharedChallengeBySharedChallengeCode_JoinCode(String code);
 }
