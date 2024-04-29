@@ -68,8 +68,10 @@ public class BankStatementService {
    * @throws IOException            If the file cannot be read properly.
    */
   public BankStatement saveBankStatement(MultipartFile file, Principal principal)
-      throws NoSuchElementException, IOException {
+      throws NoSuchElementException, IOException, NullPointerException {
 
+    User user = userRepository.findUserByEmailIgnoreCase(principal.getName())
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
     HandelsBankenReader spareBank1Reader = new HandelsBankenReader();
     File tempFile = File.createTempFile("bank-statement-", "-" + file.getOriginalFilename());
@@ -77,10 +79,15 @@ public class BankStatementService {
 
     BankStatement bankStatement = spareBank1Reader.readStatement(tempFile);
 
+
+    if (file.getOriginalFilename() == null){
+      bankStatement.setFileName("unnamed-bank-statement" + bankStatement.getTimestamp());
+    } else {
+      bankStatement.setFileName(file.getOriginalFilename());
+    }
+
     Files.delete(tempFile.toPath());
 
-    User user = userRepository.findUserByEmailIgnoreCase(principal.getName())
-        .orElseThrow(() -> new NoSuchElementException("User not found"));
     bankStatement.setUser(user);
     bankStatement.getTransactions()
         .forEach(transaction -> transaction.setBankStatement(bankStatement));
@@ -130,7 +137,7 @@ public class BankStatementService {
 
     List<BankStatement> bankStatements = bankStatementRepository.findAllByUser(user);
 
-    Set<String> accountNumbers = new  HashSet<String>();
+    Set<String> accountNumbers = new  HashSet<>();
 
     for (BankStatement bankStatement : bankStatements) {
       accountNumbers.add(bankStatement.getAccountNumber());

@@ -55,5 +55,8 @@ public class BankStatement {
   @OneToOne(cascade = CascadeType.ALL)
   private BankStatementAnalysis analysis;
 
+  @Column(name = "file_name")
+  private String fileName;
+
 
 }
