@@ -58,5 +58,8 @@ public class BankStatement {
   @Column(name = "file_name")
   private String fileName;
 
+  @Column(name = "account_name")
+  private String accountName;
+
 
 }

@@ -2,7 +2,6 @@ package edu.ntnu.idatt2106.sparesti.filehandling;
 
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
-import java.nio.file.Path;
 import java.time.MonthDay;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -18,7 +17,7 @@ import org.springframework.data.util.Pair;
 public class HandelsBankenReader extends BankStatementReader {
 
 
-@Override
+  @Override
   public void readStandardPage(String pageText, BankStatement bankStatement) {
     String[] splitText = pageText.split("\n");
     log.info("Reading transactions from SpareBank1 page 2");
@@ -53,6 +52,13 @@ public class HandelsBankenReader extends BankStatementReader {
     String[] accountAndDateLineSplit = accountAndDateLine.getFirst().orElseThrow().split(" ");
 
     bankStatement.setAccountNumber(accountAndDateLineSplit[5]);
+
+    Optional<String> accountName = getAccountName(accountAndDateLineSplit);
+    if (accountName.isPresent()) {
+      bankStatement.setAccountName(accountName.get());
+    } else {
+      bankStatement.setAccountName("Unknown");
+    }
 
     String statementYearMonthString = accountAndDateLineSplit[8];
     String[] yearMonthSplit = statementYearMonthString.split("\\.");
@@ -103,9 +109,33 @@ public class HandelsBankenReader extends BankStatementReader {
 
     String description = String.join(" ", Arrays.copyOfRange(splitLine, 0, splitLine.length - 2));
     double amount = Double.parseDouble(
-        splitLine[splitLine.length - 2].replaceAll("\\.", "").replaceAll(",", "."));
+        splitLine[splitLine.length - 2].replace("\\.", "").replace(",", "."));
 
     return new Transaction(monthDay, description, amount, incoming);
+  }
+
+  /**
+   * Gets the account name from the account and date line.
+   *
+   * @param accountAndDateLineSplit The split account and date line.
+   * @return The account name.
+   */
+  private Optional<String> getAccountName(String[] accountAndDateLineSplit) {
+    for (int i = accountAndDateLineSplit.length; i > 0; i--) {
+      try {
+        String[] possibleDates = accountAndDateLineSplit[i].split("\\.");
+        for (String possibleDate : possibleDates) {
+          Integer.parseInt(possibleDate);
+        }
+        String accountName = String.join(" ", Arrays.copyOfRange(accountAndDateLineSplit, i + 1,
+            accountAndDateLineSplit.length));
+        log.info("Account name is ");
+        return Optional.of(accountName);
+      } catch (Exception e) {
+        //If this line is reached, the account name has not been completely read yet
+      }
+    }
+    return Optional.empty();
   }
 
 

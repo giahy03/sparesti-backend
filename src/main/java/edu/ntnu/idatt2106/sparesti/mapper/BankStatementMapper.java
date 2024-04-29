@@ -5,7 +5,6 @@ import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
@@ -17,15 +16,14 @@ public interface BankStatementMapper {
 
   BankStatementMapper INSTANCE = Mappers.getMapper(BankStatementMapper.class);
 
-  @Mappings({@Mapping(target = "id", source = "id"),
-      @Mapping(target = "transactions", source = "transactions"),
-      @Mapping(target = "accountNumber", source = "accountNumber"),
-      @Mapping(target = "timestamp", source = "timestamp"),
-      @Mapping(target = "analysisIsPresent", source = "analysis", qualifiedByName =
-          "analysisIsPresent"),
-      @Mapping(target = "fileName", source = "fileName")
-  }
-  )
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "transactions", source = "transactions")
+  @Mapping(target = "accountNumber", source = "accountNumber")
+  @Mapping(target = "timestamp", source = "timestamp")
+  @Mapping(target = "analysisIsPresent", source = "analysis", qualifiedByName =
+      "analysisIsPresent")
+  @Mapping(target = "fileName", source = "fileName")
+  @Mapping(target = "accountName", source = "accountName")
   BankStatementDto bankStatementIntoBankStatementDto(BankStatement bankStatement);
 
   /**
