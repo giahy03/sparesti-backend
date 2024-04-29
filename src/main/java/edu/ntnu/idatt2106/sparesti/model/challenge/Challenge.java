@@ -59,14 +59,15 @@ public class Challenge {
   @NonNull
   private Difficulty difficulty;
 
-  @Column(name = "lives", nullable = false)
-  private int lives;
-
-  @Column(name = "current_tile", nullable = false)
-  private int currentTile;
-
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "progress", nullable = false)
+  private Progress progress;
+
+  @Column(name = "description", nullable = false)
+  @NonNull
+  private String description;
 }

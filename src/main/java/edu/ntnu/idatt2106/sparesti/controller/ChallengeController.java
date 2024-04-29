@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106.sparesti.controller;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
+import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.service.challenge.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 
 
@@ -164,7 +166,7 @@ public class ChallengeController {
               description = "The challenge was updated successfully."),
       @ApiResponse(responseCode = "400",
               description = "The challenge could not be updated."),
-          @ApiResponse(responseCode = "401",
+      @ApiResponse(responseCode = "401",
               description = "The user is not authorized to change the challenge."),
       @ApiResponse(responseCode = "404",
               description = "The user could not be found.")
@@ -180,6 +182,45 @@ public class ChallengeController {
 
     log.info("Challenge successfully updated with id {}", challengeId);
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+
+  /**
+   * Join a shared challenge with a join code.
+   *
+   * @param principal the user that wants to join the shared challenge.
+   * @param joinCode the join code of the shared challenge.
+   * @return ResponseEntity containing the status of the operation.
+   */
+  @Operation(summary = "Join a shared challenge to a given user.")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200",
+                  description = "The user joined the shared challenge successfully"),
+          @ApiResponse(responseCode = "400",
+                  description = "The challenge could not be updated."),
+  })
+  @GetMapping("/shared-challenge/{joinCode}")
+  public ResponseEntity<String> joinSharedChallenge(Principal principal,
+                                                    @PathVariable String joinCode) {
+    log.info("Joining shared challenge with join code: {}, for user: {}", joinCode, principal.getName());
+    challengeService.joinSharedChallenge(principal, joinCode);
+    log.info("Shared challenge successfully joined with join code {}", joinCode);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  /**
+  * Get participating users for a shared challenge.
+  *
+  * @param principal the user that wants to get the participating users.
+  * @return ResponseEntity containing the participating users.
+  */
+  @GetMapping("/shared-challenge/users/{joinCode}")
+  public ResponseEntity<List<SharedChallengePreviewDto>> getParticipatingUsers(Principal principal,
+                                                                               @PathVariable String joinCode) {
+    log.info("Getting participating users for shared challenge with join code: {}", joinCode);
+    List<SharedChallengePreviewDto> sharedChallengeDto = challengeService.getParticipatingUsers(principal, joinCode);
+    log.info("Participating users successfully retrieved for challenge with id: {}", joinCode);
+    return new ResponseEntity<>(sharedChallengeDto, HttpStatus.OK);
   }
 
 }

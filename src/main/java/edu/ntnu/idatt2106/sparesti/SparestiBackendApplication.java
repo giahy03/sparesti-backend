@@ -1,17 +1,17 @@
 package edu.ntnu.idatt2106.sparesti;
 
-import edu.ntnu.idatt2106.sparesti.filehandling.DnbReader;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
-import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
+import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
+import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
-import edu.ntnu.idatt2106.sparesti.repository.BankStatementRepository;
+import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
+import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeCodeRepository;
+import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
-import java.nio.file.Path;
-import java.time.YearMonth;
-import java.util.ArrayList;
-import edu.ntnu.idatt2106.sparesti.service.analysis.BankStatementAnalysisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,14 +20,13 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class SparestiBackendApplication {
 
-//  @Autowired
-//  BankStatementAnalysisService bankStatementAnalysis;
-//
-//  @Autowired
-//  BankStatementRepository bankStatementRepository;
 
   public static void main(String[] args) {
     SpringApplication.run(SparestiBackendApplication.class, args);
@@ -40,10 +39,20 @@ public class SparestiBackendApplication {
 
       BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+
       User user = User.builder()
           .email("admin@example.com")
           .firstName("Admin")
           .lastName("Admin")
+          .password(passwordEncoder.encode("password"))
+          .role(Role.USER)
+          .bankStatements(new ArrayList<>())
+          .build();
+
+      User user2 = User.builder()
+          .email("asuduo@example.com")
+          .firstName("Asu")
+          .lastName("Duo")
           .password(passwordEncoder.encode("password"))
           .role(Role.USER)
           .bankStatements(new ArrayList<>())
@@ -57,18 +66,8 @@ public class SparestiBackendApplication {
 
       userRepository.save(user);
 
-//   DnbReader dnbReader = new DnbReader();
-//   for (int i = 0; i < 2; i++) {
-//
-//     BankStatement bankStatement = dnbReader.readStatement(Path.of(("src/main/resources" + "/bankstatements/dnb/dnbExample.pdf")).toFile());
-//     bankStatementAnalysis.analyze(bankStatement, user.getUserInfo());
-//     bankStatement.setAccountNumber("1234567890" + i);
-//     bankStatement.setUser(user);
-//     bankStatement.setTimestamp(YearMonth.now());
-//     bankStatement.getTransactions().forEach(transaction -> transaction.setBankStatement(bankStatement));
-//     bankStatementRepository.save(bankStatement);
-//
-//   }
     };
+
+
   }
 }

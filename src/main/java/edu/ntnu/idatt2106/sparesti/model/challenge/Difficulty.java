@@ -1,9 +1,9 @@
 package edu.ntnu.idatt2106.sparesti.model.challenge;
 
 /**
- * Represents the difficulty of a saving challenge.
- * The difficulty is used to determine the amount
- * of money the user has to save to complete the challenge.
+ * Represents the difficulty of a challenge.
+ * The difficulty is used to determine the
+ * complexity of the challenge.
  *
  * @author Jeffrey Yaw Annor Tabiri
  * @version 1.0

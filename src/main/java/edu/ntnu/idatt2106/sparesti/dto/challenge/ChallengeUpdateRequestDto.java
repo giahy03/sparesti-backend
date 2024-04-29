@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.dto.challenge;
 
+import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,7 +13,5 @@ import lombok.Data;
 @Data
 @Builder
 public class ChallengeUpdateRequestDto {
-  int currentTiles;
-  int lives;
-  int currentAmount;
+  Progress progress;
 }

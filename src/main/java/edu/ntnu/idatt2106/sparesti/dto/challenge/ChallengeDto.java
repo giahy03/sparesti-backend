@@ -3,10 +3,12 @@ package edu.ntnu.idatt2106.sparesti.dto.challenge;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.time.LocalDate;
+import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 
 
@@ -27,17 +29,28 @@ import lombok.experimental.SuperBuilder;
         property = "challengeType",
         defaultImpl = ChallengeDto.class)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = SavingChallengeDto.class, name = "SavingChallengeDto")
-
+        @JsonSubTypes.Type(value = SharedChallengeDto.class, name = "SharedChallengeDto"),
 }
 )
-
 public class ChallengeDto {
+  @NonNull
   private Long id;
+
+  @NonNull
   private String title;
-  private int lives;
-  private int currentTile;
+
+  @NonNull
+  private String description;
+
+  @NonNull
   private LocalDate startDate;
+
+  @NonNull
   private LocalDate endDate;
+
+  @NonNull
   private String difficulty;
+
+  @NonNull
+  private Progress progress;
 }

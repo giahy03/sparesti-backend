@@ -3,16 +3,21 @@ package edu.ntnu.idatt2106.sparesti.service.challenge;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
-import edu.ntnu.idatt2106.sparesti.dto.challenge.SavingChallengeDto;
+import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengeDto;
+import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException;
 import edu.ntnu.idatt2106.sparesti.mapper.ChallengeMapper;
-import edu.ntnu.idatt2106.sparesti.mapper.SavingChallengeMapper;
+import edu.ntnu.idatt2106.sparesti.mapper.SharedChallengeMapper;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
-import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
+import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -22,7 +27,6 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 
 /**
  * A service class for services related to challenges.
@@ -37,9 +41,11 @@ import org.springframework.stereotype.Service;
 public class ChallengeService {
 
   private final ChallengesRepository challengesRepository;
+  private final SharedChallengeRepository sharedChallengeRepository;
   private final ChallengeMapper challengeMapperImpl = Mappers.getMapper(ChallengeMapper.class);
-  private final SavingChallengeMapper savingChallengeMapperImpl =
-          Mappers.getMapper(SavingChallengeMapper.class);
+  private final SharedChallengeMapper sharedChallengeMapperImpl =
+          Mappers.getMapper(SharedChallengeMapper.class);
+
   private final UserRepository userRepository;
 
 
@@ -51,9 +57,8 @@ public class ChallengeService {
    * @return a list of challenges for the specified user.
    */
   public List<ChallengePreviewDto> getChallenges(Principal principal, Pageable pageable) {
-    List<Challenge> challenges = challengesRepository.findByUser_Email(principal.getName(), pageable);
-
-    return challenges.stream()
+    return challengesRepository.findByUser_Email(principal.getName(), pageable)
+            .stream()
             .map(challengeMapperImpl::challengeIntoChallengePreviewDto)
             .collect(Collectors.toList());
   }
@@ -66,46 +71,110 @@ public class ChallengeService {
    * @param challenge is the challenge we want to add.
    */
   public void addChallenge(Principal principal, ChallengeDto challenge) {
-    String username = principal.getName();
-    checkForUser(username);
-    User user = userRepository.findUserByEmailIgnoreCase(principal.getName()).orElseThrow(() ->
-            new UsernameNotFoundException("User Not Found with -> username or email: " + username));
 
-    if (challenge instanceof SavingChallengeDto) {
-      addSavingChallenge(username, challenge, user);
+    User user = getUser(principal);
+
+    if (challenge instanceof SharedChallengeDto) {
+      addSharedChallenge(challenge, user);
+
     } else {
-      addCommonChallenge(username, challenge, user);
+      addCommonChallenge(challenge, user);
     }
+
   }
 
 
   /**
    * Add a common challenge for a specified user.
    *
-   * @param username is the name of the user we want to add a challenge for.
-   * @param challenge is the challenge we want to add.
-   * @param user is the user we want to add the challenge for.
+   * @param challengeDto is the challenge we want to add.
+   * @param user      is the user we want to add the challenge for.
    */
-  private void addCommonChallenge(String username, ChallengeDto challenge, User user) {
-    Challenge newChallenge = challengeMapperImpl.challengeDtoToChallenge(challenge);
-    newChallenge.setUser(user);
-    challengesRepository.save(newChallenge);
+  private void addCommonChallenge(ChallengeDto challengeDto, User user) {
+    Challenge challenge = challengeMapperImpl.challengeDtoToChallenge(challengeDto);
+    challenge.setUser(user);
+    challengesRepository.save(challenge);
   }
 
 
   /**
-   * Add a saving challenge for a specified user.
+   * Add a shared challenge for a specified user.
    *
-   * @param username is the user we want to add a challenge for.
-   * @param challenge is the challenge we want to add.
-   * @param user is the user we want to add the challenge for.
+   * @param challengeDto is the challenge we want to share.
+   * @param user         is the user we want to share the challenge for.
    */
-  private void addSavingChallenge(String username, ChallengeDto challenge, User user) {
-    log.info("Adding a saving challenge for user {}.", username);
-    SavingChallenge savingChallenge =
-            savingChallengeMapperImpl.savingChallengeDtoToSavingChallenge(
-                    (SavingChallengeDto) challenge, user, challengeMapperImpl);
-    challengesRepository.save(savingChallenge);
+  private void addSharedChallenge(ChallengeDto challengeDto, User user) {
+    SharedChallenge sharedChallenge = sharedChallengeMapperImpl
+            .sharedChallengeDtoToSharedChallenge(
+                    (SharedChallengeDto) challengeDto, challengeMapperImpl);
+    sharedChallenge.setUser(user);
+    sharedChallenge.setSharedChallengeCode(generateSharedChallengeCode());
+    sharedChallenge.getSharedChallengeCode().setSharedChallenges(List.of(sharedChallenge));
+    challengesRepository.save(sharedChallenge);
+  }
+
+
+  /**
+   * Get the user from the principal.
+   *
+   * @param principal is the principal we want to get the user from.
+   * @return the user.
+   */
+  private User getUser(Principal principal) {
+    return userRepository
+            .findUserByEmailIgnoreCase(principal.getName())
+            .orElseThrow(() ->
+            new UsernameNotFoundException(
+                    "User Not Found with -> username or email: " + principal.getName()));
+  }
+
+
+  /**
+   * Generate a shared challenge code for
+   * a shared challenge.
+   *
+   * @return the shared challenge code.
+   */
+  private SharedChallengeCode generateSharedChallengeCode() {
+    return SharedChallengeCode.builder()
+            .joinCode(CodeGenerationUtility.generateJoinCode())
+            .build();
+  }
+
+  /**
+   * Join a shared challenge.
+   *
+   * @param principal is the user that wants to join the challenge.
+   * @param joinCode is the join code of the challenge.
+   */
+  public void joinSharedChallenge(Principal principal, String joinCode) {
+    SharedChallenge sharedChallenge =
+            sharedChallengeRepository
+                    .findSharedChallengeBySharedChallengeCode_JoinCode(joinCode).getFirst();
+
+    User user = getUser(principal);
+
+    challengesRepository.save(copySharedChallenge(sharedChallenge, user));
+  }
+
+  /**
+   * Copy a shared challenge for a specified user.
+   *
+   * @param sharedChallenge is the shared challenge we want to copy.
+   * @param user is the user we want to copy the shared challenge for.
+   * @return the copied shared challenge.
+   */
+  private  SharedChallenge copySharedChallenge(SharedChallenge sharedChallenge, User user) {
+    return SharedChallenge.builder()
+            .title(sharedChallenge.getTitle())
+            .difficulty(sharedChallenge.getDifficulty())
+            .endDate(sharedChallenge.getEndDate())
+            .startDate(sharedChallenge.getStartDate())
+            .description(sharedChallenge.getDescription())
+            .progress(Progress.IN_PROGRESS)
+            .user(user)
+            .sharedChallengeCode(sharedChallenge.getSharedChallengeCode())
+            .build();
   }
 
 
@@ -116,32 +185,22 @@ public class ChallengeService {
    * @param challengeId is the id of the challenge we want to remove.
    */
   public void removeChallenge(Principal principal, long challengeId) {
-    checkForUser(principal.getName());
     checkValidity(checkForChallenge(challengeId), principal.getName());
     challengesRepository.deleteById(challengeId);
   }
+
 
 
   /**
    * Check if the user has access to the challenge.
    *
    * @param challenge is the id of the challenge.
-   * @param username is the username of the user.
+   * @param username  is the username of the user.
    */
   private void checkValidity(Challenge challenge, String username) {
     if (!challenge.getUser().getEmail().equals(username)) {
       throw new UnauthorizedOperationException("User not authorized to change the challenge");
     }
-  }
-
-  /**
-   * Check if the user exists.
-   *
-   * @param username is the username of the user.
-   */
-  private void checkForUser(String username) {
-    userRepository.findUserByEmailIgnoreCase(username).orElseThrow(() ->
-            new UsernameNotFoundException("User Not Found with -> username or email: " + username));
   }
 
 
@@ -155,11 +214,11 @@ public class ChallengeService {
   public ChallengeDto getChallenge(Principal principal, long challengeId) {
 
     Challenge challenge = checkForChallenge(challengeId);
-    checkForUser(principal.getName());
     checkValidity(challenge, principal.getName());
 
-    if (challenge instanceof SavingChallenge savingChallenge) {
-      return savingChallengeMapperImpl.savingChallengeDto(savingChallenge, challengeMapperImpl);
+    if (challenge instanceof SharedChallenge sharedChallenge) {
+      return sharedChallengeMapperImpl
+              .sharedChallengeToSharedChallengeDto(sharedChallenge, challengeMapperImpl);
     } else {
       return challengeMapperImpl.challengeIntoChallengeDto(challenge);
     }
@@ -178,42 +237,10 @@ public class ChallengeService {
                               ChallengeUpdateRequestDto challenge) {
 
     Challenge foundChallenge = checkForChallenge(challengeId);
-    checkForUser(principal.getName());
     checkValidity(foundChallenge, principal.getName());
+    foundChallenge.setProgress(challenge.getProgress());
 
-    if (foundChallenge instanceof SavingChallenge savingChallenge) {
-      updateSavingChallenge(challenge, savingChallenge);
-      challengesRepository.save(savingChallenge);
-
-    } else {
-      updateCommonProperties(challenge, foundChallenge);
-      challengesRepository.save(foundChallenge);
-    }
-
-  }
-
-
-  /**
-   * Update the saving challenge.
-   *
-   * @param challenge the new challenge data
-   * @param savingChallenge the challenge to update.
-   */
-  private void updateSavingChallenge(ChallengeUpdateRequestDto challenge, SavingChallenge savingChallenge) {
-    savingChallenge.setCurrentAmount(challenge.getCurrentAmount());
-    updateCommonProperties(challenge, savingChallenge);
-  }
-
-
-  /**
-   * Update the common properties of a challenge.
-   *
-   * @param challenge the new challenge data
-   * @param savingChallenge the challenge to update
-   */
-  private void updateCommonProperties(ChallengeUpdateRequestDto challenge, Challenge savingChallenge) {
-    savingChallenge.setLives(challenge.getLives());
-    savingChallenge.setCurrentTile(challenge.getCurrentTiles());
+    challengesRepository.save(foundChallenge);
   }
 
 
@@ -228,4 +255,28 @@ public class ChallengeService {
             .orElseThrow(() -> new NoSuchElementException("Challenge not found"));
   }
 
+  /**
+   * Get the users participating in a shared challenge.
+   *
+   * @param principal is the user that wants to get the participating users.
+   * @param joinCode is the join code of the shared challenge.
+   * @return the users participating in the shared challenge.
+   */
+  public List<SharedChallengePreviewDto> getParticipatingUsers(
+          Principal principal, String joinCode) {
+    List<SharedChallenge> sharedChallenge = sharedChallengeRepository
+            .findSharedChallengeBySharedChallengeCode_JoinCode(joinCode);
+    List<SharedChallengePreviewDto> sharedChallengeDto = new ArrayList<>();
+
+    getUser(principal);
+    for (SharedChallenge challenge : sharedChallenge) {
+      SharedChallengePreviewDto sharedChallengePreviewDto = SharedChallengePreviewDto.builder()
+              .firstName(challenge.getUser().getFirstName())
+              .lastName(challenge.getUser().getLastName())
+              .progress(challenge.getProgress())
+              .build();
+      sharedChallengeDto.add(sharedChallengePreviewDto);
+    }
+    return sharedChallengeDto;
+  }
 }
