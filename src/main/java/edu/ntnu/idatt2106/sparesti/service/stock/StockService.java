@@ -5,17 +5,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106.sparesti.dto.stock.StockDataDto;
 import edu.ntnu.idatt2106.sparesti.exception.stock.StockNotFoundException;
 import edu.ntnu.idatt2106.sparesti.exception.stock.StockProcessingException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 /**
+ * <p>
  * Service class for retrieving stock data from the Polygon API.
+ * </p>
  *
  * <p>
  * The Polygon API provides access to stock market data. The API key and doc can be obtained
  * on the Polygon website: <a href="https://polygon.io">Polygon API</a>.
+ * </p>
+ *
+ * <p>
+ * Notes on data: This service uses the free version of the Polygon API, which has limitations on
+ * obtaining live data. Therefore, the retrieved data is from the day before.
  * </p>
  *
  * @author Ramtin Samavat
@@ -41,8 +49,22 @@ public class StockService {
    */
   public StockDataDto getStockData(String symbol) {
 
-    String startDate = LocalDate.now().minusDays(2).toString();
-    String endDate = LocalDate.now().minusDays(1).toString();
+    DayOfWeek currentDayOfWeek = LocalDate.now().minusDays(1).getDayOfWeek();
+
+    String startDate;
+    String endDate;
+
+    if (currentDayOfWeek == DayOfWeek.SATURDAY || currentDayOfWeek == DayOfWeek.SUNDAY) {
+
+      int daysToAdd = (currentDayOfWeek == DayOfWeek.SATURDAY) ? 1 : 2;
+
+      startDate = LocalDate.now().minusDays(daysToAdd + 2).toString();
+      endDate = LocalDate.now().plusDays(daysToAdd + 1).toString();
+
+    } else {
+      startDate = LocalDate.now().minusDays(2).toString();
+      endDate = LocalDate.now().minusDays(1).toString();
+    }
 
     try {
       String url = String.format(API_URL, symbol, startDate, endDate, API_KEY);
@@ -77,6 +99,3 @@ public class StockService {
     }
   }
 }
-
-
-
