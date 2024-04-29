@@ -160,7 +160,7 @@ public class SavingGoalController {
     @DeleteMapping("/goal")
     public ResponseEntity<String> deleteSavingGoal(Principal principal, @RequestBody SavingGoalIdDto savingGoalIdDto) {
         log.info("Attempting to delete goal: " + savingGoalIdDto.getId());
-        savingGoalService.deleteSavingGoal(principal, savingGoalIdDto);
+        savingGoalService.deleteSavingGoal(savingGoalIdDto);
         log.info("Goal deleted: " + savingGoalIdDto.getId());
         return new ResponseEntity<>("Deleted successfully", HttpStatus.OK);
     }
@@ -185,7 +185,7 @@ public class SavingGoalController {
     @PutMapping("/goal/lives")
     public ResponseEntity<String> lives(Principal principal, @RequestBody SavingGoalUpdateValueDto updateValueDto) {
         log.info("Attempting to edit pig lives of goal: " + updateValueDto.getId());
-        int lives = savingGoalService.editLives(principal, updateValueDto);
+        int lives = savingGoalService.editLives(updateValueDto);
         log.info("Number of lives successfully updated to: " + lives);
 
         return new ResponseEntity<>("Lives updated successfully", HttpStatus.OK);
