@@ -2,9 +2,11 @@ package edu.ntnu.idatt2106.sparesti;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-class SparestiBackendApplicationTests {
+@ActiveProfiles("test")
+class SparestiBackendApplicationTest {
 
 	@Test
 	void contextLoads() {
