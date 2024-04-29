@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 @Builder
 public class SavingGoalContributionDto {
-    private long id;
+    private long goalId;
+    private long userId;
     private double contribution;
 }
