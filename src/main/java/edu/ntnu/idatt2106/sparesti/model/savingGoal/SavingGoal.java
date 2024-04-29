@@ -6,6 +6,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents a stored saving goal entity.
@@ -24,26 +28,35 @@ public class SavingGoal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "The unique identifier for the saving goal.")
-    @Column(name = "goal_id")
+    @Column(name = "id")
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToOne
+    // Owmner og invited. + joincode felt
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @NonNull
-    @Schema(description = "The unique identifier for the user.")
-    @JoinColumn(name="user_id", nullable = false)
-    private User user;
+    @Schema(description = "The unique identifier for the user who created the goal.")
+    @JoinColumn(name="author_id", nullable = false)
+    @Setter(AccessLevel.NONE)
+    private User author;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @NonNull
+    @Schema(description = "The unique identifier for the user(s) who has this goal.")
+    @CollectionTable(name="goal_users", joinColumns=@JoinColumn(name="id"))
+    private Set<User> users;
 
     @Schema(description = "The title of the saving goal.")
-    @Column(name="goal_name", nullable = false)
+    @Column(name="title", nullable = false)
     @NonNull
-    private String goalName;
+    private String title;
 
     @Enumerated(EnumType.STRING)
-    @Schema(description = "The difficulty level of the saving goal.")
-    @Column(name = "difficulty", nullable = false)
+    @Schema(description = "The state of the saving goal.")
+    @Column(name = "state", nullable = false)
     @NonNull
-    private GoalDifficulty difficulty;
+    private GoalState state;
 
     @Schema(description = "The start date of the saving goal.")
     @Column(name = "start_date", nullable = false)
@@ -59,25 +72,42 @@ public class SavingGoal {
 
     @Schema(description = "The amount of money to save up to achieve the saving goal.")
     @Column(name = "goal_amount")
-    private double amount;
+    private double totalAmount;
 
-    @Schema(description = "The amount of money saved up for this saving goal this far.")
-    @Column(name = "goal_progress")
-    private double progress;
+    @Column(name = "join_code", nullable = false, unique = true)
+    @Schema(description = "The join code for a goal")
+    @Setter(AccessLevel.NONE)
+    private String joinCode = "abc";   // TODO: Temorarily hardcoded.
+
+    @ElementCollection
+    @Schema(description = "The amount saved for this goal for each user.")
+    @MapKeyColumn(name="user_id")
+    @Column(name="amount")
+    @CollectionTable(name="user_saving_contribution", joinColumns=@JoinColumn(name="id"))  // goal or user id?
+    //@BatchSize(size = 10)
+    Map<Long, Double> contributions = new HashMap<>();
+
+
 
     @Schema(description = "The number of lives of the saving mascot at this saving goal.")
     @Column(name = "lives")
     private int lives;
 
-    @Schema(description = "The current tile of this saving goal.")
-    @Column(name = "current_tile")
-    private int currentTile;
-
-    // Legge inn LocalDate da mål ble nådd, og om null er den ikke oppnådd?
-/*    @Column(name = "achieved")   // Calculate from amount and progress, not needed in db
-    private boolean achieved;*/
-
+    // TODO: What about failed?
     public boolean isAchieved() {
-        return progress >= amount;
+        if (totalAmount <= getTotalProgress()){
+            setState(GoalState.FINISHED);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public double getTotalProgress() {
+        double sum = 0.0;
+        for (double value : contributions.values()) {
+            sum += value;
+        }
+        return sum;
     }
 }

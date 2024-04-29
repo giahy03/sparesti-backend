@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.savingGoal;
 
-public enum goalState {
+public enum GoalState {
     FINISHED,
     UNDER_PROGRESS,
     FAILED;
