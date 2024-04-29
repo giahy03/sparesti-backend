@@ -2,14 +2,15 @@ package edu.ntnu.idatt2106.sparesti.model.challenge.util;
 
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
-import edu.ntnu.idatt2106.sparesti.dto.challenge.SavingChallengeDto;
+import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.LoginRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.RegistrationDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
 import edu.ntnu.idatt2106.sparesti.model.EmailCode;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
-import edu.ntnu.idatt2106.sparesti.model.challenge.SavingChallenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
@@ -71,50 +72,44 @@ public class ChallengeUtility {
 
 
 
-  public static SavingChallenge createSavingChallenge() {
-    return (SavingChallenge) SavingChallenge.builder()
+  public static SharedChallenge createSharedChallengeA() {
+    return SharedChallenge.builder()
             .id(1L)
             .title("Challenge")
             .startDate(LocalDate.parse("2021-10-10"))
             .endDate(LocalDate.parse("2021-10-20"))
-            .currentAmount(0)
-            .totalAmount(100)
+            .description("Description")
+            .progress(Progress.IN_PROGRESS)
             .difficulty(Difficulty.EASY)
-            .lives(3)
-            .currentTile(0)
             .user(createUserA())
             .build();
   }
 
-  public static SavingChallengeDto createSavingChallengeDto() {
-    return SavingChallengeDto.builder()
-            .id(1L)
+  public static SharedChallengeDto createSavingChallengeDto() {
+    return SharedChallengeDto.builder()
             .title("Challenge")
+            .progress(Progress.IN_PROGRESS)
+            .id(1L)
+            .description("Challenge")
             .startDate(LocalDate.parse("2021-10-10"))
             .endDate(LocalDate.parse("2021-10-20"))
             .difficulty("EASY")
-            .lives(3)
-            .currentTile(0)
             .build();
   }
 
   public static ChallengeDto createChallengeDto() {
     return ChallengeDto.builder()
             .id(1L)
-            .title("Challenge")
+            .description("Challenge")
             .startDate(LocalDate.parse("2021-10-10"))
             .endDate(LocalDate.parse("2021-10-20"))
             .difficulty("EASY")
-            .lives(3)
-            .currentTile(0)
             .build();
   }
 
   public static ChallengeUpdateRequestDto createChallengeUpdateRequestDto() {
     return ChallengeUpdateRequestDto.builder()
-            .currentTiles(1)
-            .lives(2)
-            .currentAmount(20)
+            .progress(Progress.IN_PROGRESS)
             .build();
   }
 

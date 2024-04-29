@@ -15,20 +15,19 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 1.0
  * @author Jeffrey Yaw Annor Tabiri
  */
-class SavingChallengeTest {
+class SharedChallengeTest {
 
-  SavingChallenge challenge;
+  SharedChallenge challenge;
 
   @BeforeEach
   void setUp() {
-    challenge = ChallengeUtility.createSavingChallenge();
+    challenge = ChallengeUtility.createSharedChallengeA();
   }
 
   @Test
   void Challenge_NoArgsConstructor_ReturnChallenge() {
     //Arrange
-    SavingChallenge challenge = new SavingChallenge();
-
+    SharedChallenge challenge = new SharedChallenge();
     //Assert
     assertNotNull(challenge);
   }
@@ -41,11 +40,7 @@ class SavingChallengeTest {
     String expectedTitle = "Challenge";
     LocalDate expectedStartDate = LocalDate.parse("2021-10-10");
     LocalDate expectedEndDate = LocalDate.parse("2021-10-20");
-    int expectedTotalAmount = 100;
-    int expectedCurrentAmount = 0;
     Difficulty expectedDifficulty = Difficulty.EASY;
-    int expectedLives = 3;
-    int expectedCurrentTiles = 0;
     User user = ChallengeUtility.createUserA();
 
     //Assert
@@ -53,11 +48,7 @@ class SavingChallengeTest {
     assertEquals(expectedTitle, challenge.getTitle());
     assertEquals(expectedStartDate, challenge.getStartDate());
     assertEquals(expectedEndDate, challenge.getEndDate());
-    assertEquals(expectedTotalAmount, challenge.getTotalAmount());
-    assertEquals(expectedCurrentAmount, challenge.getCurrentAmount());
     assertEquals(expectedDifficulty, challenge.getDifficulty());
-    assertEquals(expectedLives, challenge.getLives());
-    assertEquals(expectedCurrentTiles, challenge.getCurrentTile());
     assertEquals(user.getEmail(), challenge.getUser().getEmail());
   }
 
@@ -79,22 +70,13 @@ class SavingChallengeTest {
     challenge.setTitle(expectedTitle);
     challenge.setStartDate(expectedStartDate);
     challenge.setEndDate(expectedEndDate);
-    challenge.setTotalAmount(expectedTotalAmount);
-    challenge.setCurrentAmount(expectedCurrentAmount);
     challenge.setDifficulty(expectedDifficulty);
-    challenge.setLives(expectedLives);
-    challenge.setCurrentTile(expectedCurrentTiles);
 
 
     //Assert
     assertEquals(expectedTitle, challenge.getTitle());
     assertEquals(expectedStartDate, challenge.getStartDate());
     assertEquals(expectedEndDate, challenge.getEndDate());
-    assertEquals(expectedTotalAmount, challenge.getTotalAmount());
-    assertEquals(expectedCurrentAmount, challenge.getCurrentAmount());
-    assertEquals(expectedDifficulty, challenge.getDifficulty());
-    assertEquals(expectedLives, challenge.getLives());
-    assertEquals(expectedCurrentTiles, challenge.getCurrentTile());
   }
 
   @Test
