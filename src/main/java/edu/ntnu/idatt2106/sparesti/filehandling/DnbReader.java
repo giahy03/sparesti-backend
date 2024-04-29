@@ -35,7 +35,18 @@ public class DnbReader extends BankStatementReader {
       throw new IllegalArgumentException("Could not find account number in DNB statement");
     }
 
-    bankStatement.setAccountNumber(accountLine.getFirst().get().split("\\s+")[2]);
+    String[] accountLineSplit = accountLine.getFirst().get().split("\\s+");
+
+
+    bankStatement.setAccountNumber(accountLineSplit[2]);
+    Optional<String> accountName = getAccountName(accountLineSplit);
+    if (accountName.isPresent()) {
+      log.info("Account name is: {}", accountName.get());
+      bankStatement.setAccountName(accountName.get());
+    } else {
+      bankStatement.setAccountName("Unknown");
+    }
+
     lineIndex = accountLine.getSecond();
 
     readTransactions(bankStatement, splitText, lineIndex);
@@ -73,27 +84,26 @@ public class DnbReader extends BankStatementReader {
           + "statement");
     }
 
-    String currentString = "";
+    StringBuilder currentString = new StringBuilder();
     for (; lineIndex < splitText.length; lineIndex++) {
 
       String line = splitText[lineIndex];
 
-      currentString = currentString + " " + line;
+      currentString.append(currentString).append(" ").append(line);
 
-      if (currentString.isBlank()) {
+      if (currentString.toString().isBlank()) {
         continue;
       }
       try {
-        Transaction parsedTransaction = parseTransaction(currentString, true);
+        Transaction parsedTransaction = parseTransaction(currentString.toString(), true);
 
         bankStatement.getTransactions().add(parsedTransaction);
 
-        log.debug(currentString + " was a valid transaction");
-        currentString = "";
+        log.debug("{} was a valid transaction", currentString);
+        currentString = new StringBuilder();
       } catch (Exception e) {
-        log.debug("could not parse: " + e);
+        log.debug("could not parse: {}", e.getMessage());
       }
-
     }
   }
 
@@ -107,7 +117,7 @@ public class DnbReader extends BankStatementReader {
    */
   private Transaction parseTransaction(String line, boolean incoming) {
     //TODO parse the transaction so that incoming is not always false
-    log.debug("Parsing transaction: " + line);
+    log.debug("Parsing transaction: {}", line);
     String[] splitLine = line.trim().split("\\s+");
 
     int archiveReference = Integer.parseInt(splitLine[splitLine.length - 1]);
@@ -122,26 +132,43 @@ public class DnbReader extends BankStatementReader {
           Arrays.copyOfRange(splitLine, 2, splitLine.length - 2));
       transaction.setDescription(description);
     } catch (Exception e) {
-      log.info("Error while parsing description: " + e.getMessage());
+      log.info("Error while parsing description: {}", e.getMessage());
     }
     try {
       MonthDay date = MonthDay.parse(splitLine[splitLine.length - 2], formatter);
       transaction.setDate(date);
     } catch (Exception e) {
-      log.info("Error while parsing date: " + e.getMessage());
+      log.info("Error while parsing date: {}", e.getMessage());
     }
 
     try {
       Double amount = Double.parseDouble(splitLine[splitLine.length - 3]
-          .replaceAll("\\.", "")
-          .replaceAll(",", ".")
+          .replace("\\.", "")
+          .replace(",", ".")
       );
       transaction.setAmount(amount);
     } catch (Exception e) {
-      log.info("Error while parsing amount: " + e.getMessage());
+      log.info("Error while parsing amount: {}", e.getMessage());
     }
 
     transaction.setIsIncoming(incoming);
     return transaction;
+  }
+
+
+  private Optional<String> getAccountName(String[] accountAndDateLineSplit) {
+    for (int i = accountAndDateLineSplit.length; i > 0; i--) {
+      try {
+        String[] possibleDates = accountAndDateLineSplit[i].split("\\.");
+        for (String possibleDate : possibleDates) {
+          Integer.parseInt(possibleDate);
+        }
+        return Optional.of(String.join(" ", Arrays.copyOfRange(accountAndDateLineSplit, i + 1,
+            accountAndDateLineSplit.length)));
+      } catch (Exception e) {
+        //If this line is reached, the account name has not been completely read yet
+      }
+    }
+    return Optional.empty();
   }
 }
