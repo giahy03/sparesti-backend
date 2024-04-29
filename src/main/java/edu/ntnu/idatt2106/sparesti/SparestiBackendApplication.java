@@ -33,7 +33,7 @@ public class SparestiBackendApplication {
   }
 
   @Bean
-  CommandLineRunner runner(UserRepository userRepository, ChallengesRepository challengesRepository, SharedChallengeRepository sharedChallengeCodeRepository, SharedChallengeCodeRepository codeRepository) {
+  CommandLineRunner runner(UserRepository userRepository) {
     return args -> {
       System.out.println("Creating default user");
 
@@ -64,43 +64,8 @@ public class SparestiBackendApplication {
           .user(user)
           .build());
 
-      SharedChallenge sharedChallenge = SharedChallenge.builder()
-          .title("Test challenge")
-          .description("Test description")
-          .startDate(LocalDate.now())
-          .endDate(LocalDate.now().plusDays(7))
-          .progress(Progress.NOT_STARTED)
-          .difficulty(Difficulty.EASY)
-          .user(user)
-          .build();
-
-      SharedChallenge sharedChallenge2 = SharedChallenge.builder()
-              .title("Test challenge")
-              .description("Test description")
-              .startDate(LocalDate.now())
-              .endDate(LocalDate.now().plusDays(7))
-              .progress(Progress.NOT_STARTED)
-              .difficulty(Difficulty.EASY)
-              .user(user2)
-              .build();
-
-
-
-      SharedChallengeCode sharedChallengeCode = SharedChallengeCode.builder()
-            .joinCode("12345678")
-            .sharedChallenges(List.of(sharedChallenge))
-            .build();
-
-      sharedChallenge2.setSharedChallengeCode(sharedChallenge.getSharedChallengeCode());
-
-
-
-      sharedChallenge.setSharedChallengeCode(sharedChallengeCode);
-      userRepository.save(user2);
       userRepository.save(user);
-      codeRepository.save(sharedChallengeCode);
-      sharedChallengeCodeRepository.save(sharedChallenge);
-      sharedChallengeCodeRepository.save(sharedChallenge2);
+
     };
 
 
