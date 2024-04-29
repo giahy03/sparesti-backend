@@ -21,4 +21,6 @@ public interface SavingGoalRepository extends JpaRepository<SavingGoal, Long> {
 
     List<SavingGoal> findAllByUser_Username(String email, Pageable pageable);
 
+    List<SavingGoal> findAllByUser_Username_AndAchievedIsTrue(String email, Pageable pageable);
+
 }
