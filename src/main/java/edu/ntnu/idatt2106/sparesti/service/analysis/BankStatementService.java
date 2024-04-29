@@ -73,7 +73,7 @@ public class BankStatementService {
   public BankStatement readAndSaveBankStatement(MultipartFile file, Principal principal, Bank bank)
       throws NoSuchElementException, IOException {
 
-    User user = userRepository.findUserByEmailIgnoreCase(principal.getName())
+    final User user = userRepository.findUserByEmailIgnoreCase(principal.getName())
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
     BankStatementReader bankStatementReader = switch (bank) {
@@ -172,9 +172,9 @@ public class BankStatementService {
                                               int pageNumber, int pageSize) {
 
     PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-    List<Transaction> bankStatement = transactionRepository
-        .findByBankStatement_AccountNumberAndBankStatement_User_Email(accountNumber,
-            principal.getName(), pageRequest);
+    List<Transaction> bankStatement =
+        transactionRepository.findByBankStatement_AccountNumberAndBankStatement_User_Email(
+            accountNumber, principal.getName(), pageRequest);
 
     List<TransactionDto> transactionDtoList = new ArrayList<>();
 
@@ -193,4 +193,20 @@ public class BankStatementService {
     return transactionDtoList;
   }
 
+  /**
+   * Deletes a bank statement.
+   *
+   * @param statementId The id of the bank statement.
+   * @param principal   The principal of the user.
+   * @throws NoSuchElementException If the user or bank statement is not found.
+   */
+  public void deleteBankStatement(Long statementId, Principal principal)
+      throws NoSuchElementException {
+    User user = userRepository.findUserByEmailIgnoreCase(principal.getName())
+        .orElseThrow(() -> new NoSuchElementException("User not found"));
+    BankStatement bankStatement = bankStatementRepository.findByIdAndUser(statementId, user)
+        .orElseThrow(() -> new NoSuchElementException("Bank statement not found"));
+
+    bankStatementRepository.delete(bankStatement);
+  }
 }
