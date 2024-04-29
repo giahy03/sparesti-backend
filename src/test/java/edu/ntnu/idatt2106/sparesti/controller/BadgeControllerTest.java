@@ -3,7 +3,6 @@ package edu.ntnu.idatt2106.sparesti.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
@@ -113,7 +112,6 @@ public class BadgeControllerTest {
                 .perform(get(url + "badges").with(csrf())
                         .param("page", "0")
                         .param("pageSize", "10"))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(BadgeUtility.createBadgePreviewDtoListJson()));
     }
