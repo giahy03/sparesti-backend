@@ -21,8 +21,9 @@ class UserInfoTest {
 
   @BeforeEach
   void setUp() {
-    userInfo = ChallengeUtility.createUserInfoA();
-    user = ChallengeUtility.createUserA();
+    user = ChallengeUtility.createUserD();
+    userInfo = ChallengeUtility.createUserInfoD(user);
+
   }
 
   @Test
