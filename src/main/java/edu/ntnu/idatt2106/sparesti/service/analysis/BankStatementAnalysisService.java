@@ -100,7 +100,10 @@ public class BankStatementAnalysisService {
     EnumMap<SsbPurchaseCategory, Double> actualUsage = new EnumMap<>(SsbPurchaseCategory.class);
     Arrays.stream(SsbPurchaseCategory.values()).forEach(category -> actualUsage.put(category, 0.0));
 
-    bankStatement.getTransactions().forEach(transaction -> {
+    bankStatement.getTransactions()
+        .stream()
+        .filter(transaction -> !transaction.getIsIncoming())
+        .forEach(transaction -> {
       SsbPurchaseCategory category = transaction.getCategory();
       actualUsage.put(category, actualUsage.get(category) + transaction.getAmount());
     });
