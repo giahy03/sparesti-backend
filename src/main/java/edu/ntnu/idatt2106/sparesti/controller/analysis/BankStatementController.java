@@ -24,11 +24,13 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -122,13 +124,14 @@ public class BankStatementController {
           + "because of an internal server error")})
   @GetMapping("/{statementId}/analysis")
   public ResponseEntity<BankStatementAnalysisDto> analyseBankStatement(
-      @PathVariable(name = "statementId") Long statementId, Principal principal)
+      @PathVariable(name = "statementId") Long statementId, Principal principal,
+      @RequestParam(defaultValue = "false") boolean forceNewAnalysis)
       throws ExternalApiException, NullPointerException {
     log.info("Analyzing bank statement with id: {} for user: {}", statementId, principal.getName());
 
     BankStatement statement = bankStatementService.getBankStatement(statementId, principal);
 
-    if (statement.getAnalysis() != null) {
+    if (statement.getAnalysis() != null && !forceNewAnalysis) {
       log.info("Bank statement has already been analyzed, returning the analysis");
       return ResponseEntity.ok(
           AnalysisMapper.INSTANCE.bankStatementAnalysisIntoBankStatementAnalysisDto(
@@ -292,6 +295,31 @@ public class BankStatementController {
     bankStatementService.saveBankStatement(savedAnalysis.getBankStatement());
     return null;
   }
+
+  /**
+   * Delete a bank statement.
+   *
+   * @param statementId the id of the bank statement to delete
+   * @param principal   the user that owns the bank statement
+   * @return a response entity
+   */
+  @Operation(summary = "Delete a bank statement")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "The bank statement was successfully "
+          + "deleted"),
+      @ApiResponse(responseCode = "404", description = "Invalid parameters have been given, such "
+          + "as an invalid bank statement id"),
+      @ApiResponse(responseCode = "500", description = "The bank statement was not deleted "
+          + "because of an internal server error")})
+  @DeleteMapping("/{statementId}")
+  public ResponseEntity<String> deleteBankStatement(
+      @PathVariable(name = "statementId") Long statementId, Principal principal) throws
+      NoSuchElementException {
+    log.info("Deleting bank statement with id: {} for user: {}", statementId, principal.getName());
+    bankStatementService.deleteBankStatement(statementId, principal);
+    return ResponseEntity.ok("Bank statement deleted");
+  }
+
 
 }
 
