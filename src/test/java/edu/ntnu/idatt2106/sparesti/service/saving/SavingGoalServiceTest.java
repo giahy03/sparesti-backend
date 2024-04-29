@@ -1,8 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.service.saving;
 
-import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributionDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
-import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalUpdateValueDto;
 import edu.ntnu.idatt2106.sparesti.mapper.SavingGoalMapper;
 import edu.ntnu.idatt2106.sparesti.model.saving.util.SavingGoalUtility;
@@ -20,12 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.data.domain.Pageable;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -115,7 +109,7 @@ public class SavingGoalServiceTest {
     @Test
     void Service_DeleteSavingGoal_DeleteSavingGoal() {
         // Act and assert
-        assertDoesNotThrow(() -> savingGoalService.deleteSavingGoal(principal, SavingGoalUtility.createSavingGoalIdDto()));
+        assertDoesNotThrow(() -> savingGoalService.deleteSavingGoal(SavingGoalUtility.createSavingGoalIdDto()));
     }
 
 
@@ -129,7 +123,7 @@ public class SavingGoalServiceTest {
         SavingGoalUpdateValueDto savingGoalUpdateValueDto = SavingGoalUtility.createSavingGoalUpdateValueDto();
 
         // Act and assert
-        assertDoesNotThrow(() -> savingGoalService.editLives(principal, savingGoalUpdateValueDto));
+        assertDoesNotThrow(() -> savingGoalService.editLives(savingGoalUpdateValueDto));
         //assertTrue(Integer.class.isInstance(savingGoalService.editLives(principal, savingGoalUpdateValueDto)));
     }
 

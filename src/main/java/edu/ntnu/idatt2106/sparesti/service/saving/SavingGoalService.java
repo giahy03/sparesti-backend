@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -134,10 +133,9 @@ public class SavingGoalService {
     /**
      * Delete a saving goal based on its unique id.
      *
-     * @param principal The authenticated user
      * @param savingGoalIdDto DTO containing the unique goal id
      */
-    public void deleteSavingGoal(Principal principal, SavingGoalIdDto savingGoalIdDto) {
+    public void deleteSavingGoal(SavingGoalIdDto savingGoalIdDto) {
         savingGoalRepository.deleteById(savingGoalIdDto.getId());
     }
 
@@ -146,11 +144,10 @@ public class SavingGoalService {
     /**
      * Updates the number of lives of the mascot.
      *
-     * @param principal The authenticated user
      * @param updateValueDto DTO containing the unique saving goal id
      * @return the number of lives left for the mascot after updating
      */
-    public int editLives(Principal principal, SavingGoalUpdateValueDto updateValueDto) {
+    public int editLives(SavingGoalUpdateValueDto updateValueDto) {
 
         SavingGoal savingGoal = savingGoalRepository.findById(updateValueDto.getId()).orElseThrow();
         savingGoal.setLives(updateValueDto.getValue());
@@ -177,7 +174,7 @@ public class SavingGoalService {
 
         SavingGoal savingGoal = savingGoalRepository.findById(savingGoalContributionDto.getGoalId()).orElseThrow();
 
-        // savingGoal.get - hashmap - på rett user, legg til bidrag.
+        // May produce NullPointerException upon unpacking ?
         savingGoal.getContributions().compute(user.getUserId(), (k, oldContribution) -> oldContribution + savingGoalContributionDto.getContribution());
 
         savingGoalRepository.save(savingGoal);

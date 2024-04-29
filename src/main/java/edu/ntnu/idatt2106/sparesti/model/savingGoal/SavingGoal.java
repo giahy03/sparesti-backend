@@ -7,7 +7,6 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +31,6 @@ public class SavingGoal {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    // Owmner og invited. + joincode felt
 
     @ManyToOne(cascade = CascadeType.ALL)
     @NonNull
@@ -82,7 +80,7 @@ public class SavingGoal {
     @ElementCollection
     @Schema(description = "The amount saved for this goal for each user.")
     @MapKeyColumn(name="user_id")
-    @Column(name="amount")
+    @Column(name="amount", nullable = false)
     @CollectionTable(name="user_saving_contribution", joinColumns=@JoinColumn(name="id"))  // goal or user id?
     //@BatchSize(size = 10)
     Map<Long, Double> contributions = new HashMap<>();

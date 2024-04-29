@@ -7,7 +7,6 @@ import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -66,7 +65,8 @@ public class SavingGoalUtility {
                 .build();
     }
 
-    public static SavingGoal createSavingGoalB() {
+    // Used in test currently commented out
+/*    public static SavingGoal createSavingGoalB() {
         User user = createUserB();
 
         return SavingGoal.builder()
@@ -81,7 +81,7 @@ public class SavingGoalUtility {
                 .state(GoalState.UNDER_PROGRESS)
                 .totalAmount(10000.0)
                 .build();
-    }
+    }*/
 
     public static SavingGoalCreationRequestDto createSavingGoalCreationRequestDto() {
 
