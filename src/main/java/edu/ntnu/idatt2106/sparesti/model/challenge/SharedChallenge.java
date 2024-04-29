@@ -34,7 +34,7 @@ import java.util.List;
 public class SharedChallenge extends Challenge {
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "shared_id", nullable = false)
+  @JoinColumn(name = "shared_id")
   private SharedChallengeCode sharedChallengeCode;
 
 }

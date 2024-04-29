@@ -87,6 +87,8 @@ public class ChallengeUtility {
 
   public static SharedChallengeDto createSavingChallengeDto() {
     return SharedChallengeDto.builder()
+            .title("Challenge")
+            .progress(Progress.IN_PROGRESS)
             .id(1L)
             .description("Challenge")
             .startDate(LocalDate.parse("2021-10-10"))
