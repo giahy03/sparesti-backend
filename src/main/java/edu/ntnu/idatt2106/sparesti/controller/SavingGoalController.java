@@ -58,6 +58,35 @@ public class SavingGoalController {
 
 
     /**
+     * Add a user to an existing saving goal.
+     *
+     * @param addSharedGoalToUserDto Dto containing the join code to match with the goal.
+     * @param principal The authenticated user.
+     * @return A Dto containing the goal id and title.
+     */
+    @Operation(summary = "Add a saving goal to the user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The goal was successfully added to the user",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = SavingGoalIdDto.class))
+                    }),
+            @ApiResponse(responseCode = "500", description =  "Unknown internal server error", content = @Content)
+    })
+    @PutMapping("/goal")
+    public ResponseEntity<SavingGoalIdDto> addGoalToUser(
+            @RequestBody AddSharedGoalToUserDto addSharedGoalToUserDto, Principal principal) {
+
+        log.info("Adding goal to user with email " + principal.getName());
+
+        SavingGoalIdDto savingGoalIdDto = savingGoalService.addGoalToUser(principal, addSharedGoalToUserDto);
+
+        log.info("The user was added to saving goal " + savingGoalIdDto.getTitle());
+
+        return new ResponseEntity<>(savingGoalIdDto, HttpStatus.OK);
+    }
+
+
+    /**
      * Get a list containing the ID number of all the goals along with their title.
      *
      * @param principal The authenticated user
@@ -73,12 +102,12 @@ public class SavingGoalController {
             @Content)
     })
     @GetMapping("/goals")
-    public ResponseEntity<List<SavingGoalIdDto>> getGoalsByEmail(Principal principal,
-                                                                 @RequestParam int page,
-                                                                 @RequestParam int pageSize)                                                   {
+    public ResponseEntity<List<SavingGoalIdDto>> getGoals(Principal principal,
+                                                          @RequestParam int page,
+                                                          @RequestParam int pageSize)                                                   {
         log.info("Returning list of goals for user: " + principal.getName());
         PageRequest pageRequest = PageRequest.of(page, pageSize);
-        List<SavingGoalIdDto> goals = savingGoalService.getAllGoalIdsByEmail(principal, pageRequest);
+        List<SavingGoalIdDto> goals = savingGoalService.getAllGoalsOfUser(principal, pageRequest);
         log.info("Number of goals being retrieved: " + goals.size());
 
         return new ResponseEntity<>(goals, HttpStatus.OK);
@@ -105,7 +134,7 @@ public class SavingGoalController {
     public ResponseEntity<SavingGoalDto> getGoalById( @RequestBody SavingGoalIdDto savingGoalIdDto) {
         log.info("Returning Saving Goal: " + savingGoalIdDto.getId());
         SavingGoalDto savingGoalDto = savingGoalService.getSavingGoalById(savingGoalIdDto);
-        log.info("Returning Saving Goal: " + savingGoalDto.getGoalName());
+        log.info("Returning Saving Goal: " + savingGoalDto.getTitle());
         return new ResponseEntity<>(savingGoalDto, HttpStatus.OK);
     }
 
@@ -131,7 +160,7 @@ public class SavingGoalController {
     @DeleteMapping("/goal")
     public ResponseEntity<String> deleteSavingGoal(Principal principal, @RequestBody SavingGoalIdDto savingGoalIdDto) {
         log.info("Attempting to delete goal: " + savingGoalIdDto.getId());
-        savingGoalService.deleteSavingGoal(principal, savingGoalIdDto);
+        savingGoalService.deleteSavingGoal(savingGoalIdDto);
         log.info("Goal deleted: " + savingGoalIdDto.getId());
         return new ResponseEntity<>("Deleted successfully", HttpStatus.OK);
     }
@@ -140,7 +169,6 @@ public class SavingGoalController {
     /**
      * Update the number of lives of the mascot.
      *
-     * @param principal The authenticated user
      * @param updateValueDto The unique id of the goal
      * @return ResponseEntity containing a message indicating the status of the update of the mascot life, or a
      *          null response with a status code if something went wrong
@@ -154,38 +182,12 @@ public class SavingGoalController {
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
     @PutMapping("/goal/lives")
-    public ResponseEntity<String> lives(Principal principal, @RequestBody SavingGoalUpdateValueDto updateValueDto) {
+    public ResponseEntity<String> lives(@RequestBody SavingGoalUpdateValueDto updateValueDto) {
         log.info("Attempting to edit pig lives of goal: " + updateValueDto.getId());
-        int lives = savingGoalService.editLives(principal, updateValueDto);
+        int lives = savingGoalService.editLives(updateValueDto);
         log.info("Number of lives successfully updated to: " + lives);
 
         return new ResponseEntity<>("Lives updated successfully", HttpStatus.OK);
-    }
-
-
-    /**
-     * Update the current tile number.
-     *
-     * @param principal The authenticated user
-     * @param updateValueDto The unique id of the goal
-     * @return ResponseEntity containing a message indicating the status of updating the current tile, or a
-     *          null response with a status code if something went wrong
-     */
-    @Operation(summary = "Update current tile of saving goal")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "The current tile was updated",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
-                    }),
-            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
-    })
-    @PutMapping("/goal/tile")
-    public ResponseEntity<String> tile(Principal principal, @RequestBody  SavingGoalUpdateValueDto updateValueDto) {
-        log.info("Attempting to update current tile of goal: " + updateValueDto.getId());
-        int tile = savingGoalService.updateCurrentTile(principal, updateValueDto);
-        log.info("Current tile has been successfully updated to: " + tile);
-
-        return new ResponseEntity<>("Current tile updated successfully", HttpStatus.OK);
     }
 
 
@@ -206,13 +208,13 @@ public class SavingGoalController {
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
     @PutMapping("/goal/save")
-    public ResponseEntity<String> savedAmount(Principal principal, @RequestBody  SavingGoalContributionDto savingGoalContributionDto) {
+    public ResponseEntity<SavingGoalDto> savedAmount(Principal principal, @RequestBody  SavingGoalContributionDto savingGoalContributionDto) {
 
-        log.info("Adding a new saving to the saving goal: " + savingGoalContributionDto.getId());
-        double newProgress = savingGoalService.registerSavingContribution(principal, savingGoalContributionDto);
-        log.info("New saved up amount for goal: " + newProgress);
+        log.info("Adding a new saving to the saving goal: " + savingGoalContributionDto.getGoalId());
+        SavingGoalDto goalDto = savingGoalService.registerSavingContribution(principal, savingGoalContributionDto);
+        log.info("New saved up amount for goal: " + goalDto.getProgress());
 
-        return new ResponseEntity<>("Amount saved for goal was successfully updated to: " + newProgress, HttpStatus.OK);
+        return new ResponseEntity<>(goalDto, HttpStatus.OK);
     }
 
 }

@@ -1,14 +1,15 @@
 package edu.ntnu.idatt2106.sparesti.model.saving.util;
 
 import edu.ntnu.idatt2106.sparesti.dto.saving.*;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalDifficulty;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Utility class that creates objects to support the testing classes.
@@ -40,50 +41,57 @@ public class SavingGoalUtility {
 
     }
 
+    public static HashMap<Long, Double> createContributions() {
+        HashMap<Long, Double> contributions = new HashMap<>();
+        contributions.put(1L, 10.0);
+        contributions.put(2L, 20.0);
+        contributions.put(3L, 30.0);
+        return contributions;
+    }
 
     public static SavingGoal createSavingGoalA() {
 
+        User user = createUserA();
         return SavingGoal.builder()
                 .id(1L)
-                .user(createUserA())
-                .goalName("Goal")
+                .author(user)
+                .users(Set.of(user))
+                .title("Goal")
                 .startDate(LocalDate.of(2024, 4, 15))
                 .endDate(LocalDate.of(2024, 5, 3))
+                .contributions(createContributions())
                 .lives(3)
-                .currentTile(5)
-                .difficulty(GoalDifficulty.MEDIUM)
-                .amount(10000.0)
-                .progress(500.0)
+                .state(GoalState.UNDER_PROGRESS)
+                .totalAmount(10000.0)          //          .progress(500.0)
                 .build();
     }
 
-    public static SavingGoal createSavingGoalB() {
+    // Used in test currently commented out
+/*    public static SavingGoal createSavingGoalB() {
+        User user = createUserB();
 
         return SavingGoal.builder()
                 .id(2L)
-                .user(createUserB())
-                .goalName("GoalB")
+                .author(user)
+                .users(Set.of(user))
+                .title("GoalB")
                 .startDate(LocalDate.of(2024, 4, 15))
                 .endDate(LocalDate.of(2024, 5, 3))
                 .lives(3)
-                .currentTile(5)
-                .difficulty(GoalDifficulty.MEDIUM)
-                .amount(10000.0)
-                .progress(500.0)
+                .contributions(createContributions())
+                .state(GoalState.UNDER_PROGRESS)
+                .totalAmount(10000.0)
                 .build();
-    }
+    }*/
 
     public static SavingGoalCreationRequestDto createSavingGoalCreationRequestDto() {
 
         return SavingGoalCreationRequestDto.builder()
                 .goalName("New goal")
-                .amount(15000.0)
-                .progress(100.0)
+                .totalAmount(15000.0)
                 .lives(8)
-                .currentTile(15)
                 .startDate(LocalDate.of(2024, 4, 10))
                 .endDate(LocalDate.of(2024, 4, 30))
-                .difficulty(GoalDifficulty.HARD)
                 .build();
 
     }
@@ -121,13 +129,14 @@ public class SavingGoalUtility {
 
     }
 
-    public static SavingGoalContributionDto createSavingGoalContributionDto() {
+/*    public static SavingGoalContributionDto createSavingGoalContributionDto() {
 
         return SavingGoalContributionDto.builder()
-                .id(1L)
+                .goalId(1L)
+                .userId(1L)
                 .contribution(250.0)
                 .build();
-    }
+    }*/
 
     public static String createSavingGoalContributionDtoJson() {
         return  "{"
@@ -140,14 +149,15 @@ public class SavingGoalUtility {
 
         return SavingGoalDto.builder()
                 .id(1L)
-                .goalName("New goal")
-                .amount(15000.0)
-                .progress(100.0)
+                .author(createUserA().getFirstName())
+                .contributingUsers(List.of(createUserA().getFirstName(), createUserB().getFirstName()))
+                .title("New goal")
+                .progress(2500.0)
+                .totalAmount(15000.0)
                 .lives(8)
-                .currentTile(15)
                 .startDate(LocalDate.of(2024, 4, 10))
                 .endDate(LocalDate.of(2024, 4, 30))
-                .difficulty(GoalDifficulty.HARD)
+                .state(GoalState.UNDER_PROGRESS)
                 .build();
     }
 
@@ -165,15 +175,12 @@ public class SavingGoalUtility {
 
         return  "{"
                 + "\"id\":1,"
-                + "\"goalName\":\"New goal\","
-                + "\"difficulty\":\"HARD\","
+                + "\"title\":\"New goal\","
+                + "\"state\":\"UNDER_PROGRESS\","
                 + "\"startDate\":\"2024-04-10\","
                 + "\"endDate\":\"2024-04-30\","
                 + "\"lives\":8,"
-                + "\"amount\":15000.0,"
-                + "\"progress\":100.0,"
-                + "\"achieved\":false,"
-                + "\"currentTile\":15"
+                + "\"totalAmount\":15000.0"
                 + "}";
     }
 
@@ -190,15 +197,12 @@ public class SavingGoalUtility {
 
         return
                 "{"
-                    + "\"goalName\":\"New goal\","
-                    + "\"difficulty\":\"HARD\","
+                    + "\"title\":\"New goal\","
+                    + "\"state\":\"UNDER_PROGRESS\","
                     + "\"startDate\":\"2024-04-10\","
                     + "\"endDate\":\"2024-04-30\","
                     + "\"lives\":8,"
-                    + "\"amount\":15000.0,"
-                    + "\"progress\":100.0,"
-                    + "\"achieved\":false,"
-                    + "\"currentTile\":15"
+                    + "\"totalAmount\":15000.0"
                     + "}";
     }
 

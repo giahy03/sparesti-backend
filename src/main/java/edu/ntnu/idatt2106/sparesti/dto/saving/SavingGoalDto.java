@@ -1,10 +1,10 @@
 package edu.ntnu.idatt2106.sparesti.dto.saving;
 
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalDifficulty;
-import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * DTO to represent a saving goal object
@@ -17,14 +17,16 @@ import java.time.LocalDate;
 @Builder
 public class SavingGoalDto {
     private long id;
-    private String goalName;
-    private GoalDifficulty difficulty;
+    private String author;
+    private String title;
+    private GoalState state;
     private LocalDate startDate;
     private LocalDate endDate;
     private int lives;
-    private double amount;
+    private double totalAmount;
     private double progress;
-    private boolean achieved;
-    private int currentTile;
+    private List<String> contributingUsers;
+
+    // Progress of users
     
 }

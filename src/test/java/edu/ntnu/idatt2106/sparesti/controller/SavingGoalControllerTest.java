@@ -119,7 +119,7 @@ public class SavingGoalControllerTest {
     @WithMockUser(roles = "USER")
     public void controllerPutsSavingContributionCorrectly() throws Exception {
 
-        when(savingGoalService.registerSavingContribution(any(Principal.class), any(SavingGoalContributionDto.class))).thenReturn(500.0);
+        when(savingGoalService.registerSavingContribution(any(Principal.class), any(SavingGoalContributionDto.class))).thenReturn(SavingGoalUtility.createSavingGoalDto());
 
         mockMvc
                 .perform(put(url + "goal/save").with(csrf())
@@ -138,7 +138,7 @@ public class SavingGoalControllerTest {
         List<SavingGoalIdDto> goals = Arrays.asList(idDto1, idDto2, idDto3);
 
         pageable = PageRequest.of(0, 10);
-        when(savingGoalService.getAllGoalIdsByEmail(any(Principal.class),any(PageRequest.class))).thenReturn(goals);
+        when(savingGoalService.getAllGoalsOfUser(any(Principal.class),any(PageRequest.class))).thenReturn(goals);
 
         mockMvc
                 .perform(get(url + "goals").with(csrf())

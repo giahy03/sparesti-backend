@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2106.sparesti.dto.saving;
 
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalDifficulty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -8,6 +7,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * DTO containing information to create a new saving goal
@@ -20,15 +20,14 @@ import java.time.LocalDate;
 public class SavingGoalCreationRequestDto {
     @NotBlank
     private String goalName;
-    private double amount;
-    private double progress;
+    private double totalAmount;
+    private List<String> users;
     private int lives;
-    private int currentTile;
     @NotNull
     private LocalDate startDate;
     @NotNull
     private LocalDate endDate;
-    private GoalDifficulty difficulty;
+
 
 }
 

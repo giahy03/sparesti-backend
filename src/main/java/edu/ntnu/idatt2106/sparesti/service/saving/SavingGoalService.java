@@ -42,10 +42,11 @@ public class SavingGoalService {
      */
     public SavingGoalIdDto createSavingGoal( Principal principal,
                                              SavingGoalCreationRequestDto savingGoalCreationRequestDto) {
-        String email = principal.getName();
 
+        String email = principal.getName();
         User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
                 new UserNotFoundException("User with email " + email + " not found"));
+
 
         SavingGoal createdSavingGoal = savingGoalMapper.mapToSavingGoal(savingGoalCreationRequestDto, user);
 
@@ -57,17 +58,36 @@ public class SavingGoalService {
     }
 
 
-    /**
-     * Retrieve a list containing the ID number of all the goals belonging to the authenticated user.
-     *
-     * @param principal The authenticated user
-     * @return List of DTOs containing the id and title of each goal of the user
-     */
-    public List<SavingGoalIdDto> getAllGoalIdsByEmail(Principal principal, Pageable pageable) {
+    public SavingGoalIdDto addGoalToUser(Principal principal, AddSharedGoalToUserDto addUserToGoalRequestDto) {
+
+        User newUser = userRepository.findUserByEmailIgnoreCase(principal.getName()).orElseThrow();
+
+        SavingGoal savingGoal = savingGoalRepository.findByJoinCode(addUserToGoalRequestDto.getJoin_code()).orElseThrow();
+
+        savingGoal.getUsers().add(newUser);
+        savingGoal.getContributions().put(newUser.getUserId(), 0.0);
+
+        savingGoalRepository.save(savingGoal);
+
+        return SavingGoalIdDto.builder()
+                .id(savingGoal.getId())
+                .title(savingGoal.getTitle())
+                .build();
+    }
+
+
+
+
+    public List<SavingGoalIdDto> getAllGoalsOfUser(Principal principal, Pageable pageable) {
 
         String email = principal.getName();
 
-        return savingGoalRepository.findAllByUser_Username(email, pageable)
+        User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
+                new UserNotFoundException("User with email " + email + " not found"));
+
+        List<SavingGoal> goals = user.getGoals().stream().toList();
+
+        return goals
                 .stream()
                 .map(savingGoalMapper::mapToSavingGoalIdDto)
                 .toList();
@@ -91,38 +111,21 @@ public class SavingGoalService {
     /**
      * Delete a saving goal based on its unique id.
      *
-     * @param principal The authenticated user
      * @param savingGoalIdDto DTO containing the unique goal id
      */
-    public void deleteSavingGoal(Principal principal, SavingGoalIdDto savingGoalIdDto) {
+    public void deleteSavingGoal(SavingGoalIdDto savingGoalIdDto) {
         savingGoalRepository.deleteById(savingGoalIdDto.getId());
     }
 
 
-    /**
-     * Updates the current tile of the saving goal.
-     *
-     * @param principal The authenticated user
-     * @param updateValueDto DTO representing a saving goal object
-     * @return the current tile number after update
-     */
-    public int updateCurrentTile(Principal principal, SavingGoalUpdateValueDto updateValueDto) {
-
-        SavingGoal savingGoal = savingGoalRepository.findById(updateValueDto.getId()).orElseThrow();
-        savingGoal.setCurrentTile(updateValueDto.getValue());
-        savingGoalRepository.save(savingGoal);
-
-        return savingGoalRepository.findById(updateValueDto.getId()).get().getCurrentTile();
-    }
 
     /**
      * Updates the number of lives of the mascot.
      *
-     * @param principal The authenticated user
      * @param updateValueDto DTO containing the unique saving goal id
      * @return the number of lives left for the mascot after updating
      */
-    public int editLives(Principal principal, SavingGoalUpdateValueDto updateValueDto) {
+    public int editLives(SavingGoalUpdateValueDto updateValueDto) {
 
         SavingGoal savingGoal = savingGoalRepository.findById(updateValueDto.getId()).orElseThrow();
         savingGoal.setLives(updateValueDto.getValue());
@@ -140,13 +143,22 @@ public class SavingGoalService {
      * @param savingGoalContributionDto DTO containing the saving goal id and the saved amount to add to the goal's progress
      * @return the updated progress to the saving goal after adding the saved amount
      */
-    public double registerSavingContribution(Principal principal, SavingGoalContributionDto savingGoalContributionDto) {
+    public SavingGoalDto registerSavingContribution(Principal principal, SavingGoalContributionDto savingGoalContributionDto) {
 
-        SavingGoal savingGoal = savingGoalRepository.findById(savingGoalContributionDto.getId()).orElseThrow();
-        savingGoal.setProgress(savingGoal.getProgress() + savingGoalContributionDto.getContribution());
+        String email = principal.getName();
+
+        User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
+                new UserNotFoundException("User with email " + email + " not found"));
+
+        SavingGoal savingGoal = savingGoalRepository.findById(savingGoalContributionDto.getGoalId()).orElseThrow();
+
+        // May produce NullPointerException upon unpacking ?
+        savingGoal.getContributions().compute(user.getUserId(), (k, oldContribution) -> oldContribution + savingGoalContributionDto.getContribution());
+
+        savingGoal.isAchieved();
         savingGoalRepository.save(savingGoal);
 
-        return savingGoalRepository.findById(savingGoalContributionDto.getId()).get().getProgress();
+        return savingGoalMapper.mapToSavingGoalDto(savingGoal);
     }
 
 }
