@@ -1,5 +1,7 @@
-package edu.ntnu.idatt2106.sparesti.automatic;
+package edu.ntnu.idatt2106.sparesti.controller;
 
+import edu.ntnu.idatt2106.sparesti.service.AutomaticChallengeService;
+import edu.ntnu.idatt2106.sparesti.model.challenge.ChallengeRecommendationDto;
 import java.security.Principal;
 import java.util.List;
 import lombok.NonNull;
