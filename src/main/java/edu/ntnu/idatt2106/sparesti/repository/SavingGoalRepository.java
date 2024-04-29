@@ -20,7 +20,7 @@ import java.util.Optional;
 public interface SavingGoalRepository extends JpaRepository<SavingGoal, Long> {
     Optional<SavingGoal> findById(long id);
 
-    List<SavingGoal> findAllByUser_Username(String email, Pageable pageable);
+    List<SavingGoal> findAllByAuthor_Username(String email, Pageable pageable);
 
     Optional<SavingGoal> findByJoinCode(String code);
 

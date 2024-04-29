@@ -141,7 +141,7 @@ public class AchievementStatsService {
      */
     private boolean updateTotalSaved(User user, Principal principal) {
 
-        double totalProgress = savingGoalRepository.findAllByUser_Username(principal.getName(), Pageable.unpaged())
+        double totalProgress = savingGoalRepository.findAllByAuthor_Username(principal.getName(), Pageable.unpaged())
                 .stream().mapToDouble(SavingGoal::getTotalProgress).sum();
         double oldTotal = user.getStats().getTotalSaved();
 
