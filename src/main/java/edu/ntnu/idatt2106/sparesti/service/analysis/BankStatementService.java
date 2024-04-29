@@ -2,8 +2,11 @@ package edu.ntnu.idatt2106.sparesti.service.analysis;
 
 import edu.ntnu.idatt2106.sparesti.dto.analysis.TransactionDto;
 import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException;
+import edu.ntnu.idatt2106.sparesti.filehandling.BankStatementReader;
+import edu.ntnu.idatt2106.sparesti.filehandling.DnbReader;
 import edu.ntnu.idatt2106.sparesti.filehandling.HandelsBankenReader;
 import edu.ntnu.idatt2106.sparesti.mapper.TransactionMapper;
+import edu.ntnu.idatt2106.sparesti.model.banking.Bank;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
@@ -21,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,9 +35,9 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * Service class for the BankStatement entity.
  *
- * @version 1.0
  * @author Jeffrey Yaw Annor Tabiri
  * @author Tobias Oftedal
+ * @version 1.0
  */
 @Slf4j
 @Service
@@ -67,15 +69,18 @@ public class BankStatementService {
    * @throws NoSuchElementException If the user is not found.
    * @throws IOException            If the file cannot be read properly.
    */
-  public BankStatement saveBankStatement(MultipartFile file, Principal principal)
+  public BankStatement readAndSaveBankStatement(MultipartFile file, Principal principal, Bank bank)
       throws NoSuchElementException, IOException {
 
+    BankStatementReader bankStatementReader = switch (bank) {
+      case Bank.DNB -> new DnbReader();
+      case Bank.HANDLESBANKEN, Bank.SPAREBANK1, Bank.OTHER -> new HandelsBankenReader();
+    };
 
-    HandelsBankenReader spareBank1Reader = new HandelsBankenReader();
     File tempFile = File.createTempFile("bank-statement-", "-" + file.getOriginalFilename());
     file.transferTo(tempFile);
 
-    BankStatement bankStatement = spareBank1Reader.readStatement(tempFile);
+    BankStatement bankStatement = bankStatementReader.readStatement(tempFile);
 
     Files.delete(tempFile.toPath());
 
@@ -124,13 +129,19 @@ public class BankStatementService {
     return bankStatementRepository.findAllByUser(user);
   }
 
+  /**
+   * Gets all account numbers for a user.
+   *
+   * @param principal The principal of the user.
+   * @return A set of account numbers for the user.
+   */
   public Set<String> getAllAccountNumbers(Principal principal) {
     User user = userRepository.findUserByEmailIgnoreCase(principal.getName())
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
     List<BankStatement> bankStatements = bankStatementRepository.findAllByUser(user);
 
-    Set<String> accountNumbers = new  HashSet<String>();
+    Set<String> accountNumbers = new HashSet<>();
 
     for (BankStatement bankStatement : bankStatements) {
       accountNumbers.add(bankStatement.getAccountNumber());
@@ -139,21 +150,34 @@ public class BankStatementService {
     return accountNumbers;
   }
 
-  public List<TransactionDto> getTransactions(String accountNumber, Principal principal, int pageNumber, int pageSize) {
+  /**
+   * Gets all transactions for a user.
+   *
+   * @param accountNumber The account number to get transactions for.
+   * @param principal     The principal of the user.
+   * @param pageNumber    The page number.
+   * @param pageSize      The page size.
+   * @return A list of transactions for the user.
+   */
+  public List<TransactionDto> getTransactions(String accountNumber, Principal principal,
+                                              int pageNumber, int pageSize) {
 
     PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
     List<Transaction> bankStatement = transactionRepository
-            .findByBankStatement_AccountNumberAndBankStatement_User_Email
-                    (accountNumber, principal.getName(), pageRequest);
+        .findByBankStatement_AccountNumberAndBankStatement_User_Email(accountNumber,
+            principal.getName(), pageRequest);
 
     List<TransactionDto> transactionDtoList = new ArrayList<>();
 
     for (Transaction transaction : bankStatement) {
-      Month month = transaction.getDate().getMonth(); // Assuming getMonth() returns the month (0-indexed)
-      int day = transaction.getDate().getDayOfMonth(); // Assuming getDay() returns the day of the month
+      Month month =
+          transaction.getDate().getMonth(); // Assuming getMonth() returns the month (0-indexed)
+      int day =
+          transaction.getDate().getDayOfMonth(); // Assuming getDay() returns the day of the month
       int year = transaction.getBankStatement().getTimestamp().getYear();
 
-      TransactionDto transactionDto = TransactionMapper.INSTANCE.transactionToTransactionDto(transaction);
+      TransactionDto transactionDto =
+          TransactionMapper.INSTANCE.transactionToTransactionDto(transaction);
       transactionDto.setFullDate(LocalDate.of(year, month, day));
       transactionDtoList.add(transactionDto);
     }
