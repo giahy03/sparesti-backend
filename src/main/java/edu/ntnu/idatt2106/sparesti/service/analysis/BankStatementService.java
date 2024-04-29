@@ -78,7 +78,7 @@ public class BankStatementService {
 
     BankStatementReader bankStatementReader = switch (bank) {
       case Bank.DNB -> new DnbReader();
-      case Bank.HANDLESBANKEN, Bank.SPAREBANK1, Bank.OTHER -> new HandelsBankenReader();
+      case Bank.HANDELSBANKEN, Bank.SPAREBANK1, Bank.OTHER -> new HandelsBankenReader();
     };
 
     File tempFile = File.createTempFile("bank-statement-", "-" + file.getOriginalFilename());

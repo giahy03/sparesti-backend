@@ -92,7 +92,7 @@ public class BankStatementController {
     Bank bank;
     if (bankName == null || bankName.isEmpty()) {
       log.info("Bank name not found, defaulting to Handelsbanken");
-      bank = Bank.HANDLESBANKEN;
+      bank = Bank.HANDELSBANKEN;
     } else {
       try {
         bank = Bank.valueOf(bankName.toUpperCase());
