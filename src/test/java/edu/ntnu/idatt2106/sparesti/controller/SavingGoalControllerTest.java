@@ -75,8 +75,6 @@ public class SavingGoalControllerTest {
 
     String url = "/api/v1/goal-manager/";
 
-    
-    
     @DisplayName("Test that controller is initialized")
     @Test
     public void controllerInitializedCorrectly() {
@@ -144,8 +142,8 @@ public class SavingGoalControllerTest {
 
         mockMvc
                 .perform(get(url + "goals").with(csrf())
-                .param("page", "0")
-                .param("pageSize", "10"))
+                        .param("page", "0")
+                        .param("pageSize", "10"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(SavingGoalUtility.createSavingGoalIdDtoListJson()));
     }
