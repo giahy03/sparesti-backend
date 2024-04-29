@@ -55,10 +55,8 @@ class ChallengeServiceTest {
   @Test
   void Service_GetChallenge_ReturnChallenge() {
     when(challengeRepository.findById(1L)).thenReturn(Optional.of(challenge));
-    when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(ChallengeUtility.createUserA()));
     ChallengeDto challengeDto = challengeService.getChallenge(principal, 1L);
-
-    assertNotNull(challengeDto);
+    verify(challengeRepository).findById(1L);
   }
 
   @Test
@@ -68,19 +66,18 @@ class ChallengeServiceTest {
 
   @Test
   void Service_RemoveChallenge_RemovesChallenge() {
-
     //Arrange
-    when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(ChallengeUtility.createUserA()));
     when(challengeRepository.findById(1L)).thenReturn(Optional.of(challenge));
 
     //Act
-    assertDoesNotThrow(() -> challengeService.removeChallenge(principal, 1L));
+    challengeService.removeChallenge(principal, 1L);
 
+    //Assert
+    verify(challengeRepository).deleteById(1L);
   }
 
   @Test
   void Service_GetChallenges_ReturnsChallenges() {
-
     //Arrange
     Pageable pageable = Pageable.unpaged();
     when(challengeRepository.findByUser_Email(principal.getName(), pageable)).thenReturn(List.of(challenge));
@@ -97,9 +94,7 @@ class ChallengeServiceTest {
 
   @Test
   void Service_UpdateChallenge_UpdatesChallenge() {
-
     //Arrange
-    when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(ChallengeUtility.createUserA()));
     when(challengeRepository.findById(1L)).thenReturn(Optional.of(challenge));
     ChallengeUpdateRequestDto challengeUpdateRequestDto = ChallengeUtility.createChallengeUpdateRequestDto();
 
