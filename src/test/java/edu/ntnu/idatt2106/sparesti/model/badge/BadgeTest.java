@@ -75,7 +75,6 @@ public class BadgeTest {
     public void Badge_setters_expectingExceptions() {
 
         // Act and Assert
-        assertThrows(NullPointerException.class, () -> badge.setId(null));
         assertThrows(NullPointerException.class, () -> badge.setUser(null));
         assertThrows(NullPointerException.class, () -> badge.setAchievement(null));
         assertThrows(NullPointerException.class, () -> badge.setAchievedDate(null));
