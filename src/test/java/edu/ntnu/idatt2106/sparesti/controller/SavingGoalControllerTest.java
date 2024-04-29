@@ -140,7 +140,7 @@ public class SavingGoalControllerTest {
         List<SavingGoalIdDto> goals = Arrays.asList(idDto1, idDto2, idDto3);
 
         pageable = PageRequest.of(0, 10);
-        when(savingGoalService.getAllGoalIdsByEmail(any(Principal.class),any(PageRequest.class))).thenReturn(goals);
+        when(savingGoalService.getAllGoalsOfUser(any(Principal.class),any(PageRequest.class))).thenReturn(goals);
 
         mockMvc
                 .perform(get(url + "goals").with(csrf())
