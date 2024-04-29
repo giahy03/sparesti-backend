@@ -78,28 +78,6 @@ public class SavingGoalService {
 
 
 
-    /**
-     * Retrieve a list containing the ID number of all the goals belonging to the authenticated user.
-     *
-     * @param principal The authenticated user
-     * @return List of DTOs containing the id and title of each goal of the user
-     */
-/*    public List<SavingGoalIdDto> getAllGoalIdsByEmail(Principal principal, Pageable pageable) {
-
-        String email = principal.getName();
-
-        return savingGoalRepository.findAllByUser_Username(email, pageable)
-                .stream()
-                .map(savingGoalMapper::mapToSavingGoalIdDto)
-                .toList();
-    }*/
-
-    /**
-     * Retrieve a list containing the ID number of all the goals associated with the authenticated user.
-     *
-     * @param principal The authenticated user
-     * @return List of DTOs containing the id and title of each goal of the user
-     */
     public List<SavingGoalIdDto> getAllGoalsOfUser(Principal principal, Pageable pageable) {
 
         String email = principal.getName();
@@ -165,7 +143,7 @@ public class SavingGoalService {
      * @param savingGoalContributionDto DTO containing the saving goal id and the saved amount to add to the goal's progress
      * @return the updated progress to the saving goal after adding the saved amount
      */
-    public double registerSavingContribution(Principal principal, SavingGoalContributionDto savingGoalContributionDto) {
+    public SavingGoalDto registerSavingContribution(Principal principal, SavingGoalContributionDto savingGoalContributionDto) {
 
         String email = principal.getName();
 
@@ -177,9 +155,10 @@ public class SavingGoalService {
         // May produce NullPointerException upon unpacking ?
         savingGoal.getContributions().compute(user.getUserId(), (k, oldContribution) -> oldContribution + savingGoalContributionDto.getContribution());
 
+        savingGoal.isAchieved();
         savingGoalRepository.save(savingGoal);
 
-        return savingGoalRepository.findById(savingGoalContributionDto.getGoalId()).get().getTotalProgress();
+        return savingGoalMapper.mapToSavingGoalDto(savingGoal);
     }
 
 }

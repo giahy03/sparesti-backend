@@ -8,6 +8,7 @@ import edu.ntnu.idatt2106.sparesti.model.user.User;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -148,7 +149,10 @@ public class SavingGoalUtility {
 
         return SavingGoalDto.builder()
                 .id(1L)
+                .author(createUserA().getFirstName())
+                .contributingUsers(List.of(createUserA().getFirstName(), createUserB().getFirstName()))
                 .title("New goal")
+                .progress(2500.0)
                 .totalAmount(15000.0)
                 .lives(8)
                 .startDate(LocalDate.of(2024, 4, 10))

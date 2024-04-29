@@ -91,16 +91,28 @@ public class SavingGoal {
     @Column(name = "lives")
     private int lives;
 
-    // TODO: What about failed?
+
+    /**
+     * Check if the saving goal has been achieved before the end date of the goal and set the goal state accordingly.
+     * @return True if the goal was achieved before the end date, false if not.
+     */
     public boolean isAchieved() {
         if (totalAmount <= getTotalProgress()){
             setState(GoalState.FINISHED);
             return true;
+        } else if (totalAmount >= getTotalProgress() && getEndDate().isAfter(LocalDate.now())) {
+            setState(GoalState.FAILED);
+            return false;
         } else {
+            setState(GoalState.UNDER_PROGRESS);
             return false;
         }
     }
 
+    /**
+     * Calculates the total saved amount from all contributing users of this goal.
+     * @return The currently saved up amount by all users.
+     */
     public double getTotalProgress() {
         double sum = 0.0;
         for (double value : contributions.values()) {

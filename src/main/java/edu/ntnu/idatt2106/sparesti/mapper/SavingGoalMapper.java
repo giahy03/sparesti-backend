@@ -19,12 +19,18 @@ import java.util.*;
 public class SavingGoalMapper {
 
     public SavingGoalDto mapToSavingGoalDto(SavingGoal savingGoal) {
+
+        List<String> users = savingGoal.getUsers().stream().map(user -> String.format("{} {}", user.getFirstName(), user.getLastName())).toList();
+
         return SavingGoalDto.builder()
                 .id(savingGoal.getId())
+                .author(savingGoal.getAuthor().getFirstName())
                 .title(savingGoal.getTitle())
                 .startDate(savingGoal.getStartDate())
                 .endDate(savingGoal.getEndDate())
                 .totalAmount(savingGoal.getTotalAmount())
+                .progress(savingGoal.getTotalProgress())
+                .contributingUsers(users)
                 .state(savingGoal.getState())
                 .lives(savingGoal.getLives())
                 .build();
