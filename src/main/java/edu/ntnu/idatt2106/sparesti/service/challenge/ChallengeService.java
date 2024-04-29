@@ -259,13 +259,13 @@ public class ChallengeService {
    * Get the users participating in a shared challenge.
    *
    * @param principal is the user that wants to get the participating users.
-   * @param joinCode is the join code of the shared challenge.
+   * @param sharedChallengeId is the join code of the shared challenge.
    * @return the users participating in the shared challenge.
    */
   public List<SharedChallengePreviewDto> getParticipatingUsers(
-          Principal principal, String joinCode) {
+          Principal principal, String sharedChallengeId) {
     List<SharedChallenge> sharedChallenge = sharedChallengeRepository
-            .findSharedChallengeBySharedChallengeCode_JoinCode(joinCode);
+            .findSharedChallengeBySharedChallengeCode_Id(sharedChallengeId);
     List<SharedChallengePreviewDto> sharedChallengeDto = new ArrayList<>();
 
     getUser(principal);

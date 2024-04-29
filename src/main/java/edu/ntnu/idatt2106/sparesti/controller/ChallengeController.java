@@ -214,12 +214,12 @@ public class ChallengeController {
   * @param principal the user that wants to get the participating users.
   * @return ResponseEntity containing the participating users.
   */
-  @GetMapping("/shared-challenge/users/{joinCode}")
+  @GetMapping("/shared-challenge/users/{sharedChallengeId}")
   public ResponseEntity<List<SharedChallengePreviewDto>> getParticipatingUsers(Principal principal,
-                                                                               @PathVariable String joinCode) {
-    log.info("Getting participating users for shared challenge with join code: {}", joinCode);
-    List<SharedChallengePreviewDto> sharedChallengeDto = challengeService.getParticipatingUsers(principal, joinCode);
-    log.info("Participating users successfully retrieved for challenge with id: {}", joinCode);
+                                                                               @PathVariable String sharedChallengeId) {
+    log.info("Getting participating users for shared challenge with join code: {}", sharedChallengeId);
+    List<SharedChallengePreviewDto> sharedChallengeDto = challengeService.getParticipatingUsers(principal, sharedChallengeId);
+    log.info("Participating users successfully retrieved for challenge with id: {}", sharedChallengeId);
     return new ResponseEntity<>(sharedChallengeDto, HttpStatus.OK);
   }
 
