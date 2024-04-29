@@ -20,10 +20,9 @@ public class HandelsBankenReader extends BankStatementReader {
   @Override
   public void readStandardPage(String pageText, BankStatement bankStatement) {
     String[] splitText = pageText.split("\n");
-    log.info("Reading transactions from SpareBank1 page 2");
 
     for (String line : splitText) {
-      log.info(line);
+      log.debug(line);
 
       String[] splitLine = line.split(" ");
 
@@ -58,6 +57,7 @@ public class HandelsBankenReader extends BankStatementReader {
       bankStatement.setAccountName(accountName.get());
     } else {
       bankStatement.setAccountName("Unknown");
+      log.info("Account name not found");
     }
 
     String statementYearMonthString = accountAndDateLineSplit[8];
@@ -70,14 +70,9 @@ public class HandelsBankenReader extends BankStatementReader {
     lineIndex = accountAndDateLine.getSecond();
 
     for (; lineIndex < splitText.length; lineIndex++) {
-      if (splitText[lineIndex].toLowerCase().contains("saldo fra")) {
-        lineIndex++;
-        break;
-      }
-    }
-    for (; lineIndex < splitText.length; lineIndex++) {
       String line = splitText[lineIndex];
 
+      log.info("Parsing line: {}", line);
       try {
         Transaction transaction;
         if (line.toLowerCase().contains("fra")) {
@@ -86,8 +81,8 @@ public class HandelsBankenReader extends BankStatementReader {
           transaction = parseTransaction(line, false);
         }
         bankStatement.getTransactions().add(transaction);
-      } catch (Exception e) {
-        break;
+      } catch (Exception ignored) {
+
       }
     }
   }
@@ -102,6 +97,8 @@ public class HandelsBankenReader extends BankStatementReader {
   private Transaction parseTransaction(String line, boolean incoming) {
     String[] splitLine = line.split(" ");
 
+    log.info("Parsing transaction: {}", line);
+
     String dateString = splitLine[splitLine.length - 1];
     String formatedDateString = dateString.substring(2) + "-" + dateString.substring(0, 2);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
@@ -109,7 +106,9 @@ public class HandelsBankenReader extends BankStatementReader {
 
     String description = String.join(" ", Arrays.copyOfRange(splitLine, 0, splitLine.length - 2));
     double amount = Double.parseDouble(
-        splitLine[splitLine.length - 2].replace("\\.", "").replace(",", "."));
+        splitLine[splitLine.length - 2]
+            .replaceAll("\\.", "")
+            .replaceAll(",", "."));
 
     return new Transaction(monthDay, description, amount, incoming);
   }
@@ -129,7 +128,7 @@ public class HandelsBankenReader extends BankStatementReader {
         }
         String accountName = String.join(" ", Arrays.copyOfRange(accountAndDateLineSplit, i + 1,
             accountAndDateLineSplit.length));
-        log.info("Account name is ");
+        log.info("Account name is {}", accountName);
         return Optional.of(accountName);
       } catch (Exception e) {
         //If this line is reached, the account name has not been completely read yet
