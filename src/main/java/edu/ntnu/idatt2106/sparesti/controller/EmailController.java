@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106.sparesti.controller;
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailCodeExpirationDto;
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailVerificationDto;
+import edu.ntnu.idatt2106.sparesti.service.email.EmailFriendCodeService;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailServiceImpl;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailController {
 
   private final EmailServiceImpl emailService;
+
+  private final EmailFriendCodeService emailFriendCodeService;
 
   private final EmailVerificationService emailVerificationService;
 
@@ -81,6 +85,7 @@ public class EmailController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+
   /**
    * REST-endpoint for sending a verification email.
    *
@@ -102,6 +107,7 @@ public class EmailController {
     return new ResponseEntity<>(emailCodeExpirationDto, HttpStatus.OK);
   }
 
+
   /**
    * REST-endpoint for verifying if an email exists.
    *
@@ -121,4 +127,26 @@ public class EmailController {
     log.info("Email {} does not exist.", email);
     return new ResponseEntity<>(HttpStatus.OK);
   }
+
+
+  /**
+   * REST-endpoint for verifying if an email exists.
+   *
+   * @param email the email address to be verified.
+   * @return A ResponseEntity with status OK if the email does not exist.
+   */
+  @Operation(summary = "Send challenge join code to user via email")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Request successfully processed."),
+      @ApiResponse(responseCode = "404", description = "Username not found."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.")
+  })
+  @GetMapping("/challenge/join/{id}")
+  public ResponseEntity<Void> sendJoinCode(@RequestParam String email, @PathVariable long id) {
+    log.info("Sending join code about challenge with id: {} to: {}", id, email);
+    emailFriendCodeService.sendJoinCode(email, id);
+    log.info("Join code about challenge with id: {} sent to: {}", id, email);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
 }
