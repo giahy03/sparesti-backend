@@ -89,7 +89,7 @@ public class DnbReader extends BankStatementReader {
 
       String line = splitText[lineIndex];
 
-      currentString.append(currentString).append(" ").append(line);
+      currentString.append(" ").append(line);
 
       if (currentString.toString().isBlank()) {
         continue;
@@ -117,7 +117,7 @@ public class DnbReader extends BankStatementReader {
    */
   private Transaction parseTransaction(String line, boolean incoming) {
     //TODO parse the transaction so that incoming is not always false
-    log.debug("Parsing transaction: {}", line);
+    log.info("Parsing transaction: {}", line);
     String[] splitLine = line.trim().split("\\s+");
 
     int archiveReference = Integer.parseInt(splitLine[splitLine.length - 1]);
