@@ -26,6 +26,7 @@ public class SavingGoalDto {
     private double totalAmount;
     private double progress;
     private List<String> contributingUsers;
+    private String joinCode;
 
     // Progress of users
     

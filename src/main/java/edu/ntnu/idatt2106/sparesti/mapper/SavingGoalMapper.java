@@ -6,6 +6,7 @@ import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.service.challenge.CodeGenerationUtility;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -43,6 +44,7 @@ public class SavingGoalMapper {
                 .endDate(savingGoalCreationRequestDto.getEndDate())
                 .totalAmount(savingGoalCreationRequestDto.getTotalAmount())
                 .lives(savingGoalCreationRequestDto.getLives())
+                .joinCode(CodeGenerationUtility.generateJoinCode())
                 .build();
     }
 
@@ -55,6 +57,6 @@ public class SavingGoalMapper {
                 .build();
     }
 
-    // TODO:   Liste over brukere knyttet til målet
+    // TODO:   Liste over brukere knyttet til målet?
 
 }

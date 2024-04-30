@@ -63,16 +63,30 @@ public class SavingGoalService {
     }
 
 
+    /**
+     * Add a new contributor to an existing goal with the given join-code.
+     * The authenticated user is the one being added to the goal.
+     *
+     * @param principal The authenticated user
+     * @param addUserToGoalRequestDto
+     * @return DTO containing basic information about the saving goal that the user was added to.
+     */
     public SavingGoalIdDto addGoalToUser(Principal principal, AddSharedGoalToUserDto addUserToGoalRequestDto) {
 
         User newUser = userRepository.findUserByEmailIgnoreCase(principal.getName()).orElseThrow();
 
-        SavingGoal savingGoal = savingGoalRepository.findByJoinCode(addUserToGoalRequestDto.getJoin_code()).orElseThrow();
+        SavingGoal savingGoal = savingGoalRepository.findByJoinCode(addUserToGoalRequestDto.getJoinCode()).orElseThrow();
 
-        SavingContribution newContributionLine = SavingContribution.builder()
-                        .goal(savingGoal).user(newUser).contribution(0.0).build();
+        // If the user is already associated with this goal, do not add again.
+        SavingContribution contribution = savingContributionRepository
+                .findByUser_EmailAndGoal_Id(principal.getName(), savingGoal.getId());
 
-        savingContributionRepository.save(newContributionLine);
+        if (contribution == null) {
+            SavingContribution newContribution = SavingContribution.builder()
+                    .goal(savingGoal).user(newUser).contribution(0.0).build();
+
+            savingContributionRepository.save(newContribution);
+        }
 
         return SavingGoalIdDto.builder()
                 .id(savingGoal.getId())
@@ -86,9 +100,7 @@ public class SavingGoalService {
 
     public List<SavingGoalIdDto> getAllGoalsOfUser(Principal principal, Pageable pageable) {
 
-        String email = principal.getName();
-
-        List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(email)
+        List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(principal.getName())
                 .stream().map(SavingContribution::getGoal).toList();
 
         return goals
@@ -149,10 +161,8 @@ public class SavingGoalService {
      */
     public SavingGoalDto registerSavingContribution(Principal principal, SavingGoalContributionDto savingGoalContributionDto) {
 
-        String email = principal.getName();
-
         SavingContribution contribution = savingContributionRepository
-                .findByUser_EmailAndGoal_Id(email, savingGoalContributionDto.getGoalId());
+                .findByUser_EmailAndGoal_Id(principal.getName(), savingGoalContributionDto.getGoalId());
 
         double oldContribution = contribution.getContribution();
 
