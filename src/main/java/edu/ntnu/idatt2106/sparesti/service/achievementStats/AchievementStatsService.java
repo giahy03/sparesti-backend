@@ -7,9 +7,9 @@ import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
 import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
-import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.*;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+
 
 /**
  * Service class to handle operations related to the achievement stats of the user.
@@ -37,10 +38,10 @@ public class AchievementStatsService {
 
     private final AchievementRepository achievementRepository;
     private final UserRepository userRepository;
-    private final SavingGoalRepository savingGoalRepository;
     private final BadgeRepository badgeRepository;
     private final BadgeMapper badgeMapper;
     private final ChallengesRepository challengesRepository;
+    private final SavingContributionRepository savingContributionRepository;
 
 
     /**
@@ -147,14 +148,15 @@ public class AchievementStatsService {
      */
     private boolean updateTotalSaved(User user, Principal principal) {
 
+        double totalContribution = savingContributionRepository
+                .findAllContributionsByUser_Email(principal.getName())
+                .stream()
+                .map(SavingContribution::getContribution).mapToDouble(f -> f).sum();
 
-
-        double totalProgress = savingGoalRepository.findAllByAuthor_Username(principal.getName(), Pageable.unpaged())
-                .stream().mapToDouble(SavingGoal::getTotalProgress).sum();
         double oldTotal = user.getStats().getTotalSaved();
 
-        if (totalProgress > oldTotal){
-            user.getStats().setTotalSaved(totalProgress);
+        if (totalContribution > oldTotal){
+            user.getStats().setTotalSaved(totalContribution);
             return true;
         } else {
             return false;
@@ -196,7 +198,10 @@ public class AchievementStatsService {
      */
     private boolean updateSavingGoalsAchieved(User user, Principal principal) {
 
-        int achievedGoals = (int) user.getGoals().stream()
+        List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(principal.getName())
+                .stream().map(SavingContribution::getGoal).toList();
+
+        int achievedGoals = (int) goals.stream()
                 .filter(goal -> goal.getState().equals(GoalState.FINISHED))
                 .count();
 
