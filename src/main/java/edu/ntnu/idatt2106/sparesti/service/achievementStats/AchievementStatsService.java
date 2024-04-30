@@ -149,7 +149,7 @@ public class AchievementStatsService {
     private boolean updateTotalSaved(User user, Principal principal) {
 
         double totalContribution = savingContributionRepository
-                .findAllContributionsByUser_Email(principal.getName())
+                .findAllContributionsByUser_Email(principal.getName(), Pageable.unpaged())
                 .stream()
                 .map(SavingContribution::getContribution).mapToDouble(f -> f).sum();
 
@@ -198,7 +198,7 @@ public class AchievementStatsService {
      */
     private boolean updateSavingGoalsAchieved(User user, Principal principal) {
 
-        List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(principal.getName())
+        List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(principal.getName(), Pageable.unpaged())
                 .stream().map(SavingContribution::getGoal).toList();
 
         int achievedGoals = (int) goals.stream()
@@ -242,7 +242,6 @@ public class AchievementStatsService {
      */
     private int checkSavingStreakLevel(Principal principal, User user) {
 
-        // Hente dette fra repo eller ha lagret i achievement stats?
         int currentLevel = badgeRepository
                 .findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(principal.getName(), AchievementCategory.SAVING_STREAK)
                 .getLevel();

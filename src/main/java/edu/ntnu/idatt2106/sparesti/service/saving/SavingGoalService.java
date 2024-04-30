@@ -50,7 +50,6 @@ public class SavingGoalService {
         User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
                 new UserNotFoundException("User with email " + email + " not found"));
 
-
         SavingGoal createdSavingGoal = savingGoalMapper.mapToSavingGoal(savingGoalCreationRequestDto, user);
 
         SavingGoal savedSavingGoal = savingGoalRepository.save(createdSavingGoal);
@@ -101,12 +100,12 @@ public class SavingGoalService {
      * a list of DTOs containing the goal id, title and state.
      *
      * @param principal The authenticated user
-     * @param pageable Pageable object specifying page and page-size
+     * @param pageable Pageable object defining page and page size
      * @return List of DTOs containing basic information of each goal
      */
     public List<SavingGoalIdDto> getAllGoalsOfUser(Principal principal, Pageable pageable) {
 
-        List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(principal.getName())
+        List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(principal.getName(), pageable)
                 .stream().map(SavingContribution::getGoal).toList();
 
         return goals

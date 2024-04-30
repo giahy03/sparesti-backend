@@ -3,13 +3,10 @@ package edu.ntnu.idatt2106.sparesti.mapper;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalCreationRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.service.challenge.CodeGenerationUtility;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 /**
  * Mapper class for mapping between saving goal objects and saving goal DTO objects.
