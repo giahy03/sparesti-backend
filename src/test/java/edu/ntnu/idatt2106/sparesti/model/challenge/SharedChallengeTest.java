@@ -44,7 +44,7 @@ class SharedChallengeTest {
     LocalDate expectedEndDate = LocalDate.parse("2021-10-20");
     Difficulty expectedDifficulty = Difficulty.EASY;
     User user = ChallengeUtility.createUserA();
-    Progress expectedProgress = Progress.NOT_STARTED;
+    Progress expectedProgress = Progress.FAILED;
     String expectedDescription = "Description";
     SharedChallengeCode expectedCode = ChallengeUtility.createSharedChallengeCodeA();
 
