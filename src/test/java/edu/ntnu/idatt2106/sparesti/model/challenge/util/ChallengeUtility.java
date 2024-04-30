@@ -21,6 +21,16 @@ import java.time.LocalDateTime;
 
 public class ChallengeUtility {
 
+  public static User createUser1() {
+    return User.builder()
+            .email("alice.johnson@example.com")
+            .firstName("Alice")
+            .lastName("Johnson")
+            .role(Role.USER)
+            .password("password012")
+            .build();
+  }
+
   public static User createUserA() {
     return User.builder()
             .email("example@guide")
@@ -66,7 +76,6 @@ public class ChallengeUtility {
 
   public static UserInfo createUserInfoA() {
     return UserInfo.builder()
-            .id(1L)
             .income(1000)
             .livingStatus(SsbLivingStatus.fromInteger(1))
             .build();
