@@ -24,7 +24,6 @@ import java.util.List;
  *
  * @author Hanne-Sofie Søreide
  */
-
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -76,7 +75,7 @@ public class BadgeController {
             @Content)
     })
     @GetMapping("/badges")
-    public ResponseEntity<List<BadgePreviewDto>> getGoalsByEmail(Principal principal, Pageable pageable) {
+    public ResponseEntity<List<BadgePreviewDto>> getBadgesByEmail(Principal principal, Pageable pageable) {
         log.info("Returning list of Badges from database: " + principal.getName());
         List<BadgePreviewDto> badges = badgeService.getAllBadgesByEmail(principal, pageable);
         return new ResponseEntity<>(badges, HttpStatus.OK);
@@ -113,11 +112,14 @@ public class BadgeController {
 
     /**
      * Get a list of all the possible achievements and their thresholds to qualify for a badge.
+     * Each achievement category and threshold combination correspond to a possible badge.
+     *
      * @return A list of DTOs representing the possible achievements and their associated thresholds.
      */
     @Operation(summary = "Retrieve a list with the all the possible badges.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "A list of possible achievements and thri threshodls was retried from the database.",
+            @ApiResponse(responseCode = "200", description = "A list of possible achievements and their " +
+                    "thresholds was retried from the database.",
                     content = {
                             @Content(mediaType = "application/json", schema = @Schema(implementation = AchievementPreviewDto.class))
                     }),
@@ -125,9 +127,10 @@ public class BadgeController {
             @Content)
     })
     @GetMapping("/possible-badges")
-    public ResponseEntity<List<AchievementPreviewDto>> getGoalsByEmail() {
-        log.info("Returning list of possible badges from database: ");
+    public ResponseEntity<List<AchievementPreviewDto>> getPossibleBadges(){
+        log.info("Returning list of achievements and their thresholds from database... ");
         List<AchievementPreviewDto> possibleBadges = badgeService.getAchievementPreviews();
+        log.info("Number of achievements returned: " + possibleBadges.size());
         return new ResponseEntity<>(possibleBadges, HttpStatus.OK);
     }
 

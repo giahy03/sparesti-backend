@@ -28,7 +28,6 @@ public class SavingGoal {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-
     @ManyToOne(cascade = CascadeType.ALL)
     @NonNull
     @Schema(description = "The unique identifier for the user who created the goal.")
@@ -70,5 +69,6 @@ public class SavingGoal {
     @Schema(description = "The number of lives of the saving mascot at this saving goal.")
     @Column(name = "lives")
     private int lives;
+
 
 }
