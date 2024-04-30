@@ -6,7 +6,7 @@ import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.LoginRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.RegistrationDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
-import edu.ntnu.idatt2106.sparesti.model.EmailCode;
+import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
@@ -51,6 +51,15 @@ public class ChallengeUtility {
             .build();
   }
 
+  public static User createUser2() {
+    return User.builder()
+            .email("bob.smith@example.com")
+            .firstName("Bob")
+            .lastName("Smith")
+            .role(Role.USER)
+            .password("password789")
+            .build();
+  }
   public static User createUserD() {
     return User.builder()
             .email("Anna@gmail.com")
