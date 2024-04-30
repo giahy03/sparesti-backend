@@ -49,21 +49,25 @@ public class StockService {
    */
   public StockDataDto getStockData(String symbol) {
 
-    DayOfWeek currentDayOfWeek = LocalDate.now().minusDays(1).getDayOfWeek();
+    LocalDate currentDate = LocalDate.now();
+    DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
 
     String startDate;
     String endDate;
 
-    if (currentDayOfWeek == DayOfWeek.SATURDAY || currentDayOfWeek == DayOfWeek.SUNDAY) {
+    if (currentDayOfWeek == DayOfWeek.MONDAY || currentDayOfWeek == DayOfWeek.SUNDAY) {
 
-      int daysToAdd = (currentDayOfWeek == DayOfWeek.SATURDAY) ? 1 : 2;
+      int daysToAdd = (currentDayOfWeek == DayOfWeek.SUNDAY) ? 1 : 2;
 
-      startDate = LocalDate.now().minusDays(daysToAdd + 2).toString();
-      endDate = LocalDate.now().plusDays(daysToAdd + 1).toString();
+      startDate = currentDate.minusDays(daysToAdd + 2).toString();
+      endDate = currentDate.minusDays(daysToAdd + 1).toString();
 
+    } else if (currentDayOfWeek == DayOfWeek.TUESDAY) {
+      startDate = currentDate.minusDays(4).toString();
+      endDate = currentDate.minusDays(1).toString();
     } else {
-      startDate = LocalDate.now().minusDays(2).toString();
-      endDate = LocalDate.now().minusDays(1).toString();
+      startDate = currentDate.minusDays(2).toString();
+      endDate = currentDate.minusDays(1).toString();
     }
 
     try {
