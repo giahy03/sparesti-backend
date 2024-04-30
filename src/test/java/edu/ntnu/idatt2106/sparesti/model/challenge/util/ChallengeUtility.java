@@ -44,6 +44,18 @@ public class ChallengeUtility {
             .build();
   }
 
+  public static User createUserE() {
+    return User.builder()
+            .email("Anna@gmail.com")
+            .firstName("Anna")
+            .lastName("Smith")
+            .role(Role.USER)
+            .userInfo(createUserInfoA())
+            .lastName("Guide")
+            .password("password")
+            .build();
+  }
+
   public static UserInfoDto createUserInfoDtoA() {
     return UserInfoDto.builder()
             .income(1000)
