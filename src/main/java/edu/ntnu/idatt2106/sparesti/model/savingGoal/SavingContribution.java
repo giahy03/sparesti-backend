@@ -1,11 +1,16 @@
 package edu.ntnu.idatt2106.sparesti.model.savingGoal;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
+
+/**
+ * Entity that connects Saving goal and User objects. The entity keeps track of
+ * which goals users are contributing to and their current contribution to each goal.
+ *
+ * @author Hanne-Sofie Søreide
+ */
 
 @Entity
 @Table(name = "goal_contributions")
@@ -22,14 +27,14 @@ public class SavingContribution {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToOne//(cascade = CascadeType.ALL)
+    @ManyToOne
     @NonNull
     @Schema(description = "The unique identifier for the user.")
     @JoinColumn(name="user_id", nullable = false)
     @Setter(AccessLevel.NONE)
     private User user;
 
-    @ManyToOne//(cascade = CascadeType.ALL)
+    @ManyToOne
     @NonNull
     @Schema(description = "The unique identifier for the goal.")
     @JoinColumn(name="goal_id", nullable = false)
@@ -39,6 +44,5 @@ public class SavingContribution {
     @Schema(description = "The amount contributed by the user to achieve the saving goal.")
     @Column(name = "contribution")
     private double contribution;
-
 
 }

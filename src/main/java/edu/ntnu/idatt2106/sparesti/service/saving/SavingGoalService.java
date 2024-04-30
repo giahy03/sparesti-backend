@@ -68,8 +68,8 @@ public class SavingGoalService {
      * The authenticated user is the one being added to the goal.
      *
      * @param principal The authenticated user
-     * @param addUserToGoalRequestDto
-     * @return DTO containing basic information about the saving goal that the user was added to.
+     * @param addUserToGoalRequestDto DTO containing the join code from the user
+     * @return DTO containing basic information about the saving goal that the user was added to
      */
     public SavingGoalIdDto addGoalToUser(Principal principal, AddSharedGoalToUserDto addUserToGoalRequestDto) {
 
@@ -96,8 +96,14 @@ public class SavingGoalService {
     }
 
 
-
-
+    /**
+     * Retrieves all the goals belonging to the authenticated user. The goals are represented by
+     * a list of DTOs containing the goal id, title and state.
+     *
+     * @param principal The authenticated user
+     * @param pageable Pageable object specifying page and page-size
+     * @return List of DTOs containing basic information of each goal
+     */
     public List<SavingGoalIdDto> getAllGoalsOfUser(Principal principal, Pageable pageable) {
 
         List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(principal.getName())
@@ -116,7 +122,6 @@ public class SavingGoalService {
      * @param savingGoalIdDto DTO containing the id of the saving goal
      * @return DTO containing the saving goal
      */
-
     public SavingGoalDto getSavingGoalById(SavingGoalIdDto savingGoalIdDto) {
 
         SavingGoal savingGoal = savingGoalRepository.findById(savingGoalIdDto.getId()).orElseThrow();
