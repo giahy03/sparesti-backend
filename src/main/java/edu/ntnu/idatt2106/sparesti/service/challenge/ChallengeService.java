@@ -270,12 +270,20 @@ public class ChallengeService {
 
     getUser(principal);
     for (SharedChallenge challenge : sharedChallenge) {
-      SharedChallengePreviewDto sharedChallengePreviewDto = SharedChallengePreviewDto.builder()
-              .firstName(challenge.getUser().getFirstName())
-              .lastName(challenge.getUser().getLastName())
-              .progress(challenge.getProgress())
-              .build();
-      sharedChallengeDto.add(sharedChallengePreviewDto);
+      if (!challenge.getUser().getEmail().equals(principal.getName())) {
+        SharedChallengePreviewDto sharedChallengePreviewDto = SharedChallengePreviewDto.builder()
+                .firstName(challenge.getUser().getFirstName())
+                .lastName(challenge.getUser().getLastName())
+                .id(challenge.getId())
+                .title(challenge.getTitle())
+                .description(challenge.getDescription())
+                .startDate(challenge.getStartDate())
+                .endDate(challenge.getEndDate())
+                .difficulty(challenge.getDifficulty().name())
+                .progress(challenge.getProgress())
+                .build();
+        sharedChallengeDto.add(sharedChallengePreviewDto);
+      }
     }
     return sharedChallengeDto;
   }
