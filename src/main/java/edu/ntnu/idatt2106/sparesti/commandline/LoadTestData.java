@@ -8,12 +8,14 @@ import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
 import edu.ntnu.idatt2106.sparesti.repository.BadgeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
+import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -39,6 +41,8 @@ public class LoadTestData implements CommandLineRunner {
   private final BadgeRepository badgeRepository;
 
   private final AchievementRepository achievementRepository;
+
+  private final SharedChallengeCodeRepository sharedChallengeCodeRepository;
 
   @Override
   public void run(String... args) throws Exception {
@@ -82,6 +86,36 @@ public class LoadTestData implements CommandLineRunner {
             .user(user)
             .build();
 
+    SharedChallenge sharedChallenge2 = SharedChallenge.builder()
+            .title("Buy less food")
+            .startDate(LocalDate.parse("2021-10-10"))
+            .endDate(LocalDate.parse("2021-10-20"))
+            .description("You need buy less food this month.")
+            .progress(Progress.IN_PROGRESS)
+            .difficulty(Difficulty.EASY)
+            .user(user2)
+            .build();
+
+    SharedChallengeCode sharedChallengeCode = SharedChallengeCode.builder()
+            .sharedChallenges(List.of(sharedChallenge))
+            .joinCode("1234")
+            .build();
+
+    sharedChallenge.setSharedChallengeCode(sharedChallengeCode);
+
+    sharedChallenge2.setSharedChallengeCode(sharedChallengeCode);
+
+    sharedChallengeCode.setSharedChallenges(List.of(sharedChallenge, sharedChallenge2));
+
+    sharedChallengeCodeRepository.save(sharedChallengeCode);
+
+
+
+
+
+
+
+
     Achievement achievementA = Achievement.builder()
             .category(AchievementCategory.CHALLENGE_STREAK)
             .description("Save up a specific amount of money through Sparesti.")
@@ -111,6 +145,10 @@ public class LoadTestData implements CommandLineRunner {
             .build();
 
     userRepository.save(user);
+    userRepository.save(user2);
+
+    challengesRepository.save(sharedChallenge);
+    challengesRepository.save(sharedChallenge2);
 
     user.setBadges(Set.of(badgeA, badgeB));
 
