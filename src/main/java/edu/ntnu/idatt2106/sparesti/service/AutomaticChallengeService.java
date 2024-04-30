@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.service;
 
-import edu.ntnu.idatt2106.sparesti.model.challenge.ChallengeRecommendationDto;
+import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeRecommendationDto;
 import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;

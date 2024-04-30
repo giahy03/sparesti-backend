@@ -11,15 +11,24 @@ import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
+import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 public class ChallengeUtility {
+
+  public static Streak createStreak1() {
+    return Streak.builder()
+            .numberOfDays(20)
+            .build();
+  }
 
   public static User createUser1() {
     return User.builder()
@@ -178,5 +187,18 @@ public class ChallengeUtility {
             .build();
   }
 
+  public static SharedChallengeCode createSharedChallengeCodeA() {
+    return SharedChallengeCode.builder()
+            .joinCode("ABCDEF")
+            .sharedChallenges(List.of())
+            .build();
+  }
 
+
+  public static SharedChallengeCode createSharedChallengeCodeB() {
+    return SharedChallengeCode.builder()
+            .joinCode("12345")
+            .sharedChallenges(List.of())
+            .build();
+  }
 }
