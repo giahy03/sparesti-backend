@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ import java.security.Principal;
 @RequestMapping("/api/v1/transactions")
 public class TransactionController {
 
-  TransactionService transactionService;
+  private final TransactionService transactionService;
 
 
   /**
@@ -73,7 +74,7 @@ public class TransactionController {
    * @return a response entity with status OK.
    */
   @PutMapping("/{id}")
-  public ResponseEntity<String> updateTransaction(Principal principal, Long id, @RequestBody TransactionDto transactionDto) {
+  public ResponseEntity<String> updateTransaction(Principal principal, @PathVariable Long id, @RequestBody TransactionDto transactionDto) {
     log.info("Updating transaction with id: {} for user {}", id, principal.getName());
     transactionService.updateTransaction(principal, id, transactionDto);
     log.info("Transaction with id: {} updated for user {}", id, principal.getName());
