@@ -17,7 +17,7 @@ class UserTest {
    */
   @BeforeEach
   void setUp() {
-    testUser = ChallengeUtility.createUserA();
+    testUser = ChallengeUtility.createUserD();
   }
 
   @Test
@@ -70,7 +70,7 @@ class UserTest {
   void User_GetUsername_ReturnUsername() {
 
     //Arrange
-    String expected = "example@guide";
+    String expected = "Anna@gmail.com";
 
     //Act
     String actual = testUser.getUsername();
@@ -94,7 +94,7 @@ class UserTest {
   @Test
   void User_GetEmail_ReturnEmail() {
     //Arrange
-    String expected = "example@guide";
+    String expected = "Anna@gmail.com";
 
     //Act
     String actual = testUser.getEmail();
@@ -106,7 +106,7 @@ class UserTest {
   @Test
   void User_GetName_ReturnName() {
     //Arrange
-    String expected = "Example";
+    String expected = "Anna";
 
     //Act
     String actual = testUser.getFirstName();

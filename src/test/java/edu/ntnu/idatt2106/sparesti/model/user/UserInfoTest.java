@@ -96,7 +96,7 @@ class UserInfoTest {
     User expectedUser = ChallengeUtility.createUserB();
 
     // Act
-    userInfo.setUser(user);
+    userInfo.setUser(expectedUser);
     User actualUser = userInfo.getUser();
 
     // Assert

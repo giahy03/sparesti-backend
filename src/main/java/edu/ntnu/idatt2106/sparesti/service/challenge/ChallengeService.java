@@ -263,7 +263,7 @@ public class ChallengeService {
    * @return the users participating in the shared challenge.
    */
   public List<SharedChallengePreviewDto> getParticipatingUsers(
-          Principal principal, String sharedChallengeId) {
+          Principal principal, long sharedChallengeId) {
     List<SharedChallenge> sharedChallenge = sharedChallengeRepository
             .findSharedChallengeBySharedChallengeCode_Id(sharedChallengeId);
     List<SharedChallengePreviewDto> sharedChallengeDto = new ArrayList<>();
