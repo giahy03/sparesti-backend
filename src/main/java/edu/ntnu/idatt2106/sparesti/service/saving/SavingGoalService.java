@@ -23,8 +23,6 @@ import java.util.List;
  *
  * @author Hanne-Sofie Søreide
  */
-
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
