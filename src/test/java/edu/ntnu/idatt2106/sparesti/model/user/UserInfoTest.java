@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +26,42 @@ class UserInfoTest {
     userInfo = ChallengeUtility.createUserInfoD(user);
 
   }
+
+  @Test
+  @DisplayName("Test UserInfo constructor")
+  void UserInfo_UserInfoConstructor_ReturnUserInfo() {
+    // Arrange
+    double expectedIncome = 1000;
+    SsbLivingStatus expectedLivingStatus = SsbLivingStatus.fromInteger(1);
+
+    // Act
+    UserInfo actual = ChallengeUtility.createUserInfoA();
+
+    // Assert
+    assertEquals(expectedIncome, actual.getIncome());
+    assertEquals(expectedLivingStatus, actual.getLivingStatus());
+  }
+
+  @Test
+  @DisplayName("Test UserInfo constructor with no args")
+  void UserInfo_UserInfoConstructorWithNoArgs_ReturnUserInfo() {
+    // Arrange
+    UserInfo userInfo = new UserInfo();
+    double expectedIncome = 0;
+    SsbLivingStatus expectedLivingStatus = SsbLivingStatus.fromInteger(0);
+    userInfo.setIncome(expectedIncome);
+    userInfo.setLivingStatus(SsbLivingStatus.fromInteger(0));
+
+    // Act
+    double actualIncome = userInfo.getIncome();
+    SsbLivingStatus actualLivingStatus = userInfo.getLivingStatus();
+
+    // Assert
+    assertEquals(expectedIncome, actualIncome);
+    assertEquals(expectedLivingStatus, actualLivingStatus);
+  }
+
+
 
   @Test
   void UserInfo_GetIncome_ReturnsIncome() {
