@@ -2,7 +2,7 @@ package edu.ntnu.idatt2106.sparesti.service.email;
 
 import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
 import edu.ntnu.idatt2106.sparesti.exception.email.VerificationCodeExpiredException;
-import edu.ntnu.idatt2106.sparesti.model.EmailCode;
+import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.EmailCodeRepository;

@@ -1,7 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.service.email;
 
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
-import edu.ntnu.idatt2106.sparesti.model.EmailCode;
+import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 
 import java.time.LocalDateTime;
 
