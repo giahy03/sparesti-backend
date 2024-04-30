@@ -1,7 +1,9 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
+import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -10,141 +12,95 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
-  User testUser;
+  User user;
 
   /**
    * Arrange a testUser for every method.
    */
   @BeforeEach
   void setUp() {
-    testUser = ChallengeUtility.createUserD();
+    user = ChallengeUtility.createUserD();
   }
 
   @Test
+  @DisplayName("Test that user constructor returns a user object")
   void User_UserConstructor_ReturnUser() {
     //Arrange
-    String expectedUsername = "example@guide";
-    String expectedPassword = "password";
     String expectedEmail = "example@guide";
     String expectedName = "Example";
     String expectedSurName = "Guide";
+    String expectedPassword = "password";
     Role expectedRole = Role.USER;
+    UserInfo expectedUserInfo = ChallengeUtility.createUserInfoA();
+    Streak expectedStreak = ChallengeUtility.createStreak1();
 
     //Act
-    User actual = ChallengeUtility.createUserB();
+    User actualUser = User.builder()
+            .email(expectedEmail)
+            .firstName(expectedName)
+            .lastName(expectedSurName)
+            .password(expectedPassword)
+            .role(expectedRole)
+            .streak(expectedStreak)
+            .userInfo(expectedUserInfo)
+            .build();
 
     // Assert
-    assertEquals(expectedUsername, actual.getUsername());
-    assertEquals(expectedPassword, actual.getPassword());
-    assertEquals(expectedEmail, actual.getEmail());
-    assertEquals(expectedName, actual.getFirstName());
-    assertEquals(expectedSurName, actual.getLastName());
-    assertEquals(expectedRole, actual.getRole());
+    assertEquals(expectedEmail, actualUser.getUsername());
+    assertEquals(expectedPassword, actualUser.getPassword());
+    assertEquals(expectedEmail, actualUser.getEmail());
+    assertEquals(expectedName, actualUser.getFirstName());
+    assertEquals(expectedSurName, actualUser.getLastName());
+    assertEquals(expectedRole, actualUser.getRole());
+    assertEquals(expectedUserInfo, actualUser.getUserInfo());
+    assertEquals(expectedStreak, actualUser.getStreak());
   }
 
   @Test
   void User_UserConstructorWithNoArgs_ReturnUser() {
-
     //Arrange
+
     User user = new User();
-    String expectedName = "Jake";
+    String expectedEmail = "example@guide";
+    String expectedName = "Example";
+    String expectedSurName = "Guide";
+    String expectedPassword = "password";
+    Role expectedRole = Role.USER;
+    UserInfo expectedUserInfo = ChallengeUtility.createUserInfoA();
+    Streak expectedStreak = ChallengeUtility.createStreak1();
+
 
     //Act
-    user.setEmail(expectedName);
-    String actualName = user.getEmail();
+    user.setEmail(expectedEmail);
+    user.setFirstName(expectedName);
+    user.setLastName(expectedSurName);
+    user.setPassword(expectedPassword);
+    user.setRole(expectedRole);
+    user.setUserInfo(expectedUserInfo);
+    user.setStreak(expectedStreak);
 
     //Assert
-    assertEquals(expectedName, actualName);
+    assertEquals(expectedEmail, user.getUsername());
+    assertEquals(expectedPassword, user.getPassword());
+    assertEquals(expectedEmail, user.getEmail());
+    assertEquals(expectedName, user.getFirstName());
+    assertEquals(expectedSurName, user.getLastName());
+    assertEquals(expectedRole, user.getRole());
+    assertEquals(expectedUserInfo, user.getUserInfo());
+    assertEquals(expectedStreak, user.getStreak());
   }
 
   @Test
-  public void User_UserConstructWithNull_ThrowsException() {
-    assertThrows(NullPointerException.class, () ->
-            User.builder()
-                    .email(null)
-                    .build()
-    );
+  void User_UserConstructWithNull_ThrowsException() {
+    User user = new User();
+    assertThrows(NullPointerException.class, () -> user.setEmail(null));
   }
-
-  @Test
-  void User_GetUsername_ReturnUsername() {
-
-    //Arrange
-    String expected = "Anna@gmail.com";
-
-    //Act
-    String actual = testUser.getUsername();
-
-    //Assert
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  void User_GetPassword_ReturnPassword() {
-    //Arrange
-    String expected = "password";
-
-    //Act
-    String actual = testUser.getPassword();
-
-    //Assert
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  void User_GetEmail_ReturnEmail() {
-    //Arrange
-    String expected = "Anna@gmail.com";
-
-    //Act
-    String actual = testUser.getEmail();
-
-    //Assert
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  void User_GetName_ReturnName() {
-    //Arrange
-    String expected = "Anna";
-
-    //Act
-    String actual = testUser.getFirstName();
-
-    //Assert
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  void User_GetSurname_ReturnSurname() {
-    //Arrange
-    String expected = "Guide";
-
-    //Act
-    String actual = testUser.getLastName();
-
-    //Assert
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  void User_GetRole_ReturnRole() {
-    //Arrange
-    Role expected = Role.USER;
-
-    //Act
-    Role actual = testUser.getRole();
-
-    //Assert
-    assertEquals(expected, actual);
-  }
-
 
   @Test
   void User_GetSimpleAuthority_ReturnRole() {
 
     //Act
-    List<? extends GrantedAuthority> actual = testUser.getAuthorities().stream().toList();
+    List<? extends GrantedAuthority> actual = user.getAuthorities().stream().toList();
 
     //Assert
     assertFalse(actual.isEmpty());
@@ -156,7 +112,7 @@ class UserTest {
     boolean expected = true;
 
     //Act
-    boolean actual = testUser.isEnabled();
+    boolean actual = user.isEnabled();
 
     //Assert
     assertEquals(expected, actual);
@@ -168,7 +124,7 @@ class UserTest {
     boolean expected = true;
 
     //Act
-    boolean actual = testUser.isCredentialsNonExpired();
+    boolean actual = user.isCredentialsNonExpired();
 
     //Assert
     assertEquals(expected, actual);
@@ -180,7 +136,7 @@ class UserTest {
     boolean expected = true;
 
     //Act
-    boolean actual = testUser.isAccountNonLocked();
+    boolean actual = user.isAccountNonLocked();
 
     //Assert
     assertEquals(expected, actual);
@@ -192,25 +148,12 @@ class UserTest {
     boolean expected = true;
 
     //Act
-    boolean actual = testUser.isAccountNonExpired();
+    boolean actual = user.isAccountNonExpired();
 
     //Assert
     assertEquals(expected, actual);
   }
 
-
-  @Test
-  void User_SetPassword_ReturnSavedPassword() {
-    //Arrange
-    String expected = "newPassword";
-
-    //Act
-    testUser.setPassword("newPassword");
-    String actual = testUser.getPassword();
-
-    //Assert
-    assertEquals(expected, actual);
-  }
 
   @Test
   void User_SetPasswordToNull_ReturnException() {
@@ -219,7 +162,7 @@ class UserTest {
 
     //Act
     Exception actual = assertThrows(Exception.class, () -> {
-      testUser.setPassword(null);
+      user.setPassword(null);
     });
 
     //Assert
@@ -228,52 +171,13 @@ class UserTest {
   }
 
   @Test
-  void User_SetEmail_ReturnSavedEmail() {
-    //Arrange
-    String expected = "test@Email.com";
-
-    //Act
-    testUser.setEmail("test@Email.com");
-    String actual = testUser.getEmail();
-
-    //Assert
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  void User_SetName_ReturnSavedName() {
-    //Arrange
-    String expected = "testName";
-
-    //Act
-    testUser.setFirstName("testName");
-    String actual = testUser.getFirstName();
-
-    //Assert
-    assertEquals(expected, actual);
-  }
-
-  @Test
-  void User_SetSurname_ReturnSavedSurname() {
-    //Arrange
-    String expected = "Timothy";
-
-    //Act
-    testUser.setLastName("Timothy");
-    String actual = testUser.getLastName();
-
-    //Assert
-    assertEquals(expected, actual);
-  }
-
-  @Test
   void User_SetRole_ReturnSavedRole() {
     //Arrange
     Role expected = Role.ADMIN;
 
     //Act
-    testUser.setRole(expected);
-    Role actual = testUser.getRole();
+    user.setRole(expected);
+    Role actual = user.getRole();
 
     //Assert
     assertEquals(expected, actual);

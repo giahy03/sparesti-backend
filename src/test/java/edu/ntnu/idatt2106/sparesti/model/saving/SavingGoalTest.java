@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 
 // OBS: Excluded user for now.
-public class SavingGoalTest {
+class SavingGoalTest {
 
     SavingGoal goal;
 
@@ -97,7 +97,7 @@ public class SavingGoalTest {
 
     @DisplayName("JUnit test for the setters expecting exceptions setting Null")
     @Test
-    public void Goal_SetGoalWithNull_ThrowsException() {
+     void Goal_SetGoalWithNull_ThrowsException() {
         // Act and Assert
         assertThrows(NullPointerException.class, () -> goal.setUsers(null));
         assertThrows(NullPointerException.class, () -> goal.setTitle(null));
