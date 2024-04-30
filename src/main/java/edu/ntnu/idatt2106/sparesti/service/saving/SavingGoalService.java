@@ -2,8 +2,10 @@ package edu.ntnu.idatt2106.sparesti.service.saving;
 
 import edu.ntnu.idatt2106.sparesti.dto.saving.*;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.repository.SavingContributionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SavingGoalRepository;
 import edu.ntnu.idatt2106.sparesti.mapper.SavingGoalMapper;
@@ -31,6 +33,7 @@ public class SavingGoalService {
     private final UserRepository userRepository;
     private final SavingGoalRepository savingGoalRepository;
     private final SavingGoalMapper savingGoalMapper;
+    private final SavingContributionRepository savingContributionRepository;
 
 
     /**
@@ -54,6 +57,8 @@ public class SavingGoalService {
 
         return SavingGoalIdDto.builder()
                 .id(savedSavingGoal.getId())
+                .title(savedSavingGoal.getTitle())
+                .state(savedSavingGoal.getState())
                 .build();
     }
 
@@ -64,14 +69,15 @@ public class SavingGoalService {
 
         SavingGoal savingGoal = savingGoalRepository.findByJoinCode(addUserToGoalRequestDto.getJoin_code()).orElseThrow();
 
-        savingGoal.getUsers().add(newUser);
-        savingGoal.getContributions().put(newUser.getUserId(), 0.0);
+        SavingContribution newContributionLine = SavingContribution.builder()
+                        .goal(savingGoal).user(newUser).contribution(0.0).build();
 
-        savingGoalRepository.save(savingGoal);
+        savingContributionRepository.save(newContributionLine);
 
         return SavingGoalIdDto.builder()
                 .id(savingGoal.getId())
                 .title(savingGoal.getTitle())
+                .state(savingGoal.getState())
                 .build();
     }
 
@@ -82,10 +88,8 @@ public class SavingGoalService {
 
         String email = principal.getName();
 
-        User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
-                new UserNotFoundException("User with email " + email + " not found"));
-
-        List<SavingGoal> goals = user.getGoals().stream().toList();
+        List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(email)
+                .stream().map(SavingContribution::getGoal).toList();
 
         return goals
                 .stream()
@@ -147,18 +151,18 @@ public class SavingGoalService {
 
         String email = principal.getName();
 
-        User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
-                new UserNotFoundException("User with email " + email + " not found"));
+        SavingContribution contribution = savingContributionRepository
+                .findByUser_EmailAndGoal_Id(email, savingGoalContributionDto.getGoalId());
 
-        SavingGoal savingGoal = savingGoalRepository.findById(savingGoalContributionDto.getGoalId()).orElseThrow();
+        double oldContribution = contribution.getContribution();
 
-        // May produce NullPointerException upon unpacking ?
-        savingGoal.getContributions().compute(user.getUserId(), (k, oldContribution) -> oldContribution + savingGoalContributionDto.getContribution());
+        contribution.setContribution(oldContribution + savingGoalContributionDto.getContribution());
 
-        savingGoal.isAchieved();
-        savingGoalRepository.save(savingGoal);
+        savingContributionRepository.save(contribution);
 
-        return savingGoalMapper.mapToSavingGoalDto(savingGoal);
+        SavingGoal alteredGoal = savingGoalRepository.getById(savingGoalContributionDto.getGoalId());  // Vil denne være oppdatert ?
+
+        return savingGoalMapper.mapToSavingGoalDto(alteredGoal);
     }
 
 }
