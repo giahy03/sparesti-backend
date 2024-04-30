@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * DTO containing information to create a new saving goal
@@ -21,7 +20,6 @@ public class SavingGoalCreationRequestDto {
     @NotBlank
     private String goalName;
     private double totalAmount;
-    private List<String> users;
     private int lives;
     @NotNull
     private LocalDate startDate;
