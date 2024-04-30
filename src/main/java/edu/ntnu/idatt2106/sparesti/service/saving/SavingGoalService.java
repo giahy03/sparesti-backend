@@ -163,20 +163,47 @@ public class SavingGoalService {
      * @param savingGoalContributionDto DTO containing the saving goal id and the saved amount to add to the goal's progress
      * @return the updated progress to the saving goal after adding the saved amount
      */
-    public SavingGoalDto registerSavingContribution(Principal principal, SavingGoalContributionDto savingGoalContributionDto) {
+    public double registerSavingContribution(Principal principal, SavingGoalContributionDto savingGoalContributionDto) {
 
-        SavingContribution contribution = savingContributionRepository
-                .findByUser_EmailAndGoal_Id(principal.getName(), savingGoalContributionDto.getGoalId());
+        if (savingGoalContributionDto.getContribution() > 0) {
+            SavingContribution contribution = savingContributionRepository
+                    .findByUser_EmailAndGoal_Id(principal.getName(), savingGoalContributionDto.getGoalId());
 
-        double oldContribution = contribution.getContribution();
+            double oldContribution = contribution.getContribution();
+            contribution.setContribution(oldContribution + savingGoalContributionDto.getContribution());
+            savingContributionRepository.save(contribution);
+        }
 
-        contribution.setContribution(oldContribution + savingGoalContributionDto.getContribution());
+        // Return the total saved up amount on this goal (from all users)
+        return checkTotalOfContributions(savingGoalContributionDto.getGoalId());
+    }
 
-        savingContributionRepository.save(contribution);
 
-        SavingGoal alteredGoal = savingGoalRepository.getById(savingGoalContributionDto.getGoalId());  // Vil denne være oppdatert ?
 
-        return savingGoalMapper.mapToSavingGoalDto(alteredGoal);
+    /**
+     * Updates the state of a given goal.
+     *
+     * @param updateStateDto DTO containing the goal id and new state
+     * @return A DTO containing base information about the updated goal
+     */
+    public SavingGoalIdDto updateGoalState(Principal principal, SavingGoalUpdateStateDto updateStateDto) {
+        SavingGoal savingGoal = savingGoalRepository.findById(updateStateDto.getId()).orElseThrow();
+        savingGoal.setState(updateStateDto.getGoalState());
+        savingGoalRepository.save(savingGoal);
+        return savingGoalMapper.mapToSavingGoalIdDto(savingGoal);
+    }
+
+
+    /**
+     * Summarizes and returns all the contributions made to the saving goal of the given id.
+     *
+     * @param goalId Unique identifyer of the goal to get the currently total saved amount for
+     * @return The currently saved up amount for this goal
+     */
+    public double checkTotalOfContributions(Long goalId) {
+        return savingContributionRepository.findAllContributionsByGoal_Id(goalId)
+                .stream()
+                .map(SavingContribution::getContribution).mapToDouble(f -> f).sum();
     }
 
 }

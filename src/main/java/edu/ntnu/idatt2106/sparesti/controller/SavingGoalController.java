@@ -203,18 +203,71 @@ public class SavingGoalController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The total amount saved for goal was updated",
                     content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = Double.class))
                     }),
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
     @PutMapping("/goal/save")
-    public ResponseEntity<SavingGoalDto> savedAmount(Principal principal, @RequestBody  SavingGoalContributionDto savingGoalContributionDto) {
+    public ResponseEntity<Double> contributeAmount(Principal principal, @RequestBody  SavingGoalContributionDto savingGoalContributionDto) {
 
         log.info("Adding a new saving to the saving goal: " + savingGoalContributionDto.getGoalId());
-        SavingGoalDto goalDto = savingGoalService.registerSavingContribution(principal, savingGoalContributionDto);
-        log.info("New saved up amount for goal: " + goalDto.getProgress());
+        double newTotal = savingGoalService.registerSavingContribution(principal, savingGoalContributionDto);
+        log.info("New saved up amount for goal: " + newTotal);
 
-        return new ResponseEntity<>(goalDto, HttpStatus.OK);
+        return new ResponseEntity<>(newTotal, HttpStatus.OK);
+    }
+
+    /**
+     * Get the currently saved up amount for this goal of the given id.
+     *
+     * @param principal The authenticated user
+     * @param savingGoalIdDto DTO containing the id of the goal to check
+     * @return ResponseEntity containing the currently saved up amount for this goal, or a null
+     *      response with a status code if something went wrong
+     */
+    @Operation(summary = "Get the currently saved up amount for this goal")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The total amount saved for goal was retrieved",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = Double.class))
+                    }),
+            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
+    })
+    @GetMapping("/goal/save")
+    public ResponseEntity<Double> getCurrentlySavedTotal(Principal principal, @RequestBody  SavingGoalIdDto savingGoalIdDto) {
+
+        log.info("Get currently saved up amount for goal: " + savingGoalIdDto.getId());
+        double currentTotal = savingGoalService.checkTotalOfContributions(savingGoalIdDto.getId());
+        log.info("Currently saved up amount for goal: " + currentTotal);
+
+        return new ResponseEntity<>(currentTotal, HttpStatus.OK);
+    }
+
+
+    /**
+     * Update the state of the goal of a given goal-id.
+     *
+     * @param principal The authenticated user
+     * @param updateStateDto DTO containing new state for the goal
+     * @return ResponseEntity containing a message indicating the status of the update, or a
+     *         null response with a status code if something went wrong
+     */
+    @Operation(summary = "Update the status of the goal")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The state of the goal was successfully updated",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                    }),
+            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
+    })
+    @PutMapping("/goal/state")
+    public ResponseEntity<String> updateGoalState(Principal principal, @RequestBody  SavingGoalUpdateStateDto updateStateDto) {
+
+        log.info("Updating state of saving goal: " + updateStateDto.getId());
+        SavingGoalIdDto updatedGoal = savingGoalService.updateGoalState(principal, updateStateDto);
+        log.info("New state of goal: " + updatedGoal.getState());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
