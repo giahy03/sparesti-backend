@@ -1,8 +1,10 @@
 package edu.ntnu.idatt2106.sparesti.dto.challenge;
 
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Represents a challenge update request dto.
@@ -12,6 +14,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChallengeUpdateRequestDto {
   Progress progress;
 }
