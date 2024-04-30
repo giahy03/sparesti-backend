@@ -42,7 +42,7 @@ class SavingGoalTest {
         GoalState expectedState = GoalState.UNDER_PROGRESS;
         double expectedAmount = 10000.0;
         User expectedAuthor = SavingGoalUtility.createUserA();
-        HashMap<Long,Double> expectedContributions = SavingGoalUtility.createContributions();
+
 
         // Assert
         assertEquals(expectedId, goal.getId());
@@ -51,7 +51,6 @@ class SavingGoalTest {
         assertEquals(expectedEndDate, goal.getEndDate());
         assertEquals(expectedLives, goal.getLives());
         assertEquals(expectedState, goal.getState());
-        assertEquals(expectedContributions, goal.getContributions());
         assertEquals(expectedAmount, goal.getTotalAmount());
         assertEquals(expectedAuthor.getEmail(), goal.getAuthor().getEmail());
     }
@@ -69,7 +68,6 @@ class SavingGoalTest {
         GoalState expectedState = GoalState.UNDER_PROGRESS;
         double expectedAmount = 2000.0;
         User expectedUser = SavingGoalUtility.createUserB();
-        HashMap<Long,Double> expectedContributions = SavingGoalUtility.createContributions();
 
 
         // Act
@@ -79,9 +77,6 @@ class SavingGoalTest {
         goal.setLives(expectedLives);
         goal.setState(expectedState);
         goal.setTotalAmount(expectedAmount);
-        goal.setUsers(Set.of(expectedUser));
-        goal.setContributions(expectedContributions);
-
 
         // Assert
         assertEquals(expectedName, goal.getTitle());
@@ -90,8 +85,6 @@ class SavingGoalTest {
         assertEquals(expectedLives, goal.getLives());
         assertEquals(expectedState, goal.getState());
         assertEquals(expectedAmount, goal.getTotalAmount());
-        assertEquals(expectedUser, goal.getUsers().iterator().next());
-        assertEquals(expectedContributions, goal.getContributions());
 
     }
 
@@ -99,7 +92,6 @@ class SavingGoalTest {
     @Test
      void Goal_SetGoalWithNull_ThrowsException() {
         // Act and Assert
-        assertThrows(NullPointerException.class, () -> goal.setUsers(null));
         assertThrows(NullPointerException.class, () -> goal.setTitle(null));
         assertThrows(NullPointerException.class, () -> goal.setState(null));
         assertThrows(NullPointerException.class, () -> goal.setStartDate(null));

@@ -7,6 +7,9 @@ import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
 import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.*;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
+
 
 /**
  * Service class to handle operations related to the achievement stats of the user.
@@ -34,9 +38,10 @@ public class AchievementStatsService {
 
     private final AchievementRepository achievementRepository;
     private final UserRepository userRepository;
-    private final SavingGoalRepository savingGoalRepository;
     private final BadgeRepository badgeRepository;
     private final BadgeMapper badgeMapper;
+    private final ChallengesRepository challengesRepository;
+    private final SavingContributionRepository savingContributionRepository;
 
 
     /**
@@ -103,8 +108,10 @@ public class AchievementStatsService {
 
 
     /**
-     * Return a DTO representing the achievement object of the specified type.
+     * Get the achievement object associated with the given category.
      *
+     * @param achievementCategory The category to get achievement object of.
+     * @return An achievement object of the given category.
      */
     public Achievement getAchievementOfCategory(AchievementCategory achievementCategory) {
         return achievementRepository.findByCategory(achievementCategory).orElseThrow();
@@ -141,12 +148,15 @@ public class AchievementStatsService {
      */
     private boolean updateTotalSaved(User user, Principal principal) {
 
-        double totalProgress = savingGoalRepository.findAllByAuthor_Username(principal.getName(), Pageable.unpaged())
-                .stream().mapToDouble(SavingGoal::getTotalProgress).sum();
+        double totalContribution = savingContributionRepository
+                .findAllContributionsByUser_Email(principal.getName())
+                .stream()
+                .map(SavingContribution::getContribution).mapToDouble(f -> f).sum();
+
         double oldTotal = user.getStats().getTotalSaved();
 
-        if (totalProgress > oldTotal){
-            user.getStats().setTotalSaved(totalProgress);
+        if (totalContribution > oldTotal){
+            user.getStats().setTotalSaved(totalContribution);
             return true;
         } else {
             return false;
@@ -163,15 +173,15 @@ public class AchievementStatsService {
      */
     private boolean updateNumberOfChallengesFinished(User user, Principal principal) {
 
-        int finishedChallenges = 4;   // Temporarily until Challenge::state is defined.
-
-       /* int finishedChallenges = savingGoalRepository.findAllByUser_Username(principal.getName(), Pageable.unpaged())
-                .stream().filter(Challenge::getState == ENUM.FINISHED ).count();*/
+        int completedChallenges = (int) challengesRepository.findByUser_Email(principal.getName(), Pageable.unpaged())
+                .stream()
+                .filter(challenge -> challenge.getProgress().equals(Progress.COMPLETED))
+                .count();
 
         int oldCount = user.getStats().getChallengesAchieved();
 
-        if (finishedChallenges > oldCount){
-            user.getStats().setTotalSaved(finishedChallenges);
+        if (completedChallenges > oldCount){
+            user.getStats().setTotalSaved(completedChallenges);
             return true;
         } else {
             return false;
@@ -188,10 +198,12 @@ public class AchievementStatsService {
      */
     private boolean updateSavingGoalsAchieved(User user, Principal principal) {
 
-        int achievedGoals = 4;  // Temporarily
+        List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(principal.getName())
+                .stream().map(SavingContribution::getGoal).toList();
 
-        /*int achievedGoals = savingGoalRepository.findAllByUser_Username(principal.getName(), Pageable.unpaged())
-                .stream().filter(SavingGoal::getState() == GoalState.FINISHED).count();*/
+        int achievedGoals = (int) goals.stream()
+                .filter(goal -> goal.getState().equals(GoalState.FINISHED))
+                .count();
 
         int oldCount = user.getStats().getSavingGoalsAchieved();
 
@@ -269,7 +281,7 @@ public class AchievementStatsService {
 
 
     /**
-     * Checks if the user qualifies for a new badge related to the number of saving goald completed with the current
+     * Checks if the user qualifies for a new badge related to the number of saving goal completed with the current
      * user stats. If so, an int representing the level of the new badge is returned.
      *
      * @param principal The authenticated user.

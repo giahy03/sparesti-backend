@@ -36,20 +36,11 @@ public class Achievement {
     @Column(name = "achievement_id")
     private int id;
 
-    @Schema(description = "The set of badges representing this achievement.")
-    @OneToMany(mappedBy="achievement")
-    private Set<Badge> badges;
-
     @Enumerated(EnumType.STRING)
     @Schema(description = "The category that the achievement belongs to.")
     @Column(name = "category", nullable = false)
     @NonNull
     private AchievementCategory category;
-
-/*    // lik lengden på listen over thresholds
-    @Schema(description = "The number of levels the achievement is divided into.")
-    @Column(name = "no_of_levels", nullable = false)
-    private int noOfLevels;*/
 
     @Schema(description = "Description of the achievement.")
     @Column(name = "description", nullable = false)
@@ -66,8 +57,5 @@ public class Achievement {
     @Column( name = "threshold")
     private List<Integer> thresholds;
 
-    public int getNumberOfLevels() {
-        return thresholds.size();
-    }
 
 }
