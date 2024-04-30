@@ -1,11 +1,9 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
@@ -74,14 +72,6 @@ public class User implements UserDetails {
   @Column(name = "role", nullable = false)
   @NonNull
   private Role role;
-
-
-/*
-  @Schema(description = "The contributions this user has made to various goals")
-  @OneToMany(mappedBy = "user")//(cascade = CascadeType.ALL, mappedBy = "user")
-  //@JoinColumn(name = "user")
-  private Set<SavingContribution> savingContributions;
-*/
 
   @Schema(description = "The user's badges.")
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
