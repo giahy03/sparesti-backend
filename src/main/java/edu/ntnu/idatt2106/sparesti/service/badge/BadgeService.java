@@ -1,9 +1,11 @@
 package edu.ntnu.idatt2106.sparesti.service.badge;
 
+import edu.ntnu.idatt2106.sparesti.dto.achievementStats.AchievementPreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
+import edu.ntnu.idatt2106.sparesti.mapper.AchievementMapper;
 import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
 import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
@@ -33,6 +35,7 @@ public class BadgeService {
     private final BadgeRepository badgeRepository;
     private final BadgeMapper badgeMapper;
     private final AchievementRepository achievementRepository;
+    private final AchievementMapper achievementMapper;
 
     public BadgePreviewDto getBadgeById(BadgeIdDto badgeIdDto) {
         Badge badge = badgeRepository.findById(badgeIdDto.getId()).orElseThrow();
@@ -94,6 +97,14 @@ public class BadgeService {
      */
     public Achievement getAchievementOfCategory(AchievementCategory achievementCategory, Principal principal) {
         return achievementRepository.findByCategory(achievementCategory).orElseThrow();
+    }
+
+    public List<AchievementPreviewDto> getAchievementPreviews() {
+
+        return  achievementRepository.findAll()
+                .stream()
+                .map(achievementMapper::mapToAchievementPreviewDto)
+                .toList();
     }
 
 }

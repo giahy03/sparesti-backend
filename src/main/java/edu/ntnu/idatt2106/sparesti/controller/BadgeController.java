@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
+import edu.ntnu.idatt2106.sparesti.dto.achievementStats.AchievementPreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.service.badge.BadgeService;
@@ -107,6 +108,27 @@ public class BadgeController {
         badgeService.deleteBadgeById(principal, badgeIdDto);
         log.info("Goal deleted: " + badgeIdDto.getId());
         return new ResponseEntity<>("Deleted successfully", HttpStatus.OK);
+    }
+
+
+    /**
+     * Get a list of all the possible achievements and their thresholds to qualify for a badge.
+     * @return A list of DTOs representing the possible achievements and their associated thresholds.
+     */
+    @Operation(summary = "Retrieve a list with the all the possible badges.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "A list of possible achievements and thri threshodls was retried from the database.",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = AchievementPreviewDto.class))
+                    }),
+            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content =
+            @Content)
+    })
+    @GetMapping("/possible-badges")
+    public ResponseEntity<List<AchievementPreviewDto>> getGoalsByEmail() {
+        log.info("Returning list of possible badges from database: ");
+        List<AchievementPreviewDto> possibleBadges = badgeService.getAchievementPreviews();
+        return new ResponseEntity<>(possibleBadges, HttpStatus.OK);
     }
 
 
