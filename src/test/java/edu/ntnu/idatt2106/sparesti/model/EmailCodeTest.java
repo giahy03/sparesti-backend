@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.model;
 
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
+import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -4,7 +4,7 @@ import edu.ntnu.idatt2106.sparesti.dto.email.EmailCodeExpirationDto;
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
 import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
 import edu.ntnu.idatt2106.sparesti.exception.email.VerificationCodeExpiredException;
-import edu.ntnu.idatt2106.sparesti.model.EmailCode;
+import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import edu.ntnu.idatt2106.sparesti.repository.EmailCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;

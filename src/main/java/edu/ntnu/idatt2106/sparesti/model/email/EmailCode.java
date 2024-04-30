@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.model;
+package edu.ntnu.idatt2106.sparesti.model.email;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
