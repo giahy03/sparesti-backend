@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106.sparesti.controller;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
+import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.service.challenge.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -117,7 +118,6 @@ public class ChallengeController {
 
     log.info("Getting challenge for user: {}", principal.getName());
     ChallengeDto challenge = challengeService.getChallenge(principal, challengeId);
-
     log.info("Challenge successfully retrieved with id {}", challengeId);
     return new ResponseEntity<>(challenge, HttpStatus.OK);
   }
