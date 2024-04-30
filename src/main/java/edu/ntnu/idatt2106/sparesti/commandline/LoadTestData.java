@@ -118,15 +118,14 @@ public class LoadTestData implements CommandLineRunner {
 
     Achievement achievementA = Achievement.builder()
             .category(AchievementCategory.CHALLENGE_STREAK)
-            .description("Save up a specific amount of money through Sparesti.")
-            .thresholds(List.of(new Integer[]{100, 200, 500, 1000, 5000}))
+            .description("Complete a certain number of saving challenges in Sparesti.")
+            .thresholds(List.of(new Integer[]{10, 20, 50, 100, 500}))
             .build();
 
     Achievement achievementB = Achievement.builder()
-            .id(1)
-            .category(AchievementCategory.CHALLENGE_STREAK)
+            .category(AchievementCategory.AMOUNT_SAVED)
             .description("Save up a specific amount of money through Sparesti.")
-            .thresholds(List.of(new Integer[]{100, 200, 500, 1000, 5000}))
+            .thresholds(List.of(new Integer[]{1000, 2000, 5000, 10000, 50000}))
             .build();
 
 
