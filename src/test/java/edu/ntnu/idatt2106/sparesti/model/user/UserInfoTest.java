@@ -21,8 +21,9 @@ class UserInfoTest {
 
   @BeforeEach
   void setUp() {
-    userInfo = ChallengeUtility.createUserInfoA();
-    user = ChallengeUtility.createUserA();
+    user = ChallengeUtility.createUserD();
+    userInfo = ChallengeUtility.createUserInfoD(user);
+
   }
 
   @Test
@@ -95,7 +96,7 @@ class UserInfoTest {
     User expectedUser = ChallengeUtility.createUserB();
 
     // Act
-    userInfo.setUser(user);
+    userInfo.setUser(expectedUser);
     User actualUser = userInfo.getUser();
 
     // Assert

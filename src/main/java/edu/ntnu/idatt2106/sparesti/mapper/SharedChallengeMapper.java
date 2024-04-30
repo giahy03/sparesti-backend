@@ -22,6 +22,7 @@ public interface SharedChallengeMapper {
   SharedChallenge sharedChallengeDtoToSharedChallenge(SharedChallengeDto challenge,
                                                       @Context ChallengeMapper challengeMapperImpl);
 
+  @Mapping(target = "sharedChallengeId", source = "sharedChallengeCode.id")
   SharedChallengeDto sharedChallengeToSharedChallengeDto(SharedChallenge sharedChallenge,
                                                          @Context ChallengeMapper challengeMapperImpl);
 }

@@ -32,6 +32,18 @@ public class ChallengeUtility {
             .build();
   }
 
+  public static User createUserD() {
+    return User.builder()
+            .email("Anna@gmail.com")
+            .firstName("Anna")
+            .lastName("Smith")
+            .role(Role.USER)
+            .userInfo(createUserInfoA())
+            .lastName("Guide")
+            .password("password")
+            .build();
+  }
+
   public static UserInfoDto createUserInfoDtoA() {
     return UserInfoDto.builder()
             .income(1000)
@@ -48,6 +60,13 @@ public class ChallengeUtility {
             .build();
   }
 
+  public static UserInfo createUserInfoD(User user) {
+    return UserInfo.builder()
+            .income(1000)
+            .livingStatus(SsbLivingStatus.fromInteger(1))
+            .user(user)
+            .build();
+  }
 
   public static User createUserB() {
     return User.builder()
@@ -137,5 +156,6 @@ public class ChallengeUtility {
             .expiryTimestamp(LocalDateTime.of(2021, 12, 31, 23, 59, 59))
             .build();
   }
+
 
 }

@@ -41,6 +41,7 @@ public class UserInfo {
   @Schema(description = "The unique identifier for the user's information.")
   @Column(name = "id")
   @Setter(AccessLevel.NONE)
+  @Getter(AccessLevel.NONE)
   private Long id;
 
   @Schema(description = "The user's monthly income after taxes")
