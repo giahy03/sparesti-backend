@@ -36,7 +36,8 @@ public class SecurityConfig {
   private static final String[] WHITELIST_URL = {
       "/api/v1/auth/**",
       "/api/v1/email/**",
-      "/api/v1/stock/**"
+      "/api/v1/stock/**",
+      "/api/v1/docs/**"
   };
 
   private final JwtAuthFilter jwtAuthFilter;
