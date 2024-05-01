@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
@@ -49,6 +50,8 @@ class ChallengeServiceTest {
   @BeforeEach
   void setUp() {
     challenge = ChallengeUtility.createSharedChallengeA();
+    SharedChallengeCode sharedChallengeCode = ChallengeUtility.createSharedChallengeCodeA();
+    challenge.setSharedChallengeCode(sharedChallengeCode);
     principal = () -> "example@guide";
   }
 

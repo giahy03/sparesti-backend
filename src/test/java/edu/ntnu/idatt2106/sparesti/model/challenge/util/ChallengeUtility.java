@@ -137,6 +137,7 @@ public class ChallengeUtility {
             .startDate(LocalDate.parse("2021-10-10"))
             .endDate(LocalDate.parse("2021-10-20"))
             .description("Description")
+
             .progress(Progress.IN_PROGRESS)
             .difficulty(Difficulty.EASY)
             .user(createUserA())

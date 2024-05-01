@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 /**
  * Controller class responsible for handling email related REST-endpoints.
  *
@@ -147,9 +149,9 @@ public class EmailController {
       @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
   @GetMapping("/challenge/join/{id}")
-  public ResponseEntity<Void> sendJoinCode(@RequestParam String email, @PathVariable long id) {
+  public ResponseEntity<Void> sendJoinCode(Principal principal, @RequestParam String email, @PathVariable long id) {
     log.info("Sending join code about challenge with id: {} to: {}", id, email);
-    emailFriendCodeService.sendJoinCode(email, id);
+    emailFriendCodeService.sendJoinCode(principal, email, id);
     log.info("Join code about challenge with id: {} sent to: {}", id, email);
     return new ResponseEntity<>(HttpStatus.OK);
   }
