@@ -207,4 +207,12 @@ public class SavingGoalUtility {
                     + "}";
     }
 
+  public static SavingGoalContributionDto createGoalContributionDto() {
+    return SavingGoalContributionDto.builder()
+        .goalId(1L)
+
+        .contribution(250.0)
+        .build();
+
+  }
 }

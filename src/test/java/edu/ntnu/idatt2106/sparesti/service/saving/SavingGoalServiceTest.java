@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.service.saving;
 
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributionDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalUpdateValueDto;
 import edu.ntnu.idatt2106.sparesti.mapper.SavingGoalMapper;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.when;
  * @author Hanne-Sofie Søreide
  */
 @ExtendWith(MockitoExtension.class)
-public class SavingGoalServiceTest {
+class SavingGoalServiceTest {
 
     @InjectMocks
     SavingGoalService savingGoalService;
@@ -40,7 +41,6 @@ public class SavingGoalServiceTest {
     UserRepository userRepository;
     @Mock
     SavingGoalMapper savingGoalMapper;
-
     Principal principal;
     Pageable pageable;
     private SavingGoal goal;
@@ -128,23 +128,26 @@ public class SavingGoalServiceTest {
     }
 
 
-/*
-    @DisplayName("JUnit test for registerSavingContribution method")
-    @Test
-    void Service_RegisterSavingContribution_RegisterSavingContribution() {
+//
+//
+//
+//    @DisplayName("JUnit test for registerSavingContribution method")
+//    @Test
+//    void Service_RegisterSavingContribution_RegisterSavingContribution() {
+//
+//        // Arrange
+//        User user = SavingGoalUtility.createUserA();
+//        when(savingGoalRepository.findById(1L)).thenReturn(Optional.of(goal));
+//        when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(user));
+//
+//
+//        System.out.println("HERE:    ----------");
+//        System.out.println(goal.getContributions().get(user.getUserId()));;
+//        SavingGoalContributionDto savingGoalContributionDto = SavingGoalUtility.createGoalContributionDto();
+//
+//        // Act and assert
+//        assertDoesNotThrow(() -> savingGoalService.registerSavingContribution(principal, savingGoalContributionDto));
+//    }
 
-        // Arrange
-        User user = SavingGoalUtility.createUserA();
-        when(savingGoalRepository.findById(1L)).thenReturn(Optional.of(goal));
-        when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(user));
-
-
-        System.out.println("HERE:    ----------");
-        System.out.println(goal.getContributions().get(user.getUserId()));;
-        SavingGoalContributionDto savingGoalContributionDto = SavingGoalUtility.createSavingGoalContributionDto();
-
-        // Act and assert
-        assertDoesNotThrow(() -> savingGoalService.registerSavingContribution(principal, savingGoalContributionDto));
-    }*/
 
 }
