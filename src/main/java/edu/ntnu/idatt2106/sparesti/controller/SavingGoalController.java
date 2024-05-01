@@ -68,21 +68,21 @@ public class SavingGoalController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The goal was successfully added to the user",
                     content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = SavingGoalIdDto.class))
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = SavingGoalDto.class))
                     }),
             @ApiResponse(responseCode = "500", description =  "Unknown internal server error", content = @Content)
     })
     @PutMapping("/goal")
-    public ResponseEntity<SavingGoalIdDto> addGoalToUser(
+    public ResponseEntity<SavingGoalDto> addGoalToUser(
             @RequestBody AddSharedGoalToUserDto addSharedGoalToUserDto, Principal principal) {
 
         log.info("Adding goal to user with email " + principal.getName());
 
-        SavingGoalIdDto savingGoalIdDto = savingGoalService.addGoalToUser(principal, addSharedGoalToUserDto);
+        SavingGoalDto savingGoalDto = savingGoalService.addGoalToUser(principal, addSharedGoalToUserDto);
 
-        log.info("The user was added to saving goal " + savingGoalIdDto.getTitle());
+        log.info("The user was added to saving goal " + savingGoalDto.getTitle());
 
-        return new ResponseEntity<>(savingGoalIdDto, HttpStatus.OK);
+        return new ResponseEntity<>(savingGoalDto, HttpStatus.OK);
     }
 
 
@@ -117,7 +117,8 @@ public class SavingGoalController {
     /**
      * Get a saving goal of a given id.
      *
-     * @param savingGoalIdDto The unique id of the saving goal
+     * @param principal The authenticated user
+     * @param goalId Unique identifier of goal to retrieve
      * @return ResponseEntity containing the retrieved saving goal, or an error message
      */
     @Operation(summary = "Get a saving goal by its id")
@@ -130,10 +131,10 @@ public class SavingGoalController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
-    @GetMapping("/goal")
-    public ResponseEntity<SavingGoalDto> getGoalById( @RequestBody SavingGoalIdDto savingGoalIdDto) {
-        log.info("Returning Saving Goal: " + savingGoalIdDto.getId());
-        SavingGoalDto savingGoalDto = savingGoalService.getSavingGoalById(savingGoalIdDto);
+    @GetMapping("/goal/{goalId}")
+    public ResponseEntity<SavingGoalDto> getGoalById(Principal principal, @PathVariable long goalId) {
+        log.info("Returning Saving Goal: " + goalId);
+        SavingGoalDto savingGoalDto = savingGoalService.getSavingGoalById(principal, goalId);
         log.info("Returning Saving Goal: " + savingGoalDto.getTitle());
         return new ResponseEntity<>(savingGoalDto, HttpStatus.OK);
     }
@@ -160,7 +161,7 @@ public class SavingGoalController {
     @DeleteMapping("/goal")
     public ResponseEntity<String> deleteSavingGoal(Principal principal, @RequestBody SavingGoalIdDto savingGoalIdDto) {
         log.info("Attempting to delete goal: " + savingGoalIdDto.getId());
-        savingGoalService.deleteSavingGoal(savingGoalIdDto);
+        savingGoalService.deleteSavingGoal(principal, savingGoalIdDto);
         log.info("Goal deleted: " + savingGoalIdDto.getId());
         return new ResponseEntity<>("Deleted successfully", HttpStatus.OK);
     }
@@ -182,9 +183,9 @@ public class SavingGoalController {
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
     @PutMapping("/goal/lives")
-    public ResponseEntity<String> lives(@RequestBody SavingGoalUpdateValueDto updateValueDto) {
+    public ResponseEntity<String> lives(Principal principal, @RequestBody SavingGoalUpdateValueDto updateValueDto) {
         log.info("Attempting to edit pig lives of goal: " + updateValueDto.getId());
-        int lives = savingGoalService.editLives(updateValueDto);
+        int lives = savingGoalService.editLives(principal, updateValueDto);
         log.info("Number of lives successfully updated to: " + lives);
 
         return new ResponseEntity<>("Lives updated successfully", HttpStatus.OK);
@@ -237,7 +238,7 @@ public class SavingGoalController {
     public ResponseEntity<Double> getCurrentlySavedTotal(Principal principal, @RequestBody  SavingGoalIdDto savingGoalIdDto) {
 
         log.info("Get currently saved up amount for goal: " + savingGoalIdDto.getId());
-        double currentTotal = savingGoalService.checkTotalOfContributions(savingGoalIdDto.getId());
+        double currentTotal = savingGoalService.checkTotalOfContributions(principal, savingGoalIdDto.getId());
         log.info("Currently saved up amount for goal: " + currentTotal);
 
         return new ResponseEntity<>(currentTotal, HttpStatus.OK);
@@ -268,6 +269,25 @@ public class SavingGoalController {
         log.info("New state of goal: " + updatedGoal.getState());
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "Get all the users contributing to this goal and their currently saved up amount for it.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The contributors to this goal were retrieved",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = SavingGoalContributorDto.class))
+                    }),
+            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
+    })
+    @GetMapping("/goal/contributors/{goalId}")
+    public ResponseEntity<List<SavingGoalContributorDto>> getContributorsToGoal(Principal principal, @PathVariable long goalId) {
+
+        log.info("Get contributors to the goal of ID: " + goalId);
+        List<SavingGoalContributorDto> contributors = savingGoalService.getContributorsToGoal(principal, goalId);
+        log.info("Number of contributors retrieved: " + contributors.size());
+
+        return new ResponseEntity<>(contributors, HttpStatus.OK);
     }
 
 }
