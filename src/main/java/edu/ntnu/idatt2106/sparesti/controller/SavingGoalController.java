@@ -117,7 +117,8 @@ public class SavingGoalController {
     /**
      * Get a saving goal of a given id.
      *
-     * @param savingGoalIdDto The unique id of the saving goal
+     * @param principal The authenticated user
+     * @param goalId Unique identifier of goal to retrieve
      * @return ResponseEntity containing the retrieved saving goal, or an error message
      */
     @Operation(summary = "Get a saving goal by its id")
@@ -130,10 +131,10 @@ public class SavingGoalController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
-    @GetMapping("/goal")
-    public ResponseEntity<SavingGoalDto> getGoalById( @RequestBody SavingGoalIdDto savingGoalIdDto) {
-        log.info("Returning Saving Goal: " + savingGoalIdDto.getId());
-        SavingGoalDto savingGoalDto = savingGoalService.getSavingGoalById(savingGoalIdDto);
+    @GetMapping("/goal/{goalId}")
+    public ResponseEntity<SavingGoalDto> getGoalById(Principal principal, @PathVariable long goalId) {
+        log.info("Returning Saving Goal: " + goalId);
+        SavingGoalDto savingGoalDto = savingGoalService.getSavingGoalById(principal, goalId);
         log.info("Returning Saving Goal: " + savingGoalDto.getTitle());
         return new ResponseEntity<>(savingGoalDto, HttpStatus.OK);
     }

@@ -103,12 +103,10 @@ public class SavingGoalControllerTest {
     @WithMockUser(roles = "USER")
     public void controllerGetSavingGoalCorrectly() throws Exception {
 
-        when(savingGoalService.getSavingGoalById(SavingGoalUtility.createSavingGoalIdDto())).thenReturn(SavingGoalUtility.createSavingGoalDto());
+        when(savingGoalService.getSavingGoalById(any(Principal.class), any(Long.class))).thenReturn(SavingGoalUtility.createSavingGoalDto());
 
         mockMvc
-                .perform(get(url + "goal").with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(SavingGoalUtility.createSavingGoalIdDtoJson()))
+                .perform(get(url + "goal/1").with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(SavingGoalUtility.createSavingGoalDtoJson()));
     }

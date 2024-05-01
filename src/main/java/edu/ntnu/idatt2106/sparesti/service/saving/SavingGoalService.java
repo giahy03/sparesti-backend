@@ -124,12 +124,13 @@ public class SavingGoalService {
     /**
      * Retrieves a goal from the database based on its id.
      *
-     * @param savingGoalIdDto DTO containing the id of the saving goal
+     * @param principal The authenticated user
+     * @param goalId The unique id of the saving goal
      * @return DTO containing the saving goal
      */
-    public SavingGoalDto getSavingGoalById(SavingGoalIdDto savingGoalIdDto) {
+    public SavingGoalDto getSavingGoalById(Principal principal, long goalId) {
 
-        SavingGoal savingGoal = savingGoalRepository.findById(savingGoalIdDto.getId()).orElseThrow();
+        SavingGoal savingGoal = savingGoalRepository.findById(goalId).orElseThrow();
         return savingGoalMapper.mapToSavingGoalDto(savingGoal);
     }
 

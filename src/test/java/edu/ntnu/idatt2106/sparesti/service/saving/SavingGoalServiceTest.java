@@ -69,7 +69,7 @@ class SavingGoalServiceTest {
         when(savingGoalMapper.mapToSavingGoalDto(goal)).thenReturn(SavingGoalUtility.createSavingGoalDto());
 
         // Act
-        SavingGoalDto savingGoalDto = savingGoalService.getSavingGoalById(SavingGoalUtility.createSavingGoalIdDto());
+        SavingGoalDto savingGoalDto = savingGoalService.getSavingGoalById(principal, 1L);
 
         // Assert
         assertNotNull(savingGoalDto);
