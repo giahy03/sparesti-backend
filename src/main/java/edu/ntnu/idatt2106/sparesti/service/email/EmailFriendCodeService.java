@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+
 /**
  * Service class for sending email with join code to a friend.
  * This class contains methods for sending an email to a friend with the join code of a challenge
@@ -31,13 +33,16 @@ public class EmailFriendCodeService {
    * @param email the email to send the verification code to.
    * @param id the id of the challenge to send the join code to.
    */
-  public void sendJoinCode(String email, Long id) {
+  public void sendJoinCode(Principal principal, String email, Long id) {
     SharedChallenge challenge =
             sharedChallengeRepository
                     .findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("No challenge with id: " + id));
+
     checkUser(email);
-    EmailDetailsDto emailDetailsDto = buildEmailDto(email, challenge);
+
+    EmailDetailsDto emailDetailsDto = buildEmailDto(principal.getName(), challenge);
+
     emailService.sendEmail(emailDetailsDto);
   }
 
