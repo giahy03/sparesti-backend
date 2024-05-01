@@ -47,10 +47,15 @@ public class SavingGoalService {
         String email = principal.getName();
         User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
                 new UserNotFoundException("User with email " + email + " not found"));
-
+        
         SavingGoal createdSavingGoal = savingGoalMapper.mapToSavingGoal(savingGoalCreationRequestDto, user);
-
+        SavingContribution startingContribution = SavingContribution.builder()
+                .user(user)
+                .goal(createdSavingGoal)
+                .contribution(0.0).build();
+        
         SavingGoal savedSavingGoal = savingGoalRepository.save(createdSavingGoal);
+        savingContributionRepository.save(startingContribution);
 
         return SavingGoalIdDto.builder()
                 .id(savedSavingGoal.getId())
@@ -103,8 +108,11 @@ public class SavingGoalService {
      */
     public List<SavingGoalIdDto> getAllGoalsOfUser(Principal principal, Pageable pageable) {
 
-        List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(principal.getName(), pageable)
-                .stream().map(SavingContribution::getGoal).toList();
+        List<SavingContribution> contributions = savingContributionRepository.findAllContributionsByUser_Email(principal.getName(), pageable);
+
+       /*   List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(principal.getName(), pageable)
+                .stream().map(SavingContribution::getGoal).toList();*/
+        List<SavingGoal> goals = contributions.stream().map(SavingContribution::getGoal).toList();
 
         return goals
                 .stream()

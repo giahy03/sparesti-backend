@@ -2,11 +2,14 @@ package edu.ntnu.idatt2106.sparesti.service.saving;
 
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributionDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalUpdateValueDto;
 import edu.ntnu.idatt2106.sparesti.mapper.SavingGoalMapper;
 import edu.ntnu.idatt2106.sparesti.model.saving.util.SavingGoalUtility;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.repository.SavingContributionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SavingGoalRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +22,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.data.domain.Pageable;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -40,6 +46,8 @@ class SavingGoalServiceTest {
     @Mock
     UserRepository userRepository;
     @Mock
+    SavingContributionRepository savingContributionRepository;
+    @Mock
     SavingGoalMapper savingGoalMapper;
     Principal principal;
     Pageable pageable;
@@ -49,7 +57,7 @@ class SavingGoalServiceTest {
     @BeforeEach
     void setUp() {
         goal = SavingGoalUtility.createSavingGoalA();
-        principal = () -> "test@test.tea";
+        principal = () -> "testA@test.tea";
     }
 
 
@@ -67,19 +75,17 @@ class SavingGoalServiceTest {
         assertNotNull(savingGoalDto);
     }
 
-/*
 
     @DisplayName("JUnit test of getAllGoalIdsByEmail method")
     @Test
     void Service_GetAllGoalIdsByEmail_ReturnsListOfSavingGoalIds() {
 
         // Arrange
-        List<SavingGoal> savingGoalList = new ArrayList<>();
-        savingGoalList.add(SavingGoalUtility.createSavingGoalA());
-        savingGoalList.add(SavingGoalUtility.createSavingGoalB());
-        when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.ofNullable(SavingGoalUtility.createUserA()));
-//        when(savingGoalRepository.findAllByUser_Username(principal.getName(), pageable)).thenReturn(savingGoalList);
-        when(user.getGoals())
+        User user = SavingGoalUtility.createUserA();
+        List<SavingContribution> contributions = List.of(SavingGoalUtility.createSavingContributionA(),
+                SavingGoalUtility.createSavingContributionC());
+
+        when(savingContributionRepository.findAllContributionsByUser_Email(principal.getName(), pageable)).thenReturn(contributions);
 
         // Act
         List<SavingGoalIdDto> returnedIds = savingGoalService.getAllGoalsOfUser(principal, pageable);
@@ -87,7 +93,6 @@ class SavingGoalServiceTest {
         // Assert
         assertThat(returnedIds.size()).isEqualTo(2);
     }
-*/
 
 
     @DisplayName("JUnit test for createSavingGoal method")
