@@ -8,6 +8,7 @@ import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Utility class that creates objects to support the testing classes.
@@ -19,7 +20,7 @@ public class SavingGoalUtility {
 
     public static User createUserA() {
         return User.builder()
-                .email("test@test.tea")
+                .email("testA@test.tea")
                 .firstName("First Name")
                 .lastName("Last Name")
                 .role(Role.USER)
@@ -30,7 +31,7 @@ public class SavingGoalUtility {
 
     public static User createUserB() {
         return User.builder()
-                .email("test@test.tea")
+                .email("testB@test.tea")
                 .firstName("First Name")
                 .lastName("Last Name")
                 .role(Role.USER)
@@ -48,6 +49,23 @@ public class SavingGoalUtility {
                 .build();
     }
 
+    public static SavingContribution createSavingContributionB() {
+        return SavingContribution.builder()
+                .id(4L)
+                .goal(createSavingGoalB())
+                .user(createUserB())
+                .contribution(500.0)
+                .build();
+    }
+
+    public static SavingContribution createSavingContributionC() {
+        return SavingContribution.builder()
+                .id(4L)
+                .goal(createSavingGoalB())
+                .user(createUserA())
+                .contribution(200.0)
+                .build();
+    }
 
     public static SavingGoal createSavingGoalA() {
 
@@ -58,30 +76,28 @@ public class SavingGoalUtility {
                 .title("Goal")
                 .startDate(LocalDate.of(2024, 4, 15))
                 .endDate(LocalDate.of(2024, 5, 3))
-                //.savingContribution(Set.of(createSavingContributionA()))
                 .lives(3)
                 .state(GoalState.UNDER_PROGRESS)
                 .totalAmount(10000.0)          //          .progress(500.0)
                 .build();
     }
 
-    // Used in test currently commented out
-/*    public static SavingGoal createSavingGoalB() {
+
+    public static SavingGoal createSavingGoalB() {
         User user = createUserB();
 
         return SavingGoal.builder()
                 .id(2L)
                 .author(user)
-                .users(Set.of(user))
                 .title("GoalB")
                 .startDate(LocalDate.of(2024, 4, 15))
                 .endDate(LocalDate.of(2024, 5, 3))
                 .lives(3)
-                .contributions(createContributions())
+                //.contributions(List.of(createSavingContributionB()))
                 .state(GoalState.UNDER_PROGRESS)
                 .totalAmount(10000.0)
                 .build();
-    }*/
+    }
 
     public static SavingGoalCreationRequestDto createSavingGoalCreationRequestDto() {
 
