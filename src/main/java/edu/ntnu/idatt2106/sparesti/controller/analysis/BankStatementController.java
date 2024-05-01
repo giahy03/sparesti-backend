@@ -270,14 +270,28 @@ public class BankStatementController {
             .map(BankStatement::getAnalysis).findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Analysis not found"));
 
-    savedAnalysis.setAnalysisItems(
+
+    List<AnalysisItem> newItems =
         bankStatementAnalysisDto.getAnalysisItems().stream().map(analysisItemDto -> {
           AnalysisItem item =
               new AnalysisItem(SsbPurchaseCategory.valueOf(analysisItemDto.getCategory()),
                   analysisItemDto.getExpectedValue(), analysisItemDto.getActualValue());
           item.setBankStatementAnalysis(savedAnalysis);
           return item;
-        }).toList());
+        }).toList();
+
+    savedAnalysis.getAnalysisItems().clear();
+
+    log.info("Adding {} new items to the analysis", newItems.size());
+    if (newItems.size() > SsbPurchaseCategory.values().length) {
+      throw new IllegalArgumentException("Too many items were added");
+    }
+
+    savedAnalysis.getAnalysisItems().addAll(newItems);
+
+    if (savedAnalysis.getBankStatement() == null) {
+      throw new IllegalArgumentException("The analysis does not have a bank statement");
+    }
     bankStatementService.saveBankStatement(savedAnalysis.getBankStatement());
     return null;
   }

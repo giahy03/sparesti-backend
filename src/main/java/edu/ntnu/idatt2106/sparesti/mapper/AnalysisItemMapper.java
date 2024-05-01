@@ -26,7 +26,6 @@ public interface AnalysisItemMapper {
 
   @Named("mapCategory")
   default String mapCategory(SsbPurchaseCategory purchaseCategory) {
-    System.out.println("mapping: " + purchaseCategory.getCategoryCode());
     return purchaseCategory.getCategoryCode();
   }
 }

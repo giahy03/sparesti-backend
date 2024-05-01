@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository interface for  contributions made to saving goals by users
@@ -17,7 +18,7 @@ import java.util.List;
 public interface SavingContributionRepository extends JpaRepository<SavingContribution, Long> {
 
     List<SavingContribution> findAllContributionsByUser_Email(String email, Pageable pageable);
-    SavingContribution findByUser_EmailAndGoal_Id(String email, long goalId);
+    Optional<SavingContribution> findByUser_EmailAndGoal_Id(String email, long goalId);
     List<SavingContribution> findAllContributionsByGoal_Id(long goalId);
 
 }
