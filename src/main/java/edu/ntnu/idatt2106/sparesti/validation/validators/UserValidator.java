@@ -87,4 +87,16 @@ public class UserValidator extends SimpleValidator {
               + " and contain only letters.");
     }
   }
+
+  /**
+   * The method validates that the income is not less than zero.
+   *
+   * @param income The income to be validated.
+   * @throws IllegalArgumentException If the income is negative.
+   */
+  public static void validateIncome(double income) throws IllegalArgumentException {
+    if (income < 0) {
+      throw new IllegalArgumentException("Income cannot be negative.");
+    }
+  }
 }
