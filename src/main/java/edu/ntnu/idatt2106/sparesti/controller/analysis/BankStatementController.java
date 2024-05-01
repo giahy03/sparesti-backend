@@ -172,15 +172,30 @@ public class BankStatementController {
       @ApiResponse(responseCode = "500", description = "The bank statements were not retrieved "
           + "because of an internal server error")})
   @GetMapping("/")
-  public ResponseEntity<List<BankStatementDto>> getAllStatementsForUser(Principal principal)
+  public ResponseEntity<List<BankStatementDto>> getAllStatementsForUser(Principal principal,
+                                                                        @RequestParam(defaultValue = "0")
+                                                                        Integer month,
+                                                                        @RequestParam(defaultValue = "0")
+                                                                        Integer year
+  )
       throws NullPointerException {
     List<BankStatement> bankStatements = bankStatementService.getAllBankStatements(principal);
+
+    if (month > 0 && year > 0) {
+      return ResponseEntity.ok(bankStatements.stream()
+          .filter(bankStatement -> bankStatement.getTimestamp().equals(YearMonth.of(year, month)))
+          .map(BankStatementMapper.INSTANCE::bankStatementIntoBankStatementDto)
+          .toList());
+    }
+
     List<BankStatementDto> bankStatementDtoList =
-        bankStatements.stream().map(BankStatementMapper.INSTANCE::bankStatementIntoBankStatementDto)
+        bankStatements.stream()
+            .map(BankStatementMapper.INSTANCE::bankStatementIntoBankStatementDto)
             .toList();
 
     return ResponseEntity.ok(bankStatementDtoList);
   }
+
 
   /**
    * Get all account numbers for a user.
@@ -229,35 +244,6 @@ public class BankStatementController {
     return ResponseEntity.ok(transactions);
   }
 
-  /**
-   * Get analyses for a user for a specified month and year.
-   *
-   * @param month     the month to get analyses for
-   * @param year      the year to get analyses for
-   * @param principal the user to get analyses for
-   * @return a list of analyses
-   */
-  @Operation(summary = "Get analyses for a user for a specified month and year")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "The analyses were successfully "
-          + "retrieved"),
-      @ApiResponse(responseCode = "500", description = "The analyses were not retrieved "
-          + "because of an internal server error")})
-  @GetMapping("/analyses")
-  public ResponseEntity<List<BankStatementAnalysisDto>> getAnalysesForUserForSpecifiedMonthYear(
-      @RequestParam int month, @RequestParam int year, Principal principal) {
-
-
-    List<BankStatement> bankStatements = bankStatementService.getAllBankStatements(principal);
-    List<BankStatementAnalysisDto> analyses =
-        bankStatements.stream().filter(bankStatement -> bankStatement.getAnalysis() != null)
-            .filter(bankStatement -> bankStatement.getTimestamp().equals(YearMonth.of(year, month)))
-            .map(BankStatement::getAnalysis)
-            .map(AnalysisMapper.INSTANCE::bankStatementAnalysisIntoBankStatementAnalysisDto)
-            .toList();
-
-    return ResponseEntity.ok(analyses);
-  }
 
   /**
    * Update the analysis of a bank statement.
