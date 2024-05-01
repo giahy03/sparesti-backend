@@ -23,26 +23,18 @@ public class SavingContribution {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "The unique identifier for the saving goal.")
-    @Column(name = "id")
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToOne
-    @NonNull
-    @Schema(description = "The unique identifier for the user.")
-    @JoinColumn(name="user_id", nullable = false)
-    @Setter(AccessLevel.NONE)
+    @Schema(description = "The user who made the contribution.")
+    @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private User user;
 
-    @ManyToOne
-    @NonNull
-    @Schema(description = "The unique identifier for the goal.")
-    @JoinColumn(name="goal_id", nullable = false)
-    @Setter(AccessLevel.NONE)
+    @Schema(description = "The saving goal the contribution was made to.")
+    @ManyToOne (fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private SavingGoal goal;
 
     @Schema(description = "The amount contributed by the user to achieve the saving goal.")
-    @Column(name = "contribution")
     private double contribution;
 
 }

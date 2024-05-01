@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Represents a stored saving goal entity.
@@ -28,10 +29,9 @@ public class SavingGoal {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @NonNull
     @Schema(description = "The unique identifier for the user who created the goal.")
-    @JoinColumn(name="author_id", nullable = false)
     @Setter(AccessLevel.NONE)
     private User author;
 
@@ -69,6 +69,10 @@ public class SavingGoal {
     @Schema(description = "The number of lives of the saving mascot at this saving goal.")
     @Column(name = "lives")
     private int lives;
+
+    @Schema(description = "The contributions made to this saving goal")
+    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SavingContribution> contributions;
 
 
 }
