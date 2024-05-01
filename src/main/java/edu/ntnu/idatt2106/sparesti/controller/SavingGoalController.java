@@ -271,4 +271,23 @@ public class SavingGoalController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @Operation(summary = "Get all the users contributing to this goal and their currently saved up amount for it.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The contributors to this goal were retrieved",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = SavingGoalContributorDto.class))
+                    }),
+            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
+    })
+    @GetMapping("/goal/contributors/{goalId}")
+    public ResponseEntity<List<SavingGoalContributorDto>> getContributorsToGoal(Principal principal, @PathVariable long goalId) {
+
+        log.info("Get contributors to the goal of ID: " + goalId);
+        List<SavingGoalContributorDto> contributors = savingGoalService.getContributorsToGoal(principal, goalId);
+        log.info("Number of contributors retrieved: " + contributors.size());
+
+        return new ResponseEntity<>(contributors, HttpStatus.OK);
+    }
+
 }

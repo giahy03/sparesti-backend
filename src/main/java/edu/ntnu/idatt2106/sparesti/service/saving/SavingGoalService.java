@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -204,7 +205,7 @@ public class SavingGoalService {
     /**
      * Summarizes and returns all the contributions made to the saving goal of the given id.
      *
-     * @param goalId Unique identifyer of the goal to get the currently total saved amount for
+     * @param goalId Unique identifier of the goal to get the currently total saved amount for
      * @return The currently saved up amount for this goal
      */
     public double checkTotalOfContributions(Long goalId) {
@@ -212,5 +213,32 @@ public class SavingGoalService {
                 .stream()
                 .map(SavingContribution::getContribution).mapToDouble(f -> f).sum();
     }
+
+
+    /**
+     * Get a list of DTOs representing all the contributors to a given goal, in terms of their
+     * first name, last name, email and contributed amount to this particular goal.
+     *
+     * @param principal The authenticated user
+     * @param goalId The unique id of the goal
+     * @return A list of DTOs representing the contributors to a goal.
+     */
+    public List<SavingGoalContributorDto> getContributorsToGoal(Principal principal, long goalId) {
+
+        List<SavingContribution> contributions = savingContributionRepository.findAllContributionsByGoal_Id(goalId);
+        List<SavingGoalContributorDto> contributors = new ArrayList<>();
+
+        for (SavingContribution contribution : contributions) {
+            contributors.add(SavingGoalContributorDto.builder()
+                    .firstName(contribution.getUser().getFirstName())
+                    .lastName(contribution.getUser().getLastName())
+                    .contributedAmount(contribution.getContribution())
+                    .build());
+        }
+
+        return contributors;
+
+    }
+
 
 }
