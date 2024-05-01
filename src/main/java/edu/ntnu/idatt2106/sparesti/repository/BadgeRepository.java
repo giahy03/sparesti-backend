@@ -19,9 +19,9 @@ import java.util.Optional;
 @Repository
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
 
-    Optional<Badge> findById(Long bagdeId);
+   // Optional<Badge> findById(Long bagdeId);
 
-    List<Badge> findAllByUser_Username(String email, Pageable pageable);
+    List<Badge> findAllByUser_Email(String email, Pageable pageable);
 
     Badge findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(String email, AchievementCategory achievementCategory);
 
