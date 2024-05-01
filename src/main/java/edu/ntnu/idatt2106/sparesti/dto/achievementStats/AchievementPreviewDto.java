@@ -20,5 +20,6 @@ public class AchievementPreviewDto {
 
     private AchievementCategory category;
     private List<Integer> thresholds;
+    private String description;
 
 }

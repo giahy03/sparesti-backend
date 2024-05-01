@@ -119,7 +119,7 @@ public class SavingGoalControllerTest {
     @WithMockUser(roles = "USER")
     public void controllerPutsSavingContributionCorrectly() throws Exception {
 
-        when(savingGoalService.registerSavingContribution(any(Principal.class), any(SavingGoalContributionDto.class))).thenReturn(SavingGoalUtility.createSavingGoalDto());
+        when(savingGoalService.registerSavingContribution(any(Principal.class), any(SavingGoalContributionDto.class))).thenReturn(750.0);
 
         mockMvc
                 .perform(put(url + "goal/save").with(csrf())

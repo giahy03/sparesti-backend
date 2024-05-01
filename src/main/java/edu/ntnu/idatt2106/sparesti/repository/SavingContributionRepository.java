@@ -16,5 +16,6 @@ public interface SavingContributionRepository extends JpaRepository<SavingContri
 
     List<SavingContribution> findAllContributionsByUser_Email(String email, Pageable pageable);
     SavingContribution findByUser_EmailAndGoal_Id(String email, long goalId);
+    List<SavingContribution> findAllContributionsByGoal_Id(long goalId);
 
 }
