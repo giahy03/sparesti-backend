@@ -52,7 +52,7 @@ public class BadgeService {
 
         String email = principal.getName();
 
-        return badgeRepository.findAllByUser_Username(email, pageable)
+        return badgeRepository.findAllByUser_Email(email, pageable)
                 .stream()
                 .map(badgeMapper::mapToBadgePreviewDto)
                 .toList();
