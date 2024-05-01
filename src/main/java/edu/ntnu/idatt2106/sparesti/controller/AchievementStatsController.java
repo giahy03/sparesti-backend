@@ -1,9 +1,13 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
 
+import edu.ntnu.idatt2106.sparesti.dto.achievementStats.AchievementPreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.achievementStats.CheckForAchievementDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
+import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
+import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
 import edu.ntnu.idatt2106.sparesti.service.achievementStats.AchievementStatsService;
+import edu.ntnu.idatt2106.sparesti.service.badge.BadgeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,11 +15,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 /**
  * Controller class for handling requests related to achievement stats of the user.
@@ -31,6 +37,7 @@ import java.security.Principal;
 public class AchievementStatsController {
 
     private final AchievementStatsService achievementStatsService;
+    private final BadgeService badgeService;
 
     /**
      * Responds to post requests that specify an achievement type to update the user stats for and,

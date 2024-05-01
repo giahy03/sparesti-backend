@@ -2,12 +2,11 @@ package edu.ntnu.idatt2106.sparesti.model.user;
 
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
-import edu.ntnu.idatt2106.sparesti.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * A test class for the UserInfo class.
@@ -22,121 +21,54 @@ class UserInfoTest {
 
   @BeforeEach
   void setUp() {
-    user = ChallengeUtility.createUserD();
-    userInfo = ChallengeUtility.createUserInfoD(user);
+    user = ChallengeUtility.createUser1();
+    userInfo = ChallengeUtility.createUserInfoA();
 
+    user.setUserInfo(userInfo);
+    userInfo.setUser(user);
   }
 
+
   @Test
-  @DisplayName("Test UserInfo constructor")
+  @DisplayName("Test that userInfo constructor returns a userInfo object")
   void UserInfo_UserInfoConstructor_ReturnUserInfo() {
     // Arrange
     double expectedIncome = 1000;
     SsbLivingStatus expectedLivingStatus = SsbLivingStatus.fromInteger(1);
-
-    // Act
-    UserInfo actual = ChallengeUtility.createUserInfoA();
-
-    // Assert
-    assertEquals(expectedIncome, actual.getIncome());
-    assertEquals(expectedLivingStatus, actual.getLivingStatus());
-  }
-
-  @Test
-  @DisplayName("Test UserInfo constructor with no args")
-  void UserInfo_UserInfoConstructorWithNoArgs_ReturnUserInfo() {
-    // Arrange
-    UserInfo userInfo = new UserInfo();
-    double expectedIncome = 0;
-    SsbLivingStatus expectedLivingStatus = SsbLivingStatus.fromInteger(0);
-    userInfo.setIncome(expectedIncome);
-    userInfo.setLivingStatus(SsbLivingStatus.fromInteger(0));
-
-    // Act
-    double actualIncome = userInfo.getIncome();
-    SsbLivingStatus actualLivingStatus = userInfo.getLivingStatus();
-
-    // Assert
-    assertEquals(expectedIncome, actualIncome);
-    assertEquals(expectedLivingStatus, actualLivingStatus);
-  }
-
-
-
-  @Test
-  void UserInfo_GetIncome_ReturnsIncome() {
-    // Arrange
-    double expectedIncome = 1000;
-
-    // Act
-    double actualIncome = userInfo.getIncome();
-
-    // Assert
-    assertEquals(expectedIncome, actualIncome);
-  }
-
-  @Test
-  void UserInfo_GetLivingStatus_ReturnsIncome() {
-    // Arrange
-    SsbLivingStatus expectedLivingStatus = SsbLivingStatus.fromInteger(1);
-
-    // Act
-    SsbLivingStatus actualLivingStatus = userInfo.getLivingStatus();
-
-
-    // Assert
-    assertEquals(expectedLivingStatus, actualLivingStatus);
-  }
-
-  @Test
-  void UserInfo_GetUser_ReturnUser() {
-    // Arrange
-    userInfo.setUser(user);
     User expectedUser = user;
 
     // Act
-    User actualUser = userInfo.getUser();
+    UserInfo actualUserInfo = UserInfo.builder()
+            .user(expectedUser)
+            .income(expectedIncome)
+            .livingStatus(expectedLivingStatus)
+            .build();
 
     // Assert
-    assertEquals(expectedUser.getEmail(), actualUser.getEmail());
+    assertEquals(expectedIncome, actualUserInfo.getIncome());
+    assertEquals(expectedLivingStatus, actualUserInfo.getLivingStatus());
+    assertEquals(expectedUser.getEmail(), actualUserInfo.getUser().getEmail());
   }
+
 
   @Test
-  void UserInfo_SetIncome_ReturnSavedIncome() {
+  @DisplayName("Test UserInfo constructor with no args returns a userInfo object.")
+  void UserInfo_UserInfoConstructorWithNoArgs_ReturnUserInfo() {
     // Arrange
-    double expectedIncome = 2000;
+    double expectedIncome = 0;
+    SsbLivingStatus expectedLivingStatus = SsbLivingStatus.fromInteger(0);
+    User expectedUser = user;
 
     // Act
-    userInfo.setIncome(2000);
-    double actualIncome = userInfo.getIncome();
+    UserInfo actualUserInfo = new UserInfo();
+    actualUserInfo.setIncome(expectedIncome);
+    actualUserInfo.setLivingStatus(SsbLivingStatus.fromInteger(0));
+    actualUserInfo.setUser(expectedUser);
 
     // Assert
-    assertEquals(expectedIncome, actualIncome);
+    assertEquals(expectedIncome, actualUserInfo.getIncome());
+    assertEquals(expectedLivingStatus, actualUserInfo.getLivingStatus());
+    assertEquals(expectedUser.getEmail(), actualUserInfo.getUser().getEmail());
   }
 
-  @Test
-  void UserInfo_SetLivingStatus_ReturnLivingStatus() {
-    // Arrange
-    SsbLivingStatus expectedLivingStatus = SsbLivingStatus.fromInteger(2);
-
-    // Act
-    userInfo.setLivingStatus(SsbLivingStatus.fromInteger(2));
-    SsbLivingStatus actualLivingStatus = userInfo.getLivingStatus();
-
-    // Assert
-    assertEquals(expectedLivingStatus, actualLivingStatus);
-  }
-
-  @Test
-  void UserInfo_SetUser_ReturnSavedUser() {
-    // Arrange
-    User expectedUser = ChallengeUtility.createUserB();
-
-    // Act
-    userInfo.setUser(expectedUser);
-    User actualUser = userInfo.getUser();
-
-    // Assert
-    assertEquals(expectedUser.getEmail(), actualUser.getEmail());
-  }
 }

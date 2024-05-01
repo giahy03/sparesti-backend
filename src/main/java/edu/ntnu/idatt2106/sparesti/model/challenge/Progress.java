@@ -9,7 +9,7 @@ package edu.ntnu.idatt2106.sparesti.model.challenge;
  * @author Jeffrey Yaw Annor Tabiri
  */
 public enum Progress {
-  NOT_STARTED,
+  FAILED,
   IN_PROGRESS,
   COMPLETED
 }

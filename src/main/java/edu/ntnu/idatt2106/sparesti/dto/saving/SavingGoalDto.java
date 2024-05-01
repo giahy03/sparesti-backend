@@ -4,7 +4,6 @@ import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * DTO to represent a saving goal object
@@ -24,9 +23,6 @@ public class SavingGoalDto {
     private LocalDate endDate;
     private int lives;
     private double totalAmount;
-    private double progress;
-    private List<String> contributingUsers;
-
-    // Progress of users
+    private String joinCode;
     
 }

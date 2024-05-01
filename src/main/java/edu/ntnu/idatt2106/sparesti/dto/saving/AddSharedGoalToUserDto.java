@@ -12,5 +12,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AddSharedGoalToUserDto {
-    private String join_code;
+    private String joinCode;
 }

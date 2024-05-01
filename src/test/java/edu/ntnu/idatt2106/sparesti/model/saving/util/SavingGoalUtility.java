@@ -2,14 +2,12 @@ package edu.ntnu.idatt2106.sparesti.model.saving.util;
 
 import edu.ntnu.idatt2106.sparesti.dto.saving.*;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Utility class that creates objects to support the testing classes.
@@ -41,13 +39,15 @@ public class SavingGoalUtility {
 
     }
 
-    public static HashMap<Long, Double> createContributions() {
-        HashMap<Long, Double> contributions = new HashMap<>();
-        contributions.put(1L, 10.0);
-        contributions.put(2L, 20.0);
-        contributions.put(3L, 30.0);
-        return contributions;
+    public static SavingContribution createSavingContributionA() {
+        return SavingContribution.builder()
+                .id(3L)
+                .goal(createSavingGoalA())
+                .user(createUserA())
+                .contribution(500.0)
+                .build();
     }
+
 
     public static SavingGoal createSavingGoalA() {
 
@@ -55,11 +55,10 @@ public class SavingGoalUtility {
         return SavingGoal.builder()
                 .id(1L)
                 .author(user)
-                .users(Set.of(user))
                 .title("Goal")
                 .startDate(LocalDate.of(2024, 4, 15))
                 .endDate(LocalDate.of(2024, 5, 3))
-                .contributions(createContributions())
+                //.savingContribution(Set.of(createSavingContributionA()))
                 .lives(3)
                 .state(GoalState.UNDER_PROGRESS)
                 .totalAmount(10000.0)          //          .progress(500.0)
@@ -101,6 +100,7 @@ public class SavingGoalUtility {
         return SavingGoalIdDto.builder()
                 .id(1L)
                 .title("Goal")
+                .state(GoalState.UNDER_PROGRESS)
                 .build();
     }
 
@@ -109,6 +109,7 @@ public class SavingGoalUtility {
         return SavingGoalIdDto.builder()
                 .id(2L)
                 .title("Goal")
+                .state(GoalState.UNDER_PROGRESS)
                 .build();
     }
 
@@ -117,6 +118,7 @@ public class SavingGoalUtility {
         return SavingGoalIdDto.builder()
                 .id(3L)
                 .title("Goal")
+                .state(GoalState.UNDER_PROGRESS)
                 .build();
     }
 
@@ -150,9 +152,7 @@ public class SavingGoalUtility {
         return SavingGoalDto.builder()
                 .id(1L)
                 .author(createUserA().getFirstName())
-                .contributingUsers(List.of(createUserA().getFirstName(), createUserB().getFirstName()))
                 .title("New goal")
-                .progress(2500.0)
                 .totalAmount(15000.0)
                 .lives(8)
                 .startDate(LocalDate.of(2024, 4, 10))
@@ -166,7 +166,8 @@ public class SavingGoalUtility {
 
         return  "{"
                 + "\"id\":1,"
-                + "\"title\":\"Goal\""
+                + "\"title\":\"Goal\","
+                + "\"state\":\"UNDER_PROGRESS\""
                 + "}";
     }
 
@@ -187,9 +188,9 @@ public class SavingGoalUtility {
     public static String createSavingGoalIdDtoListJson() {
 
         return  "[" +
-                "{\"id\": 1, \"title\": \"Goal\"}," +
-                "{\"id\": 2, \"title\": \"Goal\"}," +
-                "{\"id\": 3, \"title\": \"Goal\"}" +
+                "{\"id\": 1, \"title\": \"Goal\", \"state\":\"UNDER_PROGRESS\"}," +
+                "{\"id\": 2, \"title\": \"Goal\", \"state\":\"UNDER_PROGRESS\"}," +
+                "{\"id\": 3, \"title\": \"Goal\", \"state\":\"UNDER_PROGRESS\"}" +
                 "]";
     }
 
@@ -206,4 +207,12 @@ public class SavingGoalUtility {
                     + "}";
     }
 
+  public static SavingGoalContributionDto createGoalContributionDto() {
+    return SavingGoalContributionDto.builder()
+        .goalId(1L)
+
+        .contribution(250.0)
+        .build();
+
+  }
 }

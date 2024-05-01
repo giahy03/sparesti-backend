@@ -6,9 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Represents a stored saving goal entity.
@@ -31,19 +28,12 @@ public class SavingGoal {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-
     @ManyToOne(cascade = CascadeType.ALL)
     @NonNull
     @Schema(description = "The unique identifier for the user who created the goal.")
     @JoinColumn(name="author_id", nullable = false)
     @Setter(AccessLevel.NONE)
     private User author;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @NonNull
-    @Schema(description = "The unique identifier for the user(s) who has this goal.")
-    @CollectionTable(name="goal_users", joinColumns=@JoinColumn(name="id"))
-    private Set<User> users;
 
     @Schema(description = "The title of the saving goal.")
     @Column(name="title", nullable = false)
@@ -74,50 +64,11 @@ public class SavingGoal {
 
     @Column(name = "join_code", nullable = false, unique = true)
     @Schema(description = "The join code for a goal")
-    @Setter(AccessLevel.NONE)
-    private String joinCode = "abc";   // TODO: Temorarily hardcoded.
-
-    @ElementCollection
-    @Schema(description = "The amount saved for this goal for each user.")
-    @MapKeyColumn(name="user_id")
-    @Column(name="amount", nullable = false)
-    @CollectionTable(name="user_saving_contribution", joinColumns=@JoinColumn(name="id"))  // goal or user id?
-    //@BatchSize(size = 10)
-    Map<Long, Double> contributions = new HashMap<>();
-
-
+    private String joinCode;
 
     @Schema(description = "The number of lives of the saving mascot at this saving goal.")
     @Column(name = "lives")
     private int lives;
 
 
-    /**
-     * Check if the saving goal has been achieved before the end date of the goal and set the goal state accordingly.
-     * @return True if the goal was achieved before the end date, false if not.
-     */
-    public boolean isAchieved() {
-        if (totalAmount <= getTotalProgress()){
-            setState(GoalState.FINISHED);
-            return true;
-        } else if (totalAmount >= getTotalProgress() && getEndDate().isAfter(LocalDate.now())) {
-            setState(GoalState.FAILED);
-            return false;
-        } else {
-            setState(GoalState.UNDER_PROGRESS);
-            return false;
-        }
-    }
-
-    /**
-     * Calculates the total saved amount from all contributing users of this goal.
-     * @return The currently saved up amount by all users.
-     */
-    public double getTotalProgress() {
-        double sum = 0.0;
-        for (double value : contributions.values()) {
-            sum += value;
-        }
-        return sum;
-    }
 }

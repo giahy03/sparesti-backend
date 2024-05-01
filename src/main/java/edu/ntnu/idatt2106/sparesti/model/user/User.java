@@ -4,7 +4,6 @@ import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
@@ -73,10 +72,6 @@ public class User implements UserDetails {
   @Column(name = "role", nullable = false)
   @NonNull
   private Role role;
-
-  @Schema(description = "The user's saving goals.")
-  @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
-  private Set<SavingGoal> goals;
 
   @Schema(description = "The user's badges.")
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

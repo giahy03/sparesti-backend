@@ -14,6 +14,7 @@ import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
+import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import java.security.Principal;
@@ -42,6 +43,7 @@ public class ChallengeService {
 
   private final ChallengesRepository challengesRepository;
   private final SharedChallengeRepository sharedChallengeRepository;
+  private final SharedChallengeCodeRepository sharedChallengeCodeRepository;
   private final ChallengeMapper challengeMapperImpl = Mappers.getMapper(ChallengeMapper.class);
   private final SharedChallengeMapper sharedChallengeMapperImpl =
           Mappers.getMapper(SharedChallengeMapper.class);
@@ -107,9 +109,12 @@ public class ChallengeService {
     SharedChallenge sharedChallenge = sharedChallengeMapperImpl
             .sharedChallengeDtoToSharedChallenge(
                     (SharedChallengeDto) challengeDto, challengeMapperImpl);
+    SharedChallengeCode sharedChallengeCode = generateSharedChallengeCode();
+
     sharedChallenge.setUser(user);
-    sharedChallenge.setSharedChallengeCode(generateSharedChallengeCode());
+    sharedChallenge.setSharedChallengeCode(sharedChallengeCode);
     sharedChallenge.getSharedChallengeCode().setSharedChallenges(List.of(sharedChallenge));
+    sharedChallengeCodeRepository.save(sharedChallengeCode);
     challengesRepository.save(sharedChallenge);
   }
 

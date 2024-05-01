@@ -6,20 +6,39 @@ import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.LoginRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.RegistrationDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
-import edu.ntnu.idatt2106.sparesti.model.EmailCode;
+import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
+import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 public class ChallengeUtility {
+
+  public static Streak createStreak1() {
+    return Streak.builder()
+            .numberOfDays(20)
+            .build();
+  }
+
+  public static User createUser1() {
+    return User.builder()
+            .email("alice.johnson@example.com")
+            .firstName("Alice")
+            .lastName("Johnson")
+            .role(Role.USER)
+            .password("password012")
+            .build();
+  }
 
   public static User createUserA() {
     return User.builder()
@@ -32,6 +51,15 @@ public class ChallengeUtility {
             .build();
   }
 
+  public static User createUser2() {
+    return User.builder()
+            .email("bob.smith@example.com")
+            .firstName("Bob")
+            .lastName("Smith")
+            .role(Role.USER)
+            .password("password789")
+            .build();
+  }
   public static User createUserD() {
     return User.builder()
             .email("Anna@gmail.com")
@@ -66,7 +94,6 @@ public class ChallengeUtility {
 
   public static UserInfo createUserInfoA() {
     return UserInfo.builder()
-            .id(1L)
             .income(1000)
             .livingStatus(SsbLivingStatus.fromInteger(1))
             .build();
@@ -169,5 +196,18 @@ public class ChallengeUtility {
             .build();
   }
 
+  public static SharedChallengeCode createSharedChallengeCodeA() {
+    return SharedChallengeCode.builder()
+            .joinCode("ABCDEF")
+            .sharedChallenges(List.of())
+            .build();
+  }
 
+
+  public static SharedChallengeCode createSharedChallengeCodeB() {
+    return SharedChallengeCode.builder()
+            .joinCode("12345")
+            .sharedChallenges(List.of())
+            .build();
+  }
 }

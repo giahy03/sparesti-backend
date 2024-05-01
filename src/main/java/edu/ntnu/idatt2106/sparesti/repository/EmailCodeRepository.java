@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.repository;
 
-import edu.ntnu.idatt2106.sparesti.model.EmailCode;
+import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

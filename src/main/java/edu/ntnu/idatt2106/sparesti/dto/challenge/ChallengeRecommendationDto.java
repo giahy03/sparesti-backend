@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.model.challenge;
+package edu.ntnu.idatt2106.sparesti.dto.challenge;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;

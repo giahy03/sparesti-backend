@@ -5,18 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- * DTO for retrieving just the saving goal IDs.
+ * DTO containing information needed to update the saving goal state.
  *
  * @author Hanne-Sofie Søreide
  */
-
-
 @Data
 @Builder
-public class SavingGoalIdDto {
+public class SavingGoalUpdateStateDto {
     private long id;
-    private String title;
-    private GoalState state;
+    private GoalState goalState;
 }
-
-
