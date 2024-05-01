@@ -81,7 +81,7 @@ public class BadgeServiceTest {
         badgeList.add(BadgeUtility.createBadgeA());
         badgeList.add(BadgeUtility.createBadgeB());
 
-        when(badgeRepository.findAllByUser_Username(principal.getName(), pageable)).thenReturn(badgeList);
+        when(badgeRepository.findAllByUser_Email(principal.getName(), pageable)).thenReturn(badgeList);
 
         // Act
         List<BadgePreviewDto> returnedPreviewBadges = badgeService.getAllBadgesByEmail(principal, pageable);
