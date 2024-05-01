@@ -22,7 +22,7 @@ public class SavingGoalMapper {
 
         return SavingGoalDto.builder()
                 .id(savingGoal.getId())
-                .author(savingGoal.getAuthor().getFirstName())
+                .author(savingGoal.getAuthor().getFirstName() + " " + savingGoal.getAuthor().getLastName())
                 .title(savingGoal.getTitle())
                 .startDate(savingGoal.getStartDate())
                 .endDate(savingGoal.getEndDate())

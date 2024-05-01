@@ -68,21 +68,21 @@ public class SavingGoalController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The goal was successfully added to the user",
                     content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = SavingGoalIdDto.class))
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = SavingGoalDto.class))
                     }),
             @ApiResponse(responseCode = "500", description =  "Unknown internal server error", content = @Content)
     })
     @PutMapping("/goal")
-    public ResponseEntity<SavingGoalIdDto> addGoalToUser(
+    public ResponseEntity<SavingGoalDto> addGoalToUser(
             @RequestBody AddSharedGoalToUserDto addSharedGoalToUserDto, Principal principal) {
 
         log.info("Adding goal to user with email " + principal.getName());
 
-        SavingGoalIdDto savingGoalIdDto = savingGoalService.addGoalToUser(principal, addSharedGoalToUserDto);
+        SavingGoalDto savingGoalDto = savingGoalService.addGoalToUser(principal, addSharedGoalToUserDto);
 
-        log.info("The user was added to saving goal " + savingGoalIdDto.getTitle());
+        log.info("The user was added to saving goal " + savingGoalDto.getTitle());
 
-        return new ResponseEntity<>(savingGoalIdDto, HttpStatus.OK);
+        return new ResponseEntity<>(savingGoalDto, HttpStatus.OK);
     }
 
 
@@ -161,7 +161,7 @@ public class SavingGoalController {
     @DeleteMapping("/goal")
     public ResponseEntity<String> deleteSavingGoal(Principal principal, @RequestBody SavingGoalIdDto savingGoalIdDto) {
         log.info("Attempting to delete goal: " + savingGoalIdDto.getId());
-        savingGoalService.deleteSavingGoal(savingGoalIdDto);
+        savingGoalService.deleteSavingGoal(principal, savingGoalIdDto);
         log.info("Goal deleted: " + savingGoalIdDto.getId());
         return new ResponseEntity<>("Deleted successfully", HttpStatus.OK);
     }
@@ -183,9 +183,9 @@ public class SavingGoalController {
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
     @PutMapping("/goal/lives")
-    public ResponseEntity<String> lives(@RequestBody SavingGoalUpdateValueDto updateValueDto) {
+    public ResponseEntity<String> lives(Principal principal, @RequestBody SavingGoalUpdateValueDto updateValueDto) {
         log.info("Attempting to edit pig lives of goal: " + updateValueDto.getId());
-        int lives = savingGoalService.editLives(updateValueDto);
+        int lives = savingGoalService.editLives(principal, updateValueDto);
         log.info("Number of lives successfully updated to: " + lives);
 
         return new ResponseEntity<>("Lives updated successfully", HttpStatus.OK);
@@ -238,7 +238,7 @@ public class SavingGoalController {
     public ResponseEntity<Double> getCurrentlySavedTotal(Principal principal, @RequestBody  SavingGoalIdDto savingGoalIdDto) {
 
         log.info("Get currently saved up amount for goal: " + savingGoalIdDto.getId());
-        double currentTotal = savingGoalService.checkTotalOfContributions(savingGoalIdDto.getId());
+        double currentTotal = savingGoalService.checkTotalOfContributions(principal, savingGoalIdDto.getId());
         log.info("Currently saved up amount for goal: " + currentTotal);
 
         return new ResponseEntity<>(currentTotal, HttpStatus.OK);
