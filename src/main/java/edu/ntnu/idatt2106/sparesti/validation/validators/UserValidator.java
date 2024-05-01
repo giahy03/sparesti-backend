@@ -70,7 +70,7 @@ public class UserValidator extends SimpleValidator {
     if (!isNotNullOrBlank(firstName) || !firstName
             .matches(UserValidationRules.FIRSTNAME.getRegex())) {
 
-      throw new IllegalArgumentException("First firstName must be 1-64 characters "
+      throw new IllegalArgumentException("First name must be 1-64 characters "
               + "and contain only letters.");
     }
   }
