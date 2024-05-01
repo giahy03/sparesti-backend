@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2106.sparesti.service.saving;
 
-import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributionDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalUpdateValueDto;
@@ -22,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.data.domain.Pageable;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,9 +65,10 @@ class SavingGoalServiceTest {
         // Arrange
         when(savingGoalRepository.findById(1L)).thenReturn(Optional.of(goal));
         when(savingGoalMapper.mapToSavingGoalDto(goal)).thenReturn(SavingGoalUtility.createSavingGoalDto());
+        when(savingContributionRepository.findByUser_EmailAndGoal_Id(principal.getName(), 1L)).thenReturn(Optional.ofNullable(SavingGoalUtility.createSavingContributionA()));
 
         // Act
-        SavingGoalDto savingGoalDto = savingGoalService.getSavingGoalById(SavingGoalUtility.createSavingGoalIdDto());
+        SavingGoalDto savingGoalDto = savingGoalService.getSavingGoalById(principal, 1L);
 
         // Assert
         assertNotNull(savingGoalDto);
@@ -86,6 +85,7 @@ class SavingGoalServiceTest {
                 SavingGoalUtility.createSavingContributionC());
 
         when(savingContributionRepository.findAllContributionsByUser_Email(principal.getName(), pageable)).thenReturn(contributions);
+        when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(user));
 
         // Act
         List<SavingGoalIdDto> returnedIds = savingGoalService.getAllGoalsOfUser(principal, pageable);
@@ -113,8 +113,10 @@ class SavingGoalServiceTest {
     @DisplayName("JUnit test for deleteSavingGoal method")
     @Test
     void Service_DeleteSavingGoal_DeleteSavingGoal() {
+        // Arrange
+        when(savingGoalRepository.findById(1L)).thenReturn(Optional.ofNullable(goal));
         // Act and assert
-        assertDoesNotThrow(() -> savingGoalService.deleteSavingGoal(SavingGoalUtility.createSavingGoalIdDto()));
+        assertDoesNotThrow(() -> savingGoalService.deleteSavingGoal(principal, SavingGoalUtility.createSavingGoalIdDto()));
     }
 
 
@@ -126,9 +128,10 @@ class SavingGoalServiceTest {
         // Arrange
         when(savingGoalRepository.findById(1L)).thenReturn(Optional.ofNullable(goal));
         SavingGoalUpdateValueDto savingGoalUpdateValueDto = SavingGoalUtility.createSavingGoalUpdateValueDto();
+        when(savingContributionRepository.findByUser_EmailAndGoal_Id(principal.getName(), 1L)).thenReturn(Optional.ofNullable(SavingGoalUtility.createSavingContributionA()));
 
         // Act and assert
-        assertDoesNotThrow(() -> savingGoalService.editLives(savingGoalUpdateValueDto));
+        assertDoesNotThrow(() -> savingGoalService.editLives(principal, savingGoalUpdateValueDto));
         //assertTrue(Integer.class.isInstance(savingGoalService.editLives(principal, savingGoalUpdateValueDto)));
     }
 
