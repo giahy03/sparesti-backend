@@ -7,6 +7,7 @@ import edu.ntnu.idatt2106.sparesti.dto.user.edit.IncomeChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.LastNameChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.LivingStatusChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.PasswordChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.edit.ResetPasswordDto;
 import edu.ntnu.idatt2106.sparesti.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -48,7 +49,7 @@ public class UserController {
    * @param principal The principal object representing the currently authenticated user.
    * @return A ResponseEntity with status OK if the operation is successful.
    */
-  @Operation(summary = "Change user password")
+  @Operation(summary = "Change user's password")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "User password successfully updated."),
       @ApiResponse(responseCode = "400", description = "Invalid password from user."),
@@ -220,6 +221,26 @@ public class UserController {
     log.info("Attempting to delete user with email {}.", email);
     userService.deleteUserByEmail(email, verificationCode);
     log.info("User with email {} successfully deleted.", email);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  /**
+   * REST-endpoint for resetting a user's password.
+   *
+   * @param resetPasswordDto The DTO containing necessary information to reset the password.
+   * @return A ResponseEntity with status OK if the operation is successful.
+   */
+  @Operation(summary = "Reset user's password")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Password successfully reset."),
+      @ApiResponse(responseCode = "400", description = "Invalid password or verification code."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
+  })
+  @PutMapping("/password-reset")
+  public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+    log.info("Attempting to reset password for user with email {}.", resetPasswordDto.getEmail());
+    userService.resetPassword(resetPasswordDto);
+    log.info("Password for user with email {} successfully reset.", resetPasswordDto.getEmail());
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }
