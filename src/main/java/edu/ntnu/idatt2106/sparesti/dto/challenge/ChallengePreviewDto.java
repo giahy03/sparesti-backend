@@ -21,4 +21,6 @@ public class ChallengePreviewDto {
 
   @NonNull
   private String difficulty;
+
+  private String joinCode;
 }

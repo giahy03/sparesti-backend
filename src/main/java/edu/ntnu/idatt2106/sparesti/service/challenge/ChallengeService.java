@@ -61,7 +61,13 @@ public class ChallengeService {
   public List<ChallengePreviewDto> getChallenges(Principal principal, Pageable pageable) {
     return challengesRepository.findByUser_Email(principal.getName(), pageable)
             .stream()
-            .map(challengeMapperImpl::challengeIntoChallengePreviewDto)
+            .map(challenge -> {
+              ChallengePreviewDto challengePreviewDto = challengeMapperImpl.challengeIntoChallengePreviewDto(challenge);
+              if (challenge instanceof SharedChallenge sharedChallenge) {
+                challengePreviewDto.setJoinCode(sharedChallenge.getSharedChallengeCode().getJoinCode());
+              }
+              return challengePreviewDto;
+            })
             .collect(Collectors.toList());
   }
 
