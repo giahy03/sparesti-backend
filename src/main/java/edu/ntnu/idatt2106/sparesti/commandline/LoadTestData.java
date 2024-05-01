@@ -117,7 +117,7 @@ public class LoadTestData implements CommandLineRunner {
 
 
     Achievement achievementA = Achievement.builder()
-            .category(AchievementCategory.CHALLENGE_STREAK)
+            .category(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
             .description("Complete a certain number of saving challenges in Sparesti.")
             .thresholds(List.of(new Integer[]{10, 20, 50, 100, 500}))
             .build();

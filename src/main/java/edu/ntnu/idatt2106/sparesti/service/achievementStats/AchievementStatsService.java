@@ -67,8 +67,6 @@ public class AchievementStatsService {
         return switch (category) {
             case SAVING_STREAK ->
                     updateSavingStreak(user) ? checkSavingStreakLevel(principal, user) : 0;
-            case CHALLENGE_STREAK ->
-                    0;   // Temporarily
             case AMOUNT_SAVED ->
                     updateTotalSaved(user, principal) ? checkTotalSaved(principal, user) : 0;
             case NUMBER_OF_CHALLENGES_COMPLETED ->
