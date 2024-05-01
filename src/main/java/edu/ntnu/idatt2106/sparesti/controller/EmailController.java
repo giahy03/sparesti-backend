@@ -6,6 +6,7 @@ import edu.ntnu.idatt2106.sparesti.dto.email.EmailVerificationDto;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailFriendCodeService;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailServiceImpl;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,6 +43,8 @@ public class EmailController {
 
   private final EmailVerificationService emailVerificationService;
 
+  private static final String ADMIN_EMAIL = Dotenv.load().get("ADMIN_EMAIL");
+
   /**
    * REST-endpoint for sending an email.
    *
@@ -53,9 +56,11 @@ public class EmailController {
       @ApiResponse(responseCode = "200", description = "Email successfully sent."),
       @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
-  @PostMapping()
+  @PostMapping("/contact")
   public ResponseEntity<Void> sendEmail(@RequestBody EmailDetailsDto emailDetailsDto) {
-    log.info("Sending email to: {}", emailDetailsDto.getRecipient());
+    log.info("Sending email to: {}", ADMIN_EMAIL);
+
+    emailDetailsDto.setRecipient(ADMIN_EMAIL);
     emailService.sendEmail(emailDetailsDto);
     log.info("Email sent to: {}", emailDetailsDto.getRecipient());
     return new ResponseEntity<>(HttpStatus.OK);
