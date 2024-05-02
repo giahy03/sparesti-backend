@@ -5,6 +5,7 @@ import edu.ntnu.idatt2106.sparesti.dto.achievementStats.AchievementPreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.achievementStats.CheckForAchievementDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
+import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
 import edu.ntnu.idatt2106.sparesti.service.achievementStats.AchievementStatsService;
 import edu.ntnu.idatt2106.sparesti.service.badge.BadgeService;
@@ -59,12 +60,12 @@ public class AchievementStatsController {
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
     @PostMapping("/stats")
-    public ResponseEntity<BadgePreviewDto> checkForAchievement(Principal principal, @RequestBody CheckForAchievementDto checkForAchievementDto) {
+    public ResponseEntity<BadgePreviewDto> checkForAchievement(Principal principal, @PathVariable AchievementCategory category) {
 
-        int level = achievementStatsService.updateAndCheckAchievement(checkForAchievementDto, principal);
+        int level = achievementStatsService.updateAndCheckAchievement(category, principal);
 
         if (level > 0) {
-            BadgePreviewDto createdBadge = achievementStatsService.createBadge(checkForAchievementDto, principal, level);
+            BadgePreviewDto createdBadge = achievementStatsService.createBadge(category, principal, level);
             return new ResponseEntity<>(createdBadge, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.OK);
