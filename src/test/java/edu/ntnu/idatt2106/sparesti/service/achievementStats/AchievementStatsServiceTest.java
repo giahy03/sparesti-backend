@@ -9,12 +9,19 @@ import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.badge.util.BadgeUtility;
+import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
+import edu.ntnu.idatt2106.sparesti.model.saving.util.SavingGoalUtility;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
 import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
+import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
+import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
 import edu.ntnu.idatt2106.sparesti.repository.BadgeRepository;
+import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SavingContributionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,14 +29,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -38,7 +46,6 @@ import static org.mockito.Mockito.when;
  * @author Hanne-Sofie Søreide
  */
 @ExtendWith(MockitoExtension.class)
-//@PrepareForTest({Badge.class})
 class AchievementStatsServiceTest {
 
     @InjectMocks
@@ -55,19 +62,27 @@ class AchievementStatsServiceTest {
 
     @Mock
     BadgeRepository badgeRepository;
-
     @Mock
     SavingContributionRepository savingContributionRepository;
 
+    @Mock
+    ChallengesRepository challengeRepository;
+
+    User user;
+
     Principal principal;
+
+
 
     @BeforeEach
     void setUp() {
         AchievementStats stats = AchievementStatsUtility.createAchievementStatsA();
-        principal = () -> "example@email";
+        user = AchievementStatsUtility.createUserA();
+        principal = user::getEmail;
+        user.setStats(stats);
+      Streak streak = ChallengeUtility.createStreak1();
+      user.setStreak(streak);
     }
-
-
 
     @DisplayName("Test that method to find level returns correct level")
     @Test
@@ -77,69 +92,75 @@ class AchievementStatsServiceTest {
         List<Integer> levels = List.of(1, 3, 5, 10, 20, 25, 50);
 
         //Act and assert
-        assertThat(achievementStatsService.findLevel(levels, 0)).isEqualTo(0);
+        assertThat(achievementStatsService.findLevel(levels, 0)).isZero();
         assertThat(achievementStatsService.findLevel(levels, 2)).isEqualTo(1);
         assertThat(achievementStatsService.findLevel(levels, 3)).isEqualTo(2);
         assertThat(achievementStatsService.findLevel(levels, 60)).isEqualTo(7);
 
-        assertThat(achievementStatsService.findLevel(levels, 0.5)).isEqualTo(0);
+        assertThat(achievementStatsService.findLevel(levels, 0.5)).isZero();
         assertThat(achievementStatsService.findLevel(levels, 1.5)).isEqualTo(1);
         assertThat(achievementStatsService.findLevel(levels, 3.0)).isEqualTo(2);
         assertThat(achievementStatsService.findLevel(levels, 49.5)).isEqualTo(6);
         assertThat(achievementStatsService.findLevel(levels, 50.0)).isEqualTo(7);
     }
-/*
 
-    @DisplayName("Test that a badge is correctly created")
-    @Test
-    void AchievementStatsService_testCreateBadge() {
-        // Arrange
-        CheckForAchievementDto checkDto = AchievementStatsUtility.CheckForAchievementDtoA();
+  @Test
+  void Service_UpdateAndCheckAchievement_ReturnAnInt() {
+    // Arrange
+    user.getStats().setTotalSaved(0);
+    SavingGoal savingGoal = SavingGoalUtility.createSavingGoal1(user);
+    savingGoal.setState(GoalState.FINISHED);
+    SavingContribution savingContribution = ChallengeUtility.createSavingContribution();
+    savingContribution.setGoal(savingGoal);
+    savingGoal.setContributions(List.of(savingContribution));
+    user.setContributions(List.of(savingContribution));
+    Challenge challenge = ChallengeUtility.createSharedChallenge3();
 
+    when(userRepository.findUserByEmailIgnoreCase(anyString()))
+        .thenReturn(Optional.ofNullable(user));
 
-        when(userRepository.findUserByEmailIgnoreCase(principal.getName()))
-                .thenReturn(Optional.ofNullable(AchievementStatsUtility.createUserA()));
+    when(badgeRepository.findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(anyString(), any(AchievementCategory.class)))
+        .thenReturn(BadgeUtility.createBadgeA());
 
-        when(achievementRepository.findByCategory(AchievementCategory.AMOUNT_SAVED))
-                .thenReturn(Optional.ofNullable(AchievementStatsUtility.createAchievement()));
+    when(achievementRepository.findByCategory(any(AchievementCategory.class)))
+        .thenReturn(Optional.ofNullable(AchievementStatsUtility.createAchievement()));
 
-        Badge badge = Mockito.moc(Badge.class);
+    when(challengeRepository.findByUser_Email(anyString(), any(Pageable.class)))
+        .thenReturn(List.of(challenge, challenge, challenge, challenge, challenge));
 
-        when(badgeMapper.mapToBadgePreviewDto(badge))
-                .thenReturn(AchievementStatsUtility.createBadgePreviewDto());
+    when(savingContributionRepository.findAllContributionsByUser_Email(anyString(), any(Pageable.class)))
+        .thenReturn(List.of(savingContribution, savingContribution, savingContribution, savingContribution));
 
-        // Act
-        BadgePreviewDto createdBadgeA = achievementStatsService.createBadge(checkDto, principal, 4);
+    // Act
+    int updatedLevel = achievementStatsService.updateAndCheckAchievement(AchievementCategory.EDUCATION, principal);
+    int updatedLevel2 = achievementStatsService.updateAndCheckAchievement(AchievementCategory.AMOUNT_SAVED, principal);
+    int updatedLevel3 = achievementStatsService.updateAndCheckAchievement(AchievementCategory.SAVING_STREAK, principal);
+    achievementStatsService.updateAndCheckAchievement(AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED, principal);
+    achievementStatsService.updateAndCheckAchievement(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED, principal);
 
-        // Assert
-        assertThat(createdBadgeA).isNotNull();
-        assertThat(createdBadgeA.getAchievement()).isEqualTo(checkDto.getAchievement());
-        assertThat(createdBadgeA.getAchievementDate()).isEqualTo(checkDto.getAchievementDate());
-        assertThat(createdBadgeA.getLevel()).isEqualTo(4);
-        System.out.println(createdBadgeA.getThreshold());
+    // Assert
+    assertThat(updatedLevel).isNotZero();
+    assertThat(updatedLevel2).isNotZero();
+    assertThat(updatedLevel3).isNotZero();
+  }
 
+  @Test
+  void Service_CreateBadge_ReturnsBadge() {
+    // Arrange
+    when(userRepository.findUserByEmailIgnoreCase(principal.getName()))
+        .thenReturn(Optional.ofNullable(AchievementStatsUtility.createUserA()));
 
-    }
-*/
+    when(achievementRepository.findByCategory(AchievementCategory.AMOUNT_SAVED))
+        .thenReturn(Optional.ofNullable(AchievementStatsUtility.createAchievement()));
 
-/*
-    @DisplayName("Test for getAllBadgesByEmail")
-    @Test
-    void Badge_getAllBadgesByEmail_ReturnBadges() {
+    when(badgeRepository.save(any(Badge.class)))
+        .thenReturn(BadgeUtility.createBadgeA());
 
-        // Arrange
-        List<Badge> badgeList = new ArrayList<>();
-        badgeList.add(BadgeUtility.createBadgeA());
-        badgeList.add(BadgeUtility.createBadgeB());
+    when(badgeMapper.mapToBadgePreviewDto(any(Badge.class))).thenReturn(BadgeUtility.createBadgePreviewDto());
 
-        when(badgeRepository.findAllByUser_Username(principal.getName(), pageable)).thenReturn(badgeList);
-
-        // Act
-        List<BadgePreviewDto> returnedPreviewBadges = badgeService.getAllBadgesByEmail(principal, pageable);
-
-        // Assert
-        assertThat(returnedPreviewBadges.size()).isEqualTo(2);
-    }*/
-
+    // Act
+    BadgePreviewDto createdBadgeA = achievementStatsService.createBadge(AchievementCategory.AMOUNT_SAVED, principal, 4);
+    assertThat(createdBadgeA).isNotNull();
+  }
 
 }

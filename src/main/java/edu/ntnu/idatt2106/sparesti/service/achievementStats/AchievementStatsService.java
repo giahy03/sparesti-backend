@@ -97,7 +97,7 @@ public class AchievementStatsService {
                 .user(user)
                 .build();
 
-        System.out.println("Badge created: " + badge);
+       log.info("Badge created");
         Badge savedBadge = badgeRepository.save(badge);
 
         return badgeMapper.mapToBadgePreviewDto(savedBadge);

@@ -244,4 +244,17 @@ public class SavingGoalUtility {
                 .goalState(GoalState.UNDER_PROGRESS)
                 .build();
     }
+
+    public static SavingGoal createSavingGoal1(User user) {
+        return SavingGoal.builder()
+                .id(1L)
+                .author(user)
+                .title("Goal")
+                .startDate(LocalDate.of(2024, 4, 15))
+                .endDate(LocalDate.of(2024, 5, 3))
+                .lives(3)
+                .state(GoalState.UNDER_PROGRESS)
+                .totalAmount(10000.0)
+                .build();
+    }
 }

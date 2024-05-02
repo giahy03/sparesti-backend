@@ -13,7 +13,6 @@ import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
-import edu.ntnu.idatt2106.sparesti.service.email.EmailServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,7 +64,7 @@ class ChallengeServiceTest {
 
 
   void setUp() {
-    challenge = ChallengeUtility.createSharedChallenge1();
+    challenge = ChallengeUtility.createSharedChallenge2();
     user = ChallengeUtility.createUser1();
     SharedChallengeCode sharedChallengeCode = ChallengeUtility.createSharedChallengeCodeA();
     challenge.setSharedChallengeCode(sharedChallengeCode);
