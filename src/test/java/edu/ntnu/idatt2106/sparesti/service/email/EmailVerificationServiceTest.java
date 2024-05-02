@@ -69,9 +69,9 @@ class EmailVerificationServiceTest {
   }
 
   @Test
-  void Service_VerifyEmailExist_ThrowsException() {
+  void Service_VerifyEmailIsAvailable_ThrowsException() {
     when(userRepository.findUserByEmailIgnoreCase(user.getEmail())).thenReturn(Optional.of(user));
-    assertThrows(EmailAlreadyExistsException.class, () -> emailVerificationService.verifyEmailExist(user.getEmail()));
+    assertThrows(EmailAlreadyExistsException.class, () -> emailVerificationService.verifyEmailIsAvailable(user.getEmail()));
   }
 
   @Test
