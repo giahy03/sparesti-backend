@@ -13,8 +13,8 @@ import lombok.Data;
 @Data
 @Builder
 public class SavingGoalContributorDto {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private double contributedAmount;
+  private String firstName;
+  private String lastName;
+  private String email;
+  private double contributedAmount;
 }

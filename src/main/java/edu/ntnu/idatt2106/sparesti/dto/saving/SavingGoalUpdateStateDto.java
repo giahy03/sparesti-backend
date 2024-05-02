@@ -12,6 +12,6 @@ import lombok.Data;
 @Data
 @Builder
 public class SavingGoalUpdateStateDto {
-    private long id;
-    private GoalState goalState;
+  private long id;
+  private GoalState goalState;
 }
