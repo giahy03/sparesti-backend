@@ -52,28 +52,10 @@ public class StockService {
   public StockDataDto getStockData(String symbol) {
 
     LocalDate currentDate = LocalDate.now();
-    DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
-
-    String startDate;
-    String endDate;
-
-    if (currentDayOfWeek == DayOfWeek.MONDAY || currentDayOfWeek == DayOfWeek.SUNDAY) {
-
-      int daysToAdd = (currentDayOfWeek == DayOfWeek.SUNDAY) ? 1 : 2;
-
-      startDate = currentDate.minusDays(daysToAdd + 2).toString();
-      endDate = currentDate.minusDays(daysToAdd + 1).toString();
-
-    } else if (currentDayOfWeek == DayOfWeek.TUESDAY) {
-      startDate = currentDate.minusDays(4).toString();
-      endDate = currentDate.minusDays(1).toString();
-    } else {
-      startDate = currentDate.minusDays(2).toString();
-      endDate = currentDate.minusDays(1).toString();
-    }
+    String[] dateRange = calculateDateRange(currentDate);
 
     try {
-      String url = String.format(API_URL, symbol, startDate, endDate, API_KEY);
+      String url = String.format(API_URL, symbol, dateRange[0], dateRange[1], API_KEY);
       String jsonResponse = restTemplate.getForObject(url, String.class);
 
       log.info("JSON response from Polygon api: {}", jsonResponse);
@@ -104,5 +86,35 @@ public class StockService {
     } catch (Exception e) {
       throw new StockProcessingException("Failed to process stock data: " + e.getMessage(), e);
     }
+  }
+
+  /**
+   * Calculates the start and end dates for retrieving stock data.
+   *
+   * @param currentDate The current date for which to calculate the date range.
+   * @return An array of strings containing the start and end dates in the format "YYYY-MM-DD".
+   */
+  private String[] calculateDateRange(LocalDate currentDate) {
+    DayOfWeek currentDayOfWeek = currentDate.getDayOfWeek();
+
+    String startDate;
+    String endDate;
+
+    if (currentDayOfWeek == DayOfWeek.MONDAY || currentDayOfWeek == DayOfWeek.SUNDAY) {
+
+      int daysToAdd = (currentDayOfWeek == DayOfWeek.SUNDAY) ? 1 : 2;
+
+      startDate = currentDate.minusDays(daysToAdd + 2).toString();
+      endDate = currentDate.minusDays(daysToAdd + 1).toString();
+
+    } else if (currentDayOfWeek == DayOfWeek.TUESDAY) {
+      startDate = currentDate.minusDays(4).toString();
+      endDate = currentDate.minusDays(1).toString();
+    } else {
+      startDate = currentDate.minusDays(2).toString();
+      endDate = currentDate.minusDays(1).toString();
+    }
+
+    return new String[]{startDate, endDate};
   }
 }
