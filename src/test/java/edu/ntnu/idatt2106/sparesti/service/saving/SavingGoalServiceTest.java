@@ -1,5 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.service.saving;
 
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributionDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributorDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalUpdateValueDto;
@@ -26,6 +28,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -136,26 +139,67 @@ class SavingGoalServiceTest {
     }
 
 
-//
-//
-//
-//    @DisplayName("JUnit test for registerSavingContribution method")
-//    @Test
-//    void Service_RegisterSavingContribution_RegisterSavingContribution() {
-//
-//        // Arrange
-//        User user = SavingGoalUtility.createUserA();
-//        when(savingGoalRepository.findById(1L)).thenReturn(Optional.of(goal));
-//        when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(user));
-//
-//
-//        System.out.println("HERE:    ----------");
-//        System.out.println(goal.getContributions().get(user.getUserId()));;
-//        SavingGoalContributionDto savingGoalContributionDto = SavingGoalUtility.createGoalContributionDto();
-//
-//        // Act and assert
-//        assertDoesNotThrow(() -> savingGoalService.registerSavingContribution(principal, savingGoalContributionDto));
-//    }
+    @DisplayName("JUnit test for registerSavingContribution method")
+    @Test
+    void Service_RegisterSavingContribution_RegisterSavingContribution() {
+
+        SavingGoalContributionDto savingGoalContributionDto = SavingGoalUtility.createGoalContributionDto();
+
+        // Arrange
+        when(savingContributionRepository.findByUser_EmailAndGoal_Id(anyString(), anyLong())).thenReturn(Optional.ofNullable(SavingGoalUtility.createSavingContributionA()));
+
+
+        // Act and assert
+        assertDoesNotThrow(() -> savingGoalService.registerSavingContribution(principal, savingGoalContributionDto));
+    }
+
+    @Test
+    void Service_getContributorsToGoal_ReturnContributors() {
+        // Arrange
+        List<SavingContribution> contributions = List.of(SavingGoalUtility.createSavingContributionA(),
+                SavingGoalUtility.createSavingContributionC());
+        when(savingContributionRepository.findAllContributionsByGoal_Id(1L)).thenReturn(contributions);
+        when(savingContributionRepository.findByUser_EmailAndGoal_Id(anyString(), anyLong())).thenReturn(Optional.ofNullable(SavingGoalUtility.createSavingContributionA()));
+
+        // Act
+        List<SavingGoalContributorDto> returnedContributors = savingGoalService.getContributorsToGoal(principal, 1L);
+
+        // Assert
+        assertThat(returnedContributors.size()).isEqualTo(2);
+    }
+
+    @Test
+    void Service_addGoalToUser_ReturnContributors() {
+        // Arrange
+        when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(SavingGoalUtility.createUserA()));
+        when(savingGoalRepository.findByJoinCode(anyString())).thenReturn(Optional.ofNullable(goal));
+        when(savingContributionRepository.findByUser_EmailAndGoal_Id(principal.getName(), 1L)).thenReturn(Optional.ofNullable(SavingGoalUtility.createSavingContributionA()));
+        when(savingGoalMapper.mapToSavingGoalDto(any(SavingGoal.class))).thenReturn(SavingGoalUtility.createSavingGoalDto());
+        // Act and assert
+        SavingGoalDto savingGoalDto = savingGoalService.addGoalToUser(principal, SavingGoalUtility.createAddSharedGoalToUserDtoA());
+
+        assertNotNull(savingGoalDto);
+    }
+
+
+    @Test
+    void Service_updateGoal_ReturnContributors() {
+        // Arrange
+        when(savingGoalRepository.findById(1L)).thenReturn(Optional.ofNullable(goal));
+        when(savingGoalMapper.mapToSavingGoalIdDto(goal)).thenReturn(SavingGoalUtility.createSavingGoalIdDto1());
+        when(savingContributionRepository.findByUser_EmailAndGoal_Id(principal.getName(), 1L)).thenReturn(Optional.ofNullable(SavingGoalUtility.createSavingContributionA()));
+        when(savingGoalRepository.save(goal)).thenReturn(goal);
+
+
+        // Act and assert
+        SavingGoalIdDto savingGoalIdDto = savingGoalService.updateGoalState(principal, SavingGoalUtility.createSavingGoalStateA());
+
+        assertNotNull(savingGoalIdDto);
+    }
+
+
+
+
 
 
 }

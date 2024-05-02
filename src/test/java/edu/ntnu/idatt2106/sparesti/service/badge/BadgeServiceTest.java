@@ -1,11 +1,15 @@
 package edu.ntnu.idatt2106.sparesti.service.badge;
 
+import edu.ntnu.idatt2106.sparesti.dto.achievementStats.AchievementPreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
+import edu.ntnu.idatt2106.sparesti.mapper.AchievementMapper;
 import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
+import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.badge.util.BadgeUtility;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.BadgeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +29,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -42,6 +47,13 @@ public class BadgeServiceTest {
     BadgeRepository badgeRepository;
     @Mock
     BadgeMapper badgeMapper;
+
+    @Mock
+    AchievementMapper achievementMapper;
+
+    @Mock
+    AchievementRepository achievementRepository;
+
     @Mock
     UserRepository userRepository;
 
@@ -116,5 +128,30 @@ public class BadgeServiceTest {
         assertNotNull(badgeService.createBadge(badgeCreateDto, principal));
 
     }
+
+    @Test
+    void Badge_getAchievementOfCategory_ReturnsBadge() {
+        // Arrange
+        when(achievementRepository.findByCategory(BadgeUtility.createAchievementCategoryA())).thenReturn(Optional.of(BadgeUtility.createAchievementA()));
+
+        // Act and assert
+        assertNotNull(badgeService.getAchievementOfCategory(BadgeUtility.createAchievementCategoryA(), principal));
+    }
+
+    @Test
+    void Badge_getAchievementPreviews_ReturnsAchievementPreviews() {
+        // Arrange
+        when(achievementRepository.findAll()).thenReturn(List.of(BadgeUtility.createAchievementA(), BadgeUtility.createAchievementB()));
+        when(achievementMapper.mapToAchievementPreviewDto(any(Achievement.class))).thenReturn(BadgeUtility.createAchievementPreviewDtoA());
+
+        // Act
+        List<AchievementPreviewDto> achievementPreviews = badgeService.getAchievementPreviews();
+
+        // Assert
+        assertThat(achievementPreviews.size()).isEqualTo(2);
+    }
+
+
+
 
 }
