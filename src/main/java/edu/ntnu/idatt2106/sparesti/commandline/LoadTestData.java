@@ -139,7 +139,7 @@ public class LoadTestData implements CommandLineRunner {
     Achievement achievementD = Achievement.builder()
             .category(AchievementCategory.EDUCATION)
             .description("Visit a news article for the first time.")
-            .thresholds(List.of())
+            .thresholds(List.of(1))
             .build();
 
     Achievement achievementE = Achievement.builder()
