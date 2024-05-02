@@ -21,7 +21,10 @@ import org.springframework.web.client.RestTemplate;
  * </p>
  *
  * <p>
- * This code is inspired by a tutorial on YouTube: <a href="https://www.youtube.com/watch?v=KxqlJblhzfI&t=3457s">...</a>
+ * This code is inspired by a tutorial on YouTube:
+ * <a href="https://www.youtube.com/watch?v=KxqlJblhzfI&t=3457s">
+ * Spring Boot 3 + Spring Security 6
+ * </a>
  * </p>
  *
  * @author Ramtin Samavat
@@ -42,7 +45,7 @@ public class ApplicationConfig {
   @Bean
   public UserDetailsService userDetailsService() {
     return username -> userRepository.findUserByEmailIgnoreCase(username).orElseThrow(() ->
-            new UsernameNotFoundException("User with email " + username + " not found."));
+        new UsernameNotFoundException("User with email " + username + " not found."));
   }
 
   /**
@@ -69,7 +72,7 @@ public class ApplicationConfig {
    */
   @Bean
   public AuthenticationManager authenticationManager(@NonNull AuthenticationConfiguration config)
-          throws Exception {
+      throws Exception {
 
     return config.getAuthenticationManager();
   }
