@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.challenge.util;
 
+import edu.ntnu.idatt2106.sparesti.dto.analysis.TransactionDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengeDto;
@@ -272,5 +273,15 @@ public class ChallengeUtility {
     analysisItem.setActualValue(100.0);
     return analysisItem;
 
+  }
+
+  public static TransactionDto createTransactionDto1() {
+    return TransactionDto.builder()
+            .amount(100.0)
+            .category(SsbPurchaseCategory.EDUCATION)
+            .description("Transaction")
+            .isIncoming(false)
+            .date(MonthDay.now())
+            .build();
   }
 }

@@ -7,6 +7,8 @@ import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import java.util.HashMap;
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,8 +21,11 @@ import org.springframework.web.client.RestTemplate;
  * Retrieves data from the SSB API.
  */
 @Service
+@RequiredArgsConstructor
 public class SsbDataService {
   private static final String API_LOCATION = "https://data.ssb.no/api/v0/no/table/14157";
+
+  private final RestTemplate restTemplate;
 
   /**
    * Returns the expected usage of the given demography.
@@ -57,8 +62,6 @@ public class SsbDataService {
    */
   private List<Double> retrieveDataFromSsbApi(SsbLivingStatus livingStatus,
                                               SsbIncomeQuartile incomeQuartile) {
-
-    RestTemplate restTemplate = new RestTemplate();
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);

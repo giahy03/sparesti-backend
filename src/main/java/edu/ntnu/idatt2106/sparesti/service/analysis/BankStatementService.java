@@ -46,13 +46,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class BankStatementService {
-  @NonNull
+
   private final UserRepository userRepository;
-  @NonNull
   private final BankStatementRepository bankStatementRepository;
-  @NonNull
   private final TransactionRepository transactionRepository;
-  @NonNull
   private final AnalysisItemRepository analysisItemRepository;
 
 
