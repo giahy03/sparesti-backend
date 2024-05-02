@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.user.util;
 
 import edu.ntnu.idatt2106.sparesti.dto.user.UserDetailsDto;
-import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.PasswordChangeDto;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 
@@ -69,14 +68,6 @@ public class UserUtility {
                 .lastName("Hansen")
                 .income(50000.0)
                 .livingStatus("LivingStatus")
-                .build();
-    }
-
-    public static UserInfoDto createUserInfoDto() {
-
-        return UserInfoDto.builder()
-                .income(30000.0)
-                .livingStatus(2)
                 .build();
     }
 
