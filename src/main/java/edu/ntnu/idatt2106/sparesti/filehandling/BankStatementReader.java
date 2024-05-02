@@ -34,7 +34,6 @@ public abstract class BankStatementReader {
       bankStatement.setTransactions(new ArrayList<>());
 
       String firstPageText = readPageToText(1, file);
-      log.info("First page text: {}", firstPageText);
       readFirstPage(firstPageText, bankStatement);
 
       for (int i = 2; i < document.getNumberOfPages() + 1; i++) {
@@ -42,7 +41,6 @@ public abstract class BankStatementReader {
         readStandardPage(pageText, bankStatement);
       }
 
-      log.info("finalised reading statement from file:{}", file.getName());
 
       if (bankStatement.getTransactions().isEmpty()) {
         throw new IllegalArgumentException(
@@ -51,7 +49,6 @@ public abstract class BankStatementReader {
 
       return bankStatement;
     } catch (Exception e) {
-      log.error("Error reading bank statement from file: {}", file.toString(), e);
       throw new IllegalArgumentException("Error reading SpareBank1 statement from file:" + file);
     }
   }

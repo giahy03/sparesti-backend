@@ -22,7 +22,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
  * rules and filters for the application.
  *
  * <p>
- * The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/config/SecurityConfig.java">...</a>
+ * The code is inspired by Ramtin Samavat's GitHub repository:
+ * <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/config/SecurityConfig.java">
+ *   Link to repo
+ * </a>
  * </p>
  *
  * @author Ramtin Samavat
@@ -61,7 +64,7 @@ public class SecurityConfig {
             .requestMatchers(WHITELIST_URL).permitAll()
             .anyRequest().authenticated())
         .sessionManagement(
-            (session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
