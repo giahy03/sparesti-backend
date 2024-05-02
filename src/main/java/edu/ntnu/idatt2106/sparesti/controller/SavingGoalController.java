@@ -268,7 +268,7 @@ public class SavingGoalController {
         SavingGoalIdDto updatedGoal = savingGoalService.updateGoalState(principal, updateStateDto);
         log.info("New state of goal: " + updatedGoal.getState());
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("The status of the saving goal was updated.", HttpStatus.OK);
     }
 
 

@@ -231,4 +231,17 @@ public class SavingGoalUtility {
         .build();
 
   }
+
+    public static AddSharedGoalToUserDto createAddSharedGoalToUserDtoA() {
+        return AddSharedGoalToUserDto.builder()
+                .joinCode("1234")
+                .build();
+    }
+
+    public static SavingGoalUpdateStateDto createSavingGoalStateA() {
+        return SavingGoalUpdateStateDto.builder()
+                .id(1L)
+                .goalState(GoalState.UNDER_PROGRESS)
+                .build();
+    }
 }

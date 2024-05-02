@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -67,8 +68,6 @@ public class AchievementStatsService {
         return switch (category) {
             case SAVING_STREAK ->
                     updateSavingStreak(user) ? checkSavingStreakLevel(principal, user) : 0;
-            case CHALLENGE_STREAK ->
-                    0;   // Temporarily
             case AMOUNT_SAVED ->
                     updateTotalSaved(user, principal) ? checkTotalSaved(principal, user) : 0;
             case NUMBER_OF_CHALLENGES_COMPLETED ->
@@ -94,15 +93,15 @@ public class AchievementStatsService {
         User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
                 new UserNotFoundException("User with email " + email + " not found"));
 
-
         Badge badge = Badge.builder()
                 .achievement(getAchievementOfCategory(checkForAchievementDto.getAchievement()))
-                .achievedDate(checkForAchievementDto.getAchievementDate())
+                .achievedDate(LocalDate.now())
                 .level(level)
                 .user(user)
                 .build();
 
         Badge savedBadge = badgeRepository.save(badge);
+
         return badgeMapper.mapToBadgePreviewDto(savedBadge);
     }
 
@@ -354,13 +353,13 @@ public class AchievementStatsService {
      * @param value An integer to compare with the thresholds.
      * @return The level that the particular value corresponds to, given the thresholds.
      */
-    private int findLevel(List<Integer> thresholds, int value) {
+    public int findLevel(List<Integer> thresholds, int value) {
         for (int i = 0; i < thresholds.size(); i++) {
             if (thresholds.get(i) > value) {
                 return i;
             }
         }
-        return 0;
+        return value >= thresholds.getLast() ? thresholds.size() : 0;
     }
 
 
@@ -372,12 +371,13 @@ public class AchievementStatsService {
      * @param value A decimal number to compare with the thresholds.
      * @return The level that the particular value corresponds to, given the thresholds.
      */
-    private int findLevel(List<Integer> thresholds, double value) {
+    public int findLevel(List<Integer> thresholds, double value) {
         for (int i = 0; i < thresholds.size(); i++) {
             if (thresholds.get(i) > value) {
                 return i;
             }
         }
-        return 0;
+        return value >= thresholds.getLast() ? thresholds.size() : 0;
+
     }
 }

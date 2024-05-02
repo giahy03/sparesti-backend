@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.model.badge.util;
 
 
+import edu.ntnu.idatt2106.sparesti.dto.achievementStats.AchievementPreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
@@ -56,7 +57,7 @@ public class BadgeUtility {
 
         return Achievement.builder()
                 .id(1)
-                .category(AchievementCategory.CHALLENGE_STREAK)
+                .category(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
                 .description("Save up a specific amount of money through Sparesti.")
                 .thresholds(List.of(new Integer[]{100, 200, 500, 1000, 5000}))
                 .build();
@@ -199,5 +200,17 @@ public class BadgeUtility {
                 + "\"achievementDate\":\"2024-04-03\","
                 + "\"level\":2,"
                 + "}";
+    }
+
+  public static AchievementCategory createAchievementCategoryA() {
+    return AchievementCategory.AMOUNT_SAVED;
+  }
+
+    public static AchievementPreviewDto createAchievementPreviewDtoA() {
+        return AchievementPreviewDto.builder()
+                .category(AchievementCategory.AMOUNT_SAVED)
+                .description("Save up a specific amount of money through Sparesti.")
+                .thresholds(List.of(new Integer[]{100, 200, 500, 1000, 5000}))
+                .build();
     }
 }

@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106.sparesti.service.streak;
 import edu.ntnu.idatt2106.sparesti.dto.streak.StreakResponseDto;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
+import edu.ntnu.idatt2106.sparesti.model.streak.StreakUtility;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.service.user.UserService;

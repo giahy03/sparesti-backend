@@ -37,9 +37,9 @@ public class AchievementStats {
     @Column(name = "streak")
     private int streak;
 
-    @Schema(description = "The longest streak of accomplished challenges that the user has achieved in Sparesti")
+/*    @Schema(description = "The longest streak of accomplished challenges that the user has achieved in Sparesti")
     @Column(name = "challenge_streak")
-    private int challengeStreak;
+    private int challengeStreak;*/
 
     @Schema(description = "The total number of accomplished challenges of the user")
     @Column(name = "challenges_achieved")

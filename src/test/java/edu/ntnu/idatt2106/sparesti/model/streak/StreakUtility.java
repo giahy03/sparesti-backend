@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.service.streak;
+package edu.ntnu.idatt2106.sparesti.model.streak;
 
 import edu.ntnu.idatt2106.sparesti.dto.streak.StreakRequestDto;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
