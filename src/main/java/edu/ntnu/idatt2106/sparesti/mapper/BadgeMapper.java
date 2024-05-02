@@ -22,7 +22,7 @@ public class BadgeMapper {
 
         return BadgePreviewDto.builder()
                 .achievement(badge.getAchievement().getCategory())
-                .threshold(badge.getAchievement().getThresholds().get(badge.getLevel()))
+                .threshold(badge.getAchievement().getThresholds().get(badge.getLevel()-1))
                 .achievementDate(badge.getAchievedDate())
                 .build();
     }

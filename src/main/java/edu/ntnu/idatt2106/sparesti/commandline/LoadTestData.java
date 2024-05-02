@@ -121,19 +121,19 @@ public class LoadTestData implements CommandLineRunner {
     Achievement achievementA = Achievement.builder()
             .category(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
             .description("Complete a certain number of saving challenges in Sparesti.")
-            .thresholds(List.of(new Integer[]{10, 20, 50, 100, 500, 1000}))
+            .thresholds(List.of(10, 20, 50, 100, 500, 1000))
             .build();
 
     Achievement achievementB = Achievement.builder()
             .category(AchievementCategory.AMOUNT_SAVED)
             .description("Save up a specific amount of money through Sparesti.")
-            .thresholds(List.of(new Integer[]{1000, 2000, 5000, 10000, 50000, 100000}))
+            .thresholds(List.of(1000, 2000, 5000, 10000, 50000, 100000))
             .build();
 
     Achievement achievementC = Achievement.builder()
             .category(AchievementCategory.SAVING_STREAK)
             .description("Save a number of days in a row.")
-            .thresholds(List.of(new Integer[]{30, 60, 100, 150, 200, 365, 500, 750, 1000, 2000}))
+            .thresholds(List.of(7, 30, 60, 100, 150, 200, 365, 500, 750, 1000, 2000))
             .build();
 
     Achievement achievementD = Achievement.builder()
@@ -145,7 +145,7 @@ public class LoadTestData implements CommandLineRunner {
     Achievement achievementE = Achievement.builder()
             .category(AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED)
             .description("Complete a certain number of saving goals in Sparesti.")
-            .thresholds(List.of(new Integer[]{1, 5, 10, 20, 50, 100, 200, 500}))
+            .thresholds(List.of(1, 5, 10, 20, 50, 100, 200, 500))
             .build();
 
 
@@ -218,10 +218,10 @@ public class LoadTestData implements CommandLineRunner {
 
 
     AchievementStats achievementStatsA = AchievementStats.builder()
-            .challengesAchieved(3)
-            .savingGoalsAchieved(1)
-            .streak(7)
-            .totalSaved(1005)
+            .challengesAchieved(9)
+            .savingGoalsAchieved(4)
+            .streak(29)
+            .totalSaved(999)
             .readNews(false)
             .user(user)
             .build();
@@ -244,6 +244,7 @@ public class LoadTestData implements CommandLineRunner {
 
     badgeRepository.save(badgeA);
     badgeRepository.save(badgeB);
+    badgeRepository.save(badgeC);
 
     savingGoalRepository.save(savingGoalA);
     savingGoalRepository.save(savingGoalB);
