@@ -203,7 +203,7 @@ public class AchievementStatsService {
         int oldCount = user.getStats().getChallengesAchieved();
 
         if (completedChallenges > oldCount){
-            user.getStats().setTotalSaved(completedChallenges);
+            user.getStats().setChallengesAchieved(completedChallenges);
             return true;
         } else {
             return false;
@@ -220,18 +220,24 @@ public class AchievementStatsService {
      */
     private boolean updateSavingGoalsAchieved(User user, Principal principal) {
 
-        log.info("Inside: updateSavingGoalAcieved");
+        log.info("Inside: updateSavingGoalAchieved");
         List<SavingGoal> goals = savingContributionRepository.findAllContributionsByUser_Email(principal.getName(), Pageable.unpaged())
                 .stream().map(SavingContribution::getGoal).toList();
+
+        System.out.println(goals);
 
         int achievedGoals = (int) goals.stream()
                 .filter(goal -> goal.getState().equals(GoalState.FINISHED))
                 .count();
 
+        System.out.println(achievedGoals);
+
         int oldCount = user.getStats().getSavingGoalsAchieved();
 
         if (achievedGoals > oldCount){
-            user.getStats().setTotalSaved(achievedGoals);
+            System.out.println("Updating user stats");
+            user.getStats().setSavingGoalsAchieved(achievedGoals);
+            userRepository.save(user);
             return true;
         } else {
             return false;
@@ -295,7 +301,7 @@ public class AchievementStatsService {
                 .getThresholds();
 
         int currentLevel = currentTopBadge == null ? 0 : currentTopBadge.getLevel();
-        int calculatedLevel = findLevel(thresholds, user.getStats().getStreak());
+        int calculatedLevel = findLevel(thresholds, user.getStats().getTotalSaved());
 
         return calculatedLevel > currentLevel ? calculatedLevel : 0;
 
@@ -319,8 +325,13 @@ public class AchievementStatsService {
         List<Integer> thresholds = getAchievementOfCategory(AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED)
                 .getThresholds();
 
+        System.out.println(thresholds);
+
         int currentLevel = currentTopBadge == null ? 0 : currentTopBadge.getLevel();
-        int calculatedLevel = findLevel(thresholds, user.getStats().getStreak());
+        int calculatedLevel = findLevel(thresholds, user.getStats().getSavingGoalsAchieved());
+
+        System.out.println(currentLevel);
+        System.out.println(calculatedLevel);
 
         return calculatedLevel > currentLevel ? calculatedLevel : 0;
     }
@@ -343,7 +354,7 @@ public class AchievementStatsService {
                 .getThresholds();
 
         int currentLevel = currentTopBadge == null ? 0 : currentTopBadge.getLevel();
-        int calculatedLevel = findLevel(thresholds, user.getStats().getStreak());
+        int calculatedLevel = findLevel(thresholds, user.getStats().getChallengesAchieved());
 
         return calculatedLevel > currentLevel ? calculatedLevel : 0;
     }
