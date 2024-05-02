@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2106.sparesti.service.achievementStats;
 
-import edu.ntnu.idatt2106.sparesti.dto.achievementStats.CheckForAchievementDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
@@ -51,14 +50,12 @@ public class AchievementStatsService {
      * qualifies for a new badge. If so, an int indicated the level of the badge is returned.
      * If the user does not qualify for a new badge 0 is returned.
      *
-     * @param checkForAchievementDto A DTO containing the achievement type to update and check.
+     * @param category The achievement type to update and check.
      * @param principal The authenticated user
      * @return An int indicating the level of the new badge the user qualifies for, or 0 if the user
      *          does not qualify for a new badge.
      */
-    public int updateAndCheckAchievement(CheckForAchievementDto checkForAchievementDto, Principal principal) {
-
-        AchievementCategory category = checkForAchievementDto.getAchievement();
+    public int updateAndCheckAchievement(AchievementCategory category, Principal principal) {
 
         String email = principal.getName();
 
@@ -81,12 +78,12 @@ public class AchievementStatsService {
 
     /**
      * Creates and stores a new badge for the user.
-     * @param checkForAchievementDto A DTO containing the achievement type and the date it was achieved.
+     * @param category The achievement type and the date it was achieved.
      * @param principal The authenticated user.
      * @param level The level of the badge to be created.
      * @return A DTO containing info to preview a Badge object.
      */
-    public BadgePreviewDto createBadge (CheckForAchievementDto checkForAchievementDto, Principal principal, int level) {
+    public BadgePreviewDto createBadge (AchievementCategory category, Principal principal, int level) {
 
         String email = principal.getName();
 
@@ -94,12 +91,13 @@ public class AchievementStatsService {
                 new UserNotFoundException("User with email " + email + " not found"));
 
         Badge badge = Badge.builder()
-                .achievement(getAchievementOfCategory(checkForAchievementDto.getAchievement()))
+                .achievement(getAchievementOfCategory(category))
                 .achievedDate(LocalDate.now())
                 .level(level)
                 .user(user)
                 .build();
 
+        System.out.println("Badge created: " + badge);
         Badge savedBadge = badgeRepository.save(badge);
 
         return badgeMapper.mapToBadgePreviewDto(savedBadge);

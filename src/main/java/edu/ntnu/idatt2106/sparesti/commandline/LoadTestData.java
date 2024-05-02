@@ -4,7 +4,7 @@ import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
-import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
+import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
@@ -37,6 +37,8 @@ public class LoadTestData implements CommandLineRunner {
   private final UserRepository userRepository;
 
   private final ChallengesRepository challengesRepository;
+
+  private final AchievementStatsRepository achievementStatsRepository;
 
   private final BadgeRepository badgeRepository;
 
@@ -119,29 +121,56 @@ public class LoadTestData implements CommandLineRunner {
     Achievement achievementA = Achievement.builder()
             .category(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
             .description("Complete a certain number of saving challenges in Sparesti.")
-            .thresholds(List.of(new Integer[]{10, 20, 50, 100, 500}))
+            .thresholds(List.of(new Integer[]{10, 20, 50, 100, 500, 1000}))
             .build();
 
     Achievement achievementB = Achievement.builder()
             .category(AchievementCategory.AMOUNT_SAVED)
             .description("Save up a specific amount of money through Sparesti.")
-            .thresholds(List.of(new Integer[]{1000, 2000, 5000, 10000, 50000}))
+            .thresholds(List.of(new Integer[]{1000, 2000, 5000, 10000, 50000, 100000}))
             .build();
+
+    Achievement achievementC = Achievement.builder()
+            .category(AchievementCategory.SAVING_STREAK)
+            .description("Save a number of days in a row.")
+            .thresholds(List.of(new Integer[]{30, 60, 100, 150, 200, 365, 500, 750, 1000, 2000}))
+            .build();
+
+    Achievement achievementD = Achievement.builder()
+            .category(AchievementCategory.EDUCATION)
+            .description("Visit a news article for the first time.")
+            .thresholds(List.of())
+            .build();
+
+    Achievement achievementE = Achievement.builder()
+            .category(AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED)
+            .description("Complete a certain number of saving goals in Sparesti.")
+            .thresholds(List.of(new Integer[]{1, 5, 10, 20, 50, 100, 200, 500}))
+            .build();
+
 
 
     Badge badgeA = Badge.builder()
             .user(user)
             .achievement(achievementA)
             .achievedDate(LocalDate.of(2024, 4, 3))
-            .level(2)
+            .level(1)
             .build();
 
     Badge badgeB = Badge.builder()
             .user(user)
             .achievement(achievementB)
-            .achievedDate(LocalDate.of(2024, 4, 3))
-            .level(3)
+            .achievedDate(LocalDate.of(2024, 4, 4))
+            .level(1)
             .build();
+
+    Badge badgeC = Badge.builder()
+            .user(user)
+            .achievement(achievementB)
+            .achievedDate(LocalDate.of(2024, 4, 25))
+            .level(2)
+            .build();
+
 
     SavingGoal savingGoalA = SavingGoal.builder()
             .lives(5)
@@ -187,15 +216,32 @@ public class LoadTestData implements CommandLineRunner {
     userRepository.save(user);
     userRepository.save(user2);
 
-    challengesRepository.save(sharedChallenge);
-    challengesRepository.save(sharedChallenge2);
 
-    user.setBadges(Set.of(badgeA, badgeB));
+    AchievementStats achievementStatsA = AchievementStats.builder()
+            .challengesAchieved(3)
+            .savingGoalsAchieved(1)
+            .streak(7)
+            .totalSaved(1005)
+            .readNews(false)
+            .user(user)
+            .build();
 
-    challengesRepository.save(sharedChallenge);
 
     achievementRepository.save(achievementA);
     achievementRepository.save(achievementB);
+    achievementRepository.save(achievementC);
+    achievementRepository.save(achievementD);
+    achievementRepository.save(achievementE);
+
+    challengesRepository.save(sharedChallenge);
+    challengesRepository.save(sharedChallenge2);
+
+    user.setBadges(Set.of(badgeA, badgeB, badgeC));
+
+    achievementStatsRepository.save(achievementStatsA);
+
+    challengesRepository.save(sharedChallenge);
+
     badgeRepository.save(badgeA);
     badgeRepository.save(badgeB);
 
