@@ -59,7 +59,7 @@ public class StreakControllerTest {
 
     @DisplayName("Test change user streak")
     @Test
-    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+    @WithMockUser(roles = "USER")
     public void controller_changeUserStreak() throws Exception {
 
         mockMvc
@@ -72,7 +72,7 @@ public class StreakControllerTest {
 
     @DisplayName("Test retrieve streak")
     @Test
-    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+    @WithMockUser(roles = "USER")
     public void controller_getUserStreak() throws Exception {
 
         mockMvc
