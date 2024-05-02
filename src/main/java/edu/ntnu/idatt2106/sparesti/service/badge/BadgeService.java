@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.service.badge;
 
-import edu.ntnu.idatt2106.sparesti.dto.achievementStats.AchievementPreviewDto;
+import edu.ntnu.idatt2106.sparesti.dto.achievementstats.AchievementPreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;

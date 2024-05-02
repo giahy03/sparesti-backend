@@ -2,9 +2,7 @@ package edu.ntnu.idatt2106.sparesti.dto.achievementstats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.ntnu.idatt2106.sparesti.dto.achievementStats.CheckForAchievementDto;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
-import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 class CheckForAchievementDtoTest {

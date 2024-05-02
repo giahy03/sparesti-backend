@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * DTO to
+ * DTO for badge id.
  *
  * @author Hanne-Sofie Søreide
  */
@@ -13,5 +13,5 @@ import lombok.Setter;
 @Setter
 @Builder
 public class BadgeIdDto {
-    private long id;
+  private long id;
 }

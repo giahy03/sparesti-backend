@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.Getter;
 
 /**
- * DTO containing information to create a new saving goal
+ * DTO containing information to create a new saving goal.
  *
  * @author Hanne-Sofie Søreide
  */

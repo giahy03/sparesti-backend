@@ -1,11 +1,10 @@
 package edu.ntnu.idatt2106.sparesti.dto.badge;
 
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 /**
  * DTO to represent a badge achieved by the user.
@@ -17,7 +16,7 @@ import java.time.LocalDate;
 @Setter
 @Builder
 public class BadgePreviewDto {
-    private AchievementCategory achievement;
-    private int threshold;
-    private LocalDate achievementDate;
+  private AchievementCategory achievement;
+  private int threshold;
+  private LocalDate achievementDate;
 }

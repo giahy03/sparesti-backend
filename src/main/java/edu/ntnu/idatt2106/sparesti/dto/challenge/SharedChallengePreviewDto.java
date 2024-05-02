@@ -1,16 +1,16 @@
 package edu.ntnu.idatt2106.sparesti.dto.challenge;
 
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
-
+/**
+ * Dto for previewing a shared challenge.
+ */
 @Data
 @Builder
 @AllArgsConstructor

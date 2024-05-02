@@ -1,13 +1,13 @@
 package edu.ntnu.idatt2106.sparesti.dto.saving;
 
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
+import edu.ntnu.idatt2106.sparesti.model.goal.GoalState;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
 /**
- * DTO to represent a saving goal object
+ * DTO to represent a saving goal object.
  *
  * @author Hanne-Sofie Søreide
  */
