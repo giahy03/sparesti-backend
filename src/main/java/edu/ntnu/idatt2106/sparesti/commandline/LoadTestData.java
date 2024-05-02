@@ -159,6 +159,7 @@ public class LoadTestData implements CommandLineRunner {
 
 
 
+/*
     Badge badgeA = Badge.builder()
             .user(user)
             .achievement(achievementA)
@@ -179,6 +180,7 @@ public class LoadTestData implements CommandLineRunner {
             .achievedDate(LocalDate.of(2024, 4, 25))
             .level(2)
             .build();
+*/
 
 
     SavingGoal savingGoalA = SavingGoal.builder()
@@ -226,6 +228,7 @@ public class LoadTestData implements CommandLineRunner {
     userRepository.save(user2);
 
 
+/*
     AchievementStats achievementStatsA = AchievementStats.builder()
             .challengesAchieved(9)
             .savingGoalsAchieved(4)
@@ -234,6 +237,7 @@ public class LoadTestData implements CommandLineRunner {
             .readNews(false)
             .user(user)
             .build();
+*/
 
 
     achievementRepository.save(achievementA);
@@ -245,15 +249,15 @@ public class LoadTestData implements CommandLineRunner {
     challengesRepository.save(sharedChallenge);
     challengesRepository.save(sharedChallenge2);
 
-    user.setBadges(Set.of(badgeA, badgeB, badgeC));
+   // user.setBadges(Set.of(badgeA, badgeB, badgeC));
 
-    achievementStatsRepository.save(achievementStatsA);
+    //achievementStatsRepository.save(achievementStatsA);
 
     challengesRepository.save(sharedChallenge);
 
-    badgeRepository.save(badgeA);
-    badgeRepository.save(badgeB);
-    badgeRepository.save(badgeC);
+//    badgeRepository.save(badgeA);
+//    badgeRepository.save(badgeB);
+//    badgeRepository.save(badgeC);
 
     savingGoalRepository.save(savingGoalA);
     savingGoalRepository.save(savingGoalB);

@@ -5,6 +5,8 @@ package edu.ntnu.idatt2106.sparesti.repository;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -21,6 +23,6 @@ import org.springframework.stereotype.Repository;
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
   List<Badge> findAllByUser_Email(String email, Pageable pageable);
 
-  Badge findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(
+  Optional<Badge> findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(
           String email, AchievementCategory achievementCategory);
 }

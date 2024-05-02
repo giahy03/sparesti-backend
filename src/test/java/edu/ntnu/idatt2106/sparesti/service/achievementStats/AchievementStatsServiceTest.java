@@ -16,10 +16,7 @@ import edu.ntnu.idatt2106.sparesti.model.goal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.goal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
-import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
-import edu.ntnu.idatt2106.sparesti.repository.BadgeRepository;
-import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
-import edu.ntnu.idatt2106.sparesti.repository.SavingContributionRepository;
+import edu.ntnu.idatt2106.sparesti.repository.*;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,6 +52,9 @@ class AchievementStatsServiceTest {
 
     @Mock
     AchievementRepository achievementRepository;
+
+    @Mock
+    AchievementStatsRepository achievementStatsRepository;
 
     @Mock
     BadgeMapper badgeMapper;
@@ -114,12 +114,15 @@ class AchievementStatsServiceTest {
     savingGoal.setContributions(List.of(savingContribution));
     user.setContributions(List.of(savingContribution));
     Challenge challenge = ChallengeUtility.createSharedChallenge3();
+    AchievementStats stats = user.getStats();
 
     when(userRepository.findUserByEmailIgnoreCase(anyString()))
         .thenReturn(Optional.ofNullable(user));
 
+    when(achievementStatsRepository.findAchievementStatsByUserEmail(principal.getName())).thenReturn(Optional.of(stats));
+
     when(badgeRepository.findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(anyString(), any(AchievementCategory.class)))
-        .thenReturn(BadgeUtility.createBadgeA());
+            .thenReturn(Optional.of(BadgeUtility.createBadgeA()));
 
     when(achievementRepository.findByCategory(any(AchievementCategory.class)))
         .thenReturn(Optional.ofNullable(AchievementStatsUtility.createAchievement()));
@@ -129,6 +132,7 @@ class AchievementStatsServiceTest {
 
     when(savingContributionRepository.findAllContributionsByUser_Email(anyString(), any(Pageable.class)))
         .thenReturn(List.of(savingContribution, savingContribution, savingContribution, savingContribution));
+
 
     // Act
     int updatedLevel = achievementStatsService.updateAndCheckAchievement(AchievementCategory.EDUCATION, principal);
