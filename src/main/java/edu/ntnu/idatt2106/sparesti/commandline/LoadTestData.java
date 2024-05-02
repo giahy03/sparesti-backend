@@ -9,13 +9,13 @@ import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
-import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
-import edu.ntnu.idatt2106.sparesti.repository.BadgeRepository;
-import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
-import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeCodeRepository;
+import edu.ntnu.idatt2106.sparesti.repository.*;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -43,6 +43,8 @@ public class LoadTestData implements CommandLineRunner {
   private final AchievementRepository achievementRepository;
 
   private final SharedChallengeCodeRepository sharedChallengeCodeRepository;
+  private final SavingGoalRepository savingGoalRepository;
+  private final SavingContributionRepository savingContributionRepository;
 
   @Override
   public void run(String... args) throws Exception {
@@ -114,8 +116,6 @@ public class LoadTestData implements CommandLineRunner {
 
 
 
-
-
     Achievement achievementA = Achievement.builder()
             .category(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
             .description("Complete a certain number of saving challenges in Sparesti.")
@@ -140,8 +140,49 @@ public class LoadTestData implements CommandLineRunner {
             .user(user)
             .achievement(achievementB)
             .achievedDate(LocalDate.of(2024, 4, 3))
-            .level(2)
+            .level(3)
             .build();
+
+    SavingGoal savingGoalA = SavingGoal.builder()
+            .lives(5)
+            .state(GoalState.UNDER_PROGRESS)
+            .totalAmount(25000.0)
+            .joinCode("abc")
+            .startDate(LocalDate.of(2024, 4, 1))
+            .endDate(LocalDate.of(2024, 4, 20))
+            .author(user)
+            .title("Felles tur til Spania")
+            .build();
+
+    SavingGoal savingGoalB = SavingGoal.builder()
+            .lives(3)
+            .state(GoalState.UNDER_PROGRESS)
+            .totalAmount(250000.0)
+            .joinCode("123")
+            .startDate(LocalDate.of(2024, 4, 1))
+            .endDate(LocalDate.of(2024, 4, 20))
+            .author(user2)
+            .title("Ny bil")
+            .build();
+
+    SavingContribution savingContribution1 = SavingContribution.builder()
+            .user(user)
+            .goal(savingGoalA)
+            .contribution(2500.0)
+            .build();
+
+    SavingContribution savingContribution2 = SavingContribution.builder()
+            .user(user2)
+            .goal(savingGoalA)
+            .contribution(3000.0)
+            .build();
+
+    SavingContribution savingContribution3 = SavingContribution.builder()
+            .user(user2)
+            .goal(savingGoalB)
+            .contribution(20000.0)
+            .build();
+
 
     userRepository.save(user);
     userRepository.save(user2);
@@ -157,6 +198,13 @@ public class LoadTestData implements CommandLineRunner {
     achievementRepository.save(achievementB);
     badgeRepository.save(badgeA);
     badgeRepository.save(badgeB);
+
+    savingGoalRepository.save(savingGoalA);
+    savingGoalRepository.save(savingGoalB);
+
+    savingContributionRepository.save(savingContribution1);
+    savingContributionRepository.save(savingContribution2);
+    savingContributionRepository.save(savingContribution3);
 
   }
 }

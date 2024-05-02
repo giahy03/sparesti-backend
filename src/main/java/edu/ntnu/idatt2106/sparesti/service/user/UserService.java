@@ -65,9 +65,9 @@ public class UserService {
    * @param email The email of the user.
    */
   public void editFirstName(@NonNull FirstNameChangeDto firstNameChangeDto, @NonNull String email) {
-    User user = findUser(email);
-
     UserValidator.validateFirstName(firstNameChangeDto.getNewFirstName());
+
+    User user = findUser(email);
 
     user.setFirstName(firstNameChangeDto.getNewFirstName());
 
@@ -81,9 +81,9 @@ public class UserService {
    * @param email The email of the user.
    */
   public void editLastName(@NonNull LastNameChangeDto lastNameChangeDto, @NonNull String email) {
-    User user = findUser(email);
+    UserValidator.validateLastName(lastNameChangeDto.getNewLastName());
 
-    UserValidator.validateFirstName(lastNameChangeDto.getNewLastName());
+    User user = findUser(email);
 
     user.setLastName(lastNameChangeDto.getNewLastName());
 
@@ -97,6 +97,8 @@ public class UserService {
    * @param email The email of the user.
    */
   public void editIncome(@NonNull IncomeChangeDto incomeChangeDto, @NonNull String email) {
+    UserValidator.validateIncome(incomeChangeDto.getNewIncome());
+
     User user = findUser(email);
 
     user.getUserInfo().setIncome(incomeChangeDto.getNewIncome());
@@ -147,6 +149,8 @@ public class UserService {
    * @param email The email of the user.
    */
   public void addUserInfo(@NonNull UserInfoDto userInfoDto, @NonNull String email) {
+    UserValidator.validateIncome(userInfoDto.getIncome());
+
     User user = findUser(email);
 
     if (user.getUserInfo() == null) {

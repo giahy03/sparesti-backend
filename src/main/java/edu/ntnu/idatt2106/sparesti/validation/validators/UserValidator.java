@@ -70,7 +70,7 @@ public class UserValidator extends SimpleValidator {
     if (!isNotNullOrBlank(firstName) || !firstName
             .matches(UserValidationRules.FIRSTNAME.getRegex())) {
 
-      throw new IllegalArgumentException("First firstName must be 1-64 characters "
+      throw new IllegalArgumentException("First name must be 1-64 characters "
               + "and contain only letters.");
     }
   }
@@ -85,6 +85,18 @@ public class UserValidator extends SimpleValidator {
     if (!isNotNullOrBlank(lastName) || !lastName.matches(UserValidationRules.LASTNAME.getRegex())) {
       throw new IllegalArgumentException("Last name must be 1-64 characters"
               + " and contain only letters.");
+    }
+  }
+
+  /**
+   * The method validates that the income is not less than zero.
+   *
+   * @param income The income to be validated.
+   * @throws IllegalArgumentException If the income is negative.
+   */
+  public static void validateIncome(double income) throws IllegalArgumentException {
+    if (income < 0) {
+      throw new IllegalArgumentException("Income cannot be negative.");
     }
   }
 }

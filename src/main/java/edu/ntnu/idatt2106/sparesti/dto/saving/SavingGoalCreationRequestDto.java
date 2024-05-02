@@ -1,5 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.dto.saving;
 
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;

@@ -74,6 +74,7 @@ public class StockService {
       String url = String.format(API_URL, symbol, startDate, endDate, API_KEY);
       String jsonResponse = restTemplate.getForObject(url, String.class);
 
+      log.info("JSON response from Polygon api: {}", jsonResponse);
       log.debug("JSON response from Polygon api: {}", jsonResponse);
 
       JsonNode rootNode = objectMapper.readTree(jsonResponse);

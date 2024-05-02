@@ -2,11 +2,18 @@ package edu.ntnu.idatt2106.sparesti.service.challenge;
 
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
+import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengeDto;
+import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengePreviewDto;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
+import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
+import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeCodeRepository;
+import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
+import edu.ntnu.idatt2106.sparesti.service.email.EmailServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,16 +47,31 @@ class ChallengeServiceTest {
   ChallengesRepository challengeRepository;
 
   @Mock
+  SharedChallengeCodeRepository sharedChallengeCodeRepository;
+
+  @Mock
+  SharedChallengeRepository sharedChallengeRepository;
+
+  @Mock
   UserRepository userRepository;
 
   Principal principal;
 
   private SharedChallenge challenge;
 
+  User user;
+
   @BeforeEach
+
+
   void setUp() {
-    challenge = ChallengeUtility.createSharedChallengeA();
-    principal = () -> "example@guide";
+    challenge = ChallengeUtility.createSharedChallenge1();
+    user = ChallengeUtility.createUser1();
+    SharedChallengeCode sharedChallengeCode = ChallengeUtility.createSharedChallengeCodeA();
+    challenge.setSharedChallengeCode(sharedChallengeCode);
+    principal = () -> user.getEmail();
+
+    challenge.setUser(user);
   }
 
   @Test
@@ -61,8 +83,44 @@ class ChallengeServiceTest {
 
   @Test
   void Service_AddChallenge_AddChallenge() {
+    //Arrange
+    ChallengeDto challengeDto = ChallengeUtility.createChallengeDto();
+    when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(user));
 
+    //Act
+    challengeService.addChallenge(principal, challengeDto);
+
+    //Assert
+    verify(challengeRepository).save(any(Challenge.class));
   }
+
+  @Test
+  void Service_AddSharedChallenge_AddChallenge() {
+    //Arrange
+    SharedChallengeDto challengeDto = ChallengeUtility.createSharedChallengeDto();
+    when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(user));
+
+    //Act
+    challengeService.addChallenge(principal, challengeDto);
+
+    //Assert
+    verify(challengeRepository).save(any(Challenge.class));
+  }
+
+  @Test
+  void Service_JoinSharedChallenge_ShouldAddUserToChallenge() {
+
+    String joinCode = "1234";
+    //Arrange
+    when(sharedChallengeRepository.findSharedChallengeBySharedChallengeCode_JoinCode(joinCode)).thenReturn(List.of(challenge));
+    when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(user));
+    //Act
+    challengeService.joinSharedChallenge(principal, joinCode);
+
+    //Assert
+    verify(challengeRepository).save(any(Challenge.class));
+  }
+
 
   @Test
   void Service_RemoveChallenge_RemovesChallenge() {
@@ -102,4 +160,22 @@ class ChallengeServiceTest {
     challengeService.updateChallenge(principal, 1L, challengeUpdateRequestDto);
     verify(challengeRepository).save(any(Challenge.class));
   }
+
+  @Test
+  void Service_GetParticipants_ReturnsParticipants() {
+    //Arrange
+    User dummyUser = ChallengeUtility.createUserA();
+    challenge.setUser(dummyUser);
+
+    when(sharedChallengeRepository.findSharedChallengeBySharedChallengeCode_Id(1L)).thenReturn(List.of(challenge));
+    when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(ChallengeUtility.createUserA()));
+
+    //Act
+    List<SharedChallengePreviewDto> sharedChallengePreviewDtos = challengeService.getParticipatingUsers(principal, 1L);
+
+    //Assert
+    assertNotNull(sharedChallengePreviewDtos);
+  }
+
+
 }

@@ -1,6 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
@@ -92,6 +93,10 @@ public class User implements UserDetails {
   @Schema(description = "The user's achievement stats.")
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private AchievementStats stats;
+
+  @Schema(description = "The contributions the user has made to saving goals")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<SavingContribution> contributions;
 
 
   /**

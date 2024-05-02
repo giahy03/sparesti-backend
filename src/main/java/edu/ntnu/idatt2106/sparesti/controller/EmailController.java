@@ -6,6 +6,7 @@ import edu.ntnu.idatt2106.sparesti.dto.email.EmailVerificationDto;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailFriendCodeService;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailServiceImpl;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 /**
  * Controller class responsible for handling email related REST-endpoints.
@@ -42,6 +45,8 @@ public class EmailController {
 
   private final EmailVerificationService emailVerificationService;
 
+  private static final String ADMIN_EMAIL = Dotenv.load().get("ADMIN_EMAIL");
+
   /**
    * REST-endpoint for sending an email.
    *
@@ -53,9 +58,11 @@ public class EmailController {
       @ApiResponse(responseCode = "200", description = "Email successfully sent."),
       @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
-  @PostMapping()
+  @PostMapping("/contact")
   public ResponseEntity<Void> sendEmail(@RequestBody EmailDetailsDto emailDetailsDto) {
-    log.info("Sending email to: {}", emailDetailsDto.getRecipient());
+    log.info("Sending email to: {}", ADMIN_EMAIL);
+
+    emailDetailsDto.setRecipient(ADMIN_EMAIL);
     emailService.sendEmail(emailDetailsDto);
     log.info("Email sent to: {}", emailDetailsDto.getRecipient());
     return new ResponseEntity<>(HttpStatus.OK);
@@ -142,9 +149,9 @@ public class EmailController {
       @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
   @GetMapping("/challenge/join/{id}")
-  public ResponseEntity<Void> sendJoinCode(@RequestParam String email, @PathVariable long id) {
+  public ResponseEntity<Void> sendJoinCode(Principal principal, @RequestParam String email, @PathVariable long id) {
     log.info("Sending join code about challenge with id: {} to: {}", id, email);
-    emailFriendCodeService.sendJoinCode(email, id);
+    emailFriendCodeService.sendJoinCode(principal, email, id);
     log.info("Join code about challenge with id: {} sent to: {}", id, email);
     return new ResponseEntity<>(HttpStatus.OK);
   }

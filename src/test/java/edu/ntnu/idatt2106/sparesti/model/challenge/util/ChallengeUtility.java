@@ -143,7 +143,7 @@ public class ChallengeUtility {
             .build();
   }
 
-  public static SharedChallengeDto createSavingChallengeDto() {
+  public static SharedChallengeDto createSharedChallengeDto() {
     return SharedChallengeDto.builder()
             .title("Challenge")
             .progress(Progress.IN_PROGRESS)
@@ -158,6 +158,8 @@ public class ChallengeUtility {
   public static ChallengeDto createChallengeDto() {
     return ChallengeDto.builder()
             .id(1L)
+            .title("Challenge")
+            .progress(Progress.IN_PROGRESS)
             .description("Challenge")
             .startDate(LocalDate.parse("2021-10-10"))
             .endDate(LocalDate.parse("2021-10-20"))
@@ -208,6 +210,18 @@ public class ChallengeUtility {
     return SharedChallengeCode.builder()
             .joinCode("12345")
             .sharedChallenges(List.of())
+            .build();
+  }
+
+  public static SharedChallenge createSharedChallenge1() {
+    return SharedChallenge.builder()
+            .id(1L)
+            .title("Challenge")
+            .startDate(LocalDate.parse("2021-10-10"))
+            .endDate(LocalDate.parse("2021-10-20"))
+            .description("Description")
+            .progress(Progress.IN_PROGRESS)
+            .difficulty(Difficulty.EASY)
             .build();
   }
 }
