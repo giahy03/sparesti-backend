@@ -1,9 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.mapper;
 
-import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;
-import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import lombok.RequiredArgsConstructor;

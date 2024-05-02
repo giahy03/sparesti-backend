@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2106.sparesti.service.achievementStats;
 
-import edu.ntnu.idatt2106.sparesti.dto.achievementStats.CheckForAchievementDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;

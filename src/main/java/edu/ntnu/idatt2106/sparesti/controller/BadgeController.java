@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
 import edu.ntnu.idatt2106.sparesti.dto.achievementStats.AchievementPreviewDto;
-import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.service.badge.BadgeService;
 import io.swagger.v3.oas.annotations.Operation;
