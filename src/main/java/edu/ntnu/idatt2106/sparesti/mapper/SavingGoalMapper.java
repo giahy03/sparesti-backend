@@ -29,6 +29,7 @@ public class SavingGoalMapper {
                 .totalAmount(savingGoal.getTotalAmount())
                 .state(savingGoal.getState())
                 .lives(savingGoal.getLives())
+                .joinCode(savingGoal.getJoinCode())
                 .build();
     }
 
