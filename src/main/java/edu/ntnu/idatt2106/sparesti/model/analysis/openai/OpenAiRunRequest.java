@@ -7,7 +7,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Represents a request to create and run a thread
+ * Represents a request to create and run a thread.
  */
 @Data
 @RequiredArgsConstructor

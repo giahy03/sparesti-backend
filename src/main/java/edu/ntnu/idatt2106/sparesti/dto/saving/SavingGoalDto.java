@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.dto.saving;
 
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
+import edu.ntnu.idatt2106.sparesti.model.goal.GoalState;
 import lombok.*;
 
 import java.time.LocalDate;

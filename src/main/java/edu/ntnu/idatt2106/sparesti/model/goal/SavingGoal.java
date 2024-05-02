@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.model.savingGoal;
+package edu.ntnu.idatt2106.sparesti.model.goal;
 
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;

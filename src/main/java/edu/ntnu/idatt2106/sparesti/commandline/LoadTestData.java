@@ -10,9 +10,9 @@ import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
+import edu.ntnu.idatt2106.sparesti.model.goal.GoalState;
+import edu.ntnu.idatt2106.sparesti.model.goal.SavingContribution;
+import edu.ntnu.idatt2106.sparesti.model.goal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
@@ -35,11 +35,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 
 @Component

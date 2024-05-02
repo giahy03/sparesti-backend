@@ -66,9 +66,9 @@ public class AnalysisItem {
       return false;
     }
     AnalysisItem that = (AnalysisItem) object;
-    return Objects.equals(id, that.id) && purchaseCategory == that.purchaseCategory &&
-        Objects.equals(expectedValue, that.expectedValue) &&
-        Objects.equals(actualValue, that.actualValue);
+    return Objects.equals(id, that.id) && purchaseCategory == that.purchaseCategory
+        && Objects.equals(expectedValue, that.expectedValue)
+        && Objects.equals(actualValue, that.actualValue);
   }
 
   @Override

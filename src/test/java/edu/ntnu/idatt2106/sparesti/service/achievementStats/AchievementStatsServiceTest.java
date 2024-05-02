@@ -1,20 +1,13 @@
 package edu.ntnu.idatt2106.sparesti.service.achievementStats;
 
 
-import edu.ntnu.idatt2106.sparesti.dto.achievementStats.CheckForAchievementDto;
-import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
 import edu.ntnu.idatt2106.sparesti.model.achievementStats.util.AchievementStatsUtility;
-import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
-import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
-import edu.ntnu.idatt2106.sparesti.model.badge.util.BadgeUtility;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
 import edu.ntnu.idatt2106.sparesti.repository.BadgeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SavingContributionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,13 +17,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 /**
  * Test class for the achievement stats service
