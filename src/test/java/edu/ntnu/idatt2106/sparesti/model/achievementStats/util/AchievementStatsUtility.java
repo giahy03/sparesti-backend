@@ -82,8 +82,6 @@ public class AchievementStatsUtility {
 
     public static BadgePreviewDto createBadgePreviewDto() {
         return BadgePreviewDto.builder()
-                .id(2L)
-                .level(4)
                 .threshold(15)
                 .achievementDate(LocalDate.of(2024, 4, 1))
                 .achievement(AchievementCategory.SAVING_STREAK)

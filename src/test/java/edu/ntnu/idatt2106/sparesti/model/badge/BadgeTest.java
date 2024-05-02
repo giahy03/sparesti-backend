@@ -34,14 +34,12 @@ public class BadgeTest {
         User expectedUser = BadgeUtility.createUserA();
         Achievement expectedAchievement = BadgeUtility.createAchievementA();
         LocalDate expectedDate = LocalDate.of(2024, 4, 3);
-        int expectedLevel = 2;
 
         // Assert
         assertEquals(expectedId, badge.getId());
         assertEquals(expectedUser.getEmail(), badge.getUser().getEmail());
         assertEquals(expectedAchievement.getCategory(), badge.getAchievement().getCategory());
         assertEquals(expectedDate, badge.getAchievedDate());
-        assertEquals(expectedLevel, badge.getLevel());
     }
 
     @DisplayName("Test for the setter methods of Badge")

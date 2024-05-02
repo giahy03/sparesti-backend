@@ -21,6 +21,7 @@ import java.time.LocalDate;
 public class BadgeMapper {
 
     public BadgePreviewDto mapToBadgePreviewDto(Badge badge) {
+
         return BadgePreviewDto.builder()
                 .achievement(badge.getAchievement().getCategory())
                 .threshold(badge.getAchievement().getThresholds().get(badge.getLevel()))
@@ -35,15 +36,6 @@ public class BadgeMapper {
                 .achievedDate(LocalDate.now())
                 .level(createBadgeDto.getLevel())
                 .achievement(createBadgeDto.getAchievement())
-                .build();
-    }
-
-    public BadgeCreateDto mapToBadgeCreateDto(BadgeCreateRequestDto createBadgeRequestDto, Achievement achievement) {
-
-        return BadgeCreateDto.builder()
-                .achievementDate(createBadgeRequestDto.getAchievementDate())
-                .level(createBadgeRequestDto.getLevel())
-                .achievement(achievement)
                 .build();
     }
 
