@@ -67,7 +67,54 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("Test change user first name")
+    @Test
+    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+    public void controller_changeFirstName() throws Exception {
 
+        mockMvc
+                .perform(put(url + "/first-name").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(UserUtility.createFirstNameChangeDtoJson()))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("Test change user last name")
+    @Test
+    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+    public void controller_changeLastName() throws Exception {
+
+        mockMvc
+                .perform(put(url + "/last-name").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(UserUtility.createLastNameChangeDtoJson()))
+                .andExpect(status().isOk());
+    }
+
+
+    @DisplayName("Test change user income")
+    @Test
+    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+    public void controller_changeUserIncome() throws Exception {
+
+        mockMvc
+                .perform(put(url + "/income").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(UserUtility.createIncomeChangeDtoJson()))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("Test change user's living status")
+    @Test
+    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+    public void controller_changeUserLivingStatus() throws Exception {
+
+        mockMvc
+                .perform(put(url + "/living-status").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(UserUtility.createLivingStatusChangeDtoJson()))
+                .andExpect(status().isOk());
+    }
 
 
 

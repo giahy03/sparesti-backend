@@ -23,4 +23,33 @@ public class UserUtility {
                 + "\"newPassword\":\"123\""
                 + "}";
     }
+
+    public static String createFirstNameChangeDtoJson() {
+        return  "{"
+                + "\"newFirstName\":\"Anne\""
+                + "}";
+    }
+
+    public static String createLastNameChangeDtoJson() {
+        return  "{"
+                + "\"newLastName\":\"Larsen\""
+                + "}";
+    }
+
+    public static String createIncomeChangeDtoJson() {
+        return  "{"
+                + "\"newIncome\":50000.0"
+                + "}";
+    }
+
+
+    public static String createLivingStatusChangeDtoJson() {
+        return  "{"
+                + "\"newLivingStatus\":2"
+                + "}";
+    }
+
+
+
+
 }
