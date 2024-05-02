@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.repository;
 
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
+import edu.ntnu.idatt2106.sparesti.model.goal.SavingContribution;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
