@@ -37,7 +37,8 @@ public class SecurityConfig {
       "/api/v1/auth/**",
       "/api/v1/email/**",
       "/api/v1/stock/**",
-      "/api/v1/docs/**"
+      "/api/v1/docs/**",
+      "/api/v1/users/password-reset"
   };
 
   private final JwtAuthFilter jwtAuthFilter;

@@ -114,6 +114,25 @@ public class EmailController {
     return new ResponseEntity<>(emailCodeExpirationDto, HttpStatus.OK);
   }
 
+  /**
+   * REST-endpoint for verifying if an email is available for use.
+   *
+   * @param email the email address to be verified.
+   * @return A ResponseEntity with status OK if the email does not exist.
+   */
+  @Operation(summary = "Verify email availability")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Email is available."),
+      @ApiResponse(responseCode = "409", description = "Email already in use."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.")
+  })
+  @GetMapping("/available")
+  public ResponseEntity<Void> verifyIsAvailable(@RequestParam String email) {
+    log.info("Verifying if email {} is available for use.", email);
+    emailVerificationService.verifyEmailIsAvailable(email);
+    log.info("Email {} is available for use.", email);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
   /**
    * REST-endpoint for verifying if an email exists.
@@ -123,18 +142,17 @@ public class EmailController {
    */
   @Operation(summary = "Verify email existence")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Email does not exist."),
-      @ApiResponse(responseCode = "409", description = "Email already exists."),
+      @ApiResponse(responseCode = "200", description = "Email exist."),
+      @ApiResponse(responseCode = "404", description = "Email does not exists."),
       @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
-  @GetMapping("/verify-existence")
+  @GetMapping("/exist")
   public ResponseEntity<Void> verifyExistence(@RequestParam String email) {
     log.info("Verifying existence of email {}.", email);
     emailVerificationService.verifyEmailExist(email);
-    log.info("Email {} does not exist.", email);
+    log.info("Email {} exist.", email);
     return new ResponseEntity<>(HttpStatus.OK);
   }
-
 
   /**
    * REST-endpoint for verifying if an email exists.
