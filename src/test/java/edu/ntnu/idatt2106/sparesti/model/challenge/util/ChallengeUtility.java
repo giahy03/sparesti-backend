@@ -6,6 +6,11 @@ import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.LoginRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.RegistrationDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
+import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
+import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
+import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
+import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
@@ -20,10 +25,13 @@ import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.MonthDay;
+import java.time.YearMonth;
 import java.util.List;
 
 
 public class ChallengeUtility {
+
 
   public static Streak createStreak1() {
     return Streak.builder()
@@ -242,5 +250,27 @@ public class ChallengeUtility {
     return SavingContribution.builder()
             .contribution(100)
             .build();
+  }
+
+  public static BankStatement createBankStatement1() {
+    return new BankStatement("123456789", List.of(), YearMonth.now());
+  }
+
+  public static Transaction createTransaction1() {
+    return new Transaction(MonthDay.now(), "Transaction", 100.0, false);
+  }
+
+  public static BankStatementAnalysis createBankStatementAnalysis1(List<AnalysisItem> analysisItems) {
+    return new BankStatementAnalysis(analysisItems);
+  }
+
+  public static AnalysisItem createAnalysisItem1() {
+    AnalysisItem analysisItem = new AnalysisItem();
+    analysisItem.setId(1L);
+    analysisItem.setPurchaseCategory(SsbPurchaseCategory.FOOD);
+    analysisItem.setExpectedValue(100.0);
+    analysisItem.setActualValue(100.0);
+    return analysisItem;
+
   }
 }
