@@ -71,14 +71,12 @@ public class AchievementStatsUtility {
     public static CheckForAchievementDto CheckForAchievementDtoA() {
         return CheckForAchievementDto.builder()
                 .achievement(AchievementCategory.AMOUNT_SAVED)
-                .achievementDate(LocalDate.of(2024, 4, 1))
                 .build();
     }
 
     public static CheckForAchievementDto CheckForAchievementDtoB() {
         return CheckForAchievementDto.builder()
                 .achievement(AchievementCategory.SAVING_STREAK)
-                .achievementDate(LocalDate.of(2024, 4, 1))
                 .build();
     }
 

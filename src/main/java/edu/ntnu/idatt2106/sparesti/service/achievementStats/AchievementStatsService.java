@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -94,7 +95,7 @@ public class AchievementStatsService {
 
         Badge badge = Badge.builder()
                 .achievement(getAchievementOfCategory(checkForAchievementDto.getAchievement()))
-                .achievedDate(checkForAchievementDto.getAchievementDate())
+                .achievedDate(LocalDate.now())
                 .level(level)
                 .user(user)
                 .build();

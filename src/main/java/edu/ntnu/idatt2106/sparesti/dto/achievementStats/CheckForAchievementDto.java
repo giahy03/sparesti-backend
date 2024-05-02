@@ -19,8 +19,5 @@ import java.time.LocalDate;
 @Setter
 @Builder
 public class CheckForAchievementDto {
-
     private AchievementCategory achievement;
-    private LocalDate achievementDate;
-
 }
