@@ -70,7 +70,7 @@ class BankStatementAnalysisServiceTest {
     //act
 
     BankStatementAnalysis bankStatementAnalysis =
-        bankStatementAnalysisService.analyze(bankStatement, userInfo);
+        bankStatementAnalysisService.analyze(bankStatement, userInfo, true);
 
     //assert
 

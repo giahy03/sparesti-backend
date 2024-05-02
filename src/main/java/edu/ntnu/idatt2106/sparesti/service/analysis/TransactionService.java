@@ -156,13 +156,11 @@ public class TransactionService {
    * Updates a transaction.
    *
    * @param principal The principal of the user.
-   * @param id The id of the transaction to update.
    * @param transactionDto The transaction DTO.
    */
-  public void updateTransaction(Principal principal, Long id, TransactionDto transactionDto) {
-    Transaction transaction = transactionRepository.findById(id).orElseThrow(
+  public void updateTransaction(Principal principal, TransactionDto transactionDto) {
+    Transaction transaction = transactionRepository.findById(transactionDto.getId()).orElseThrow(
             () -> new NoSuchElementException("Transaction not found."));
-    checkIfUserExists(principal);
     checkIfUserIsAuthorized(principal, transaction);
 
     // Update transaction

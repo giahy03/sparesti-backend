@@ -125,9 +125,12 @@ public class BankStatementController {
   @GetMapping("/{statementId}/analysis")
   public ResponseEntity<BankStatementAnalysisDto> analyseBankStatement(
       @PathVariable(name = "statementId") Long statementId, Principal principal,
-      @RequestParam(defaultValue = "false") boolean forceNewAnalysis)
+      @RequestParam(defaultValue = "false") boolean forceNewAnalysis,
+      @RequestParam(defaultValue = "true") boolean categorize)
       throws ExternalApiException, NullPointerException {
     log.info("Analyzing bank statement with id: {} for user: {}", statementId, principal.getName());
+    log.info("Force new analysis: {}", forceNewAnalysis);
+    log.info("Categorize: {}", categorize);
 
     BankStatement statement = bankStatementService.getBankStatement(statementId, principal);
 
@@ -143,7 +146,7 @@ public class BankStatementController {
     UserInfo userInfo = user.getUserInfo();
 
     BankStatementAnalysis bankStatementAnalysis =
-        bankStatementAnalysisService.analyze(statement, userInfo);
+        bankStatementAnalysisService.analyze(statement, userInfo, categorize);
     bankStatementAnalysis.setBankStatement(statement);
     statement.setAnalysis(bankStatementAnalysis);
     BankStatement saved = bankStatementService.saveBankStatement(statement);
@@ -173,7 +176,7 @@ public class BankStatementController {
           + "because of an internal server error")})
   @GetMapping("/")
   public ResponseEntity<List<BankStatementDto>>
-      getAllStatementsForUser(Principal principal,
+  getAllStatementsForUser(Principal principal,
                           @RequestParam(defaultValue = "0")
                           Integer month,
                           @RequestParam(defaultValue = "0")

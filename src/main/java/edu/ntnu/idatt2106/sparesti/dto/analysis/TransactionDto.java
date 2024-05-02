@@ -26,5 +26,4 @@ public class TransactionDto {
   private Double amount;
   private Boolean isIncoming;
   private SsbPurchaseCategory category;
-  private LocalDate fullDate;
 }
