@@ -92,7 +92,6 @@ public class AchievementStatsService {
         User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
                 new UserNotFoundException("User with email " + email + " not found"));
 
-
         Badge badge = Badge.builder()
                 .achievement(getAchievementOfCategory(checkForAchievementDto.getAchievement()))
                 .achievedDate(checkForAchievementDto.getAchievementDate())
@@ -101,6 +100,7 @@ public class AchievementStatsService {
                 .build();
 
         Badge savedBadge = badgeRepository.save(badge);
+
         return badgeMapper.mapToBadgePreviewDto(savedBadge);
     }
 
@@ -352,13 +352,13 @@ public class AchievementStatsService {
      * @param value An integer to compare with the thresholds.
      * @return The level that the particular value corresponds to, given the thresholds.
      */
-    private int findLevel(List<Integer> thresholds, int value) {
+    public int findLevel(List<Integer> thresholds, int value) {
         for (int i = 0; i < thresholds.size(); i++) {
             if (thresholds.get(i) > value) {
                 return i;
             }
         }
-        return 0;
+        return value >= thresholds.getLast() ? thresholds.size() : 0;
     }
 
 
@@ -370,12 +370,13 @@ public class AchievementStatsService {
      * @param value A decimal number to compare with the thresholds.
      * @return The level that the particular value corresponds to, given the thresholds.
      */
-    private int findLevel(List<Integer> thresholds, double value) {
+    public int findLevel(List<Integer> thresholds, double value) {
         for (int i = 0; i < thresholds.size(); i++) {
             if (thresholds.get(i) > value) {
                 return i;
             }
         }
-        return 0;
+        return value >= thresholds.getLast() ? thresholds.size() : 0;
+
     }
 }

@@ -4,7 +4,9 @@ import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -26,10 +28,10 @@ public class AchievementStatsTest {
 
     @BeforeEach
     void setup() {
-        achievementStats = AchievementStatsUtility.createAchievementStats();
+        achievementStats = AchievementStatsUtility.createAchievementStatsA();
     }
 
-
+    @DisplayName("Test builder of achievement stats entity")
     @Test
     void AchievementStats_Constructor() {
 
@@ -61,6 +63,7 @@ public class AchievementStatsTest {
 
     }
 
+    @DisplayName("Test setter methods of achievement stats entity")
     @Test
     void AchievementStats_SetterReturnCorrectValues() {
 

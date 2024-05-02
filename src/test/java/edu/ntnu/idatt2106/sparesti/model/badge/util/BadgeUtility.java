@@ -56,7 +56,7 @@ public class BadgeUtility {
 
         return Achievement.builder()
                 .id(1)
-                .category(AchievementCategory.CHALLENGE_STREAK)
+                .category(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
                 .description("Save up a specific amount of money through Sparesti.")
                 .thresholds(List.of(new Integer[]{100, 200, 500, 1000, 5000}))
                 .build();

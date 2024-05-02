@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
+ * Repository interface for managing the saving contributions made by users
+ * to various saving goals.
+ * The Jpa-interface supports basic CRUD (Create, Read, Update, Delete) operations.
  *
  * @author Hanne-Sofie Søreide
  */
