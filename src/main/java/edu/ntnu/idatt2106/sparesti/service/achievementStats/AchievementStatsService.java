@@ -72,7 +72,7 @@ public class AchievementStatsService {
             case NUMBER_OF_SAVING_GOALS_ACHIEVED ->
                     updateSavingGoalsAchieved(user, principal) ? checkGoalsCompleted(principal, user) : 0;
             case EDUCATION ->
-                    updateEducation(user) ? checkEducation(user) : 0;
+                    updateEducation(user);
         };
     }
 
@@ -218,13 +218,13 @@ public class AchievementStatsService {
      * @param user The user for which the education stat may be updated.
      * @return True if the user's stat related to reading news is updated, false otherwise.
      */
-    private boolean updateEducation(User user) {
+    private int updateEducation(User user) {
 
         if (user.getStats().isReadNews()){
-            return false;
+            return 0;
         } else {
             user.getStats().setReadNews(true);
-            return true;
+            return 1;
         }
     }
 
@@ -296,24 +296,6 @@ public class AchievementStatsService {
         int calculatedLevel = findLevel(thresholds, user.getStats().getSavingGoalsAchieved());
 
         return calculatedLevel > currentLevel ? calculatedLevel : 0;
-    }
-
-
-    /**
-     * Checks if the user qualifies for a new badge related to the education achievement with the current user stats.
-     * If so, an int representing the level of the new badge is returned.
-     *
-     * @param user The user who may have qualified for a new badge.
-     * @return An int indicating the level of the new badge or 0 if the user did not qualify for a new badge.
-     */
-    private int checkEducation(User user) {
-
-        if (user.getStats().isReadNews()) {
-            return 0;
-        } else {
-            user.getStats().setReadNews(true);
-            return 1;
-        }
     }
 
 
