@@ -33,30 +33,6 @@ public class BadgeController {
 
     private final BadgeService badgeService;
 
-    /**
-     * Get a badge of a given id.
-     *
-     * @param badgeIdDto The unique id of the saving goal
-     * @return ResponseEntity containing the retrieved badge, or an error message
-     */
-    @Operation(summary = "Get a badge by its id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "The badge was found and returned",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = BadgePreviewDto.class))
-                    }),
-            @ApiResponse(responseCode = "400", description = "The badge was not found",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
-    })
-    @GetMapping("/badge")
-    public ResponseEntity<BadgePreviewDto> getGoalById(@RequestBody BadgeIdDto badgeIdDto) {
-        log.info("Returning Badge: " + badgeIdDto.getId());
-        BadgePreviewDto badgeDto = badgeService.getBadgeById(badgeIdDto);
-        log.info("Returning Badge: " + badgeDto.getAchievement().toString().toLowerCase() + " - Level: " + badgeDto.getLevel());
-        return new ResponseEntity<>(badgeDto, HttpStatus.OK);
-    }
-
 
 
     /**
@@ -83,31 +59,6 @@ public class BadgeController {
 
 
 
-    /**
-     * Delete a badge by its id.
-     *
-     * @param principal The authenticated user
-     * @param badgeIdDto Unique id of the badge to be deleted
-     * @return ResponseEntity containing a message indicating the status of the deletion, or a
-     *          null response with a status code if something went wrong.
-     */
-    @Operation(summary = "Delete a badge by its id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "The badge was deleted",
-                    content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
-                    }),
-            @ApiResponse(responseCode = "404", description = "The badge was not found", content = @Content),
-            @ApiResponse(responseCode = "403", description = "The user is not authorized to delete the badge", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
-    })
-    @DeleteMapping("/badge")
-    public ResponseEntity<String> deleteBadge(Principal principal, @RequestBody BadgeIdDto badgeIdDto) {
-        log.info("Attempting to delete goal: " + badgeIdDto.getId());
-        badgeService.deleteBadgeById(principal, badgeIdDto);
-        log.info("Goal deleted: " + badgeIdDto.getId());
-        return new ResponseEntity<>("Deleted successfully", HttpStatus.OK);
-    }
 
 
     /**

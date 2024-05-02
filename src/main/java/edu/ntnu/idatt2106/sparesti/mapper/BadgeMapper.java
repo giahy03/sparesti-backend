@@ -22,10 +22,8 @@ public class BadgeMapper {
 
     public BadgePreviewDto mapToBadgePreviewDto(Badge badge) {
         return BadgePreviewDto.builder()
-                .id(badge.getId())
                 .achievement(badge.getAchievement().getCategory())
                 .threshold(badge.getAchievement().getThresholds().get(badge.getLevel()))
-                .level(badge.getLevel())
                 .achievementDate(badge.getAchievedDate())
                 .build();
     }
