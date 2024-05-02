@@ -1,14 +1,13 @@
 package edu.ntnu.idatt2106.sparesti.model.saving.util;
 
 import edu.ntnu.idatt2106.sparesti.dto.saving.*;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
+import edu.ntnu.idatt2106.sparesti.model.goal.GoalState;
+import edu.ntnu.idatt2106.sparesti.model.goal.SavingContribution;
+import edu.ntnu.idatt2106.sparesti.model.goal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Utility class that creates objects to support the testing classes.

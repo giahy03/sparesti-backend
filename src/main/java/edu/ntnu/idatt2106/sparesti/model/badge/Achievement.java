@@ -1,16 +1,24 @@
 package edu.ntnu.idatt2106.sparesti.model.badge;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -30,32 +38,32 @@ import java.util.Set;
 @Getter
 @Setter
 public class Achievement {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "The unique identifier of the achievement.")
-    @Column(name = "achievement_id")
-    private int id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Schema(description = "The unique identifier of the achievement.")
+  @Column(name = "achievement_id")
+  private int id;
 
-    @Enumerated(EnumType.STRING)
-    @Schema(description = "The category that the achievement belongs to.")
-    @Column(name = "category", nullable = false)
-    @NonNull
-    private AchievementCategory category;
+  @Enumerated(EnumType.STRING)
+  @Schema(description = "The category that the achievement belongs to.")
+  @Column(name = "category", nullable = false)
+  @NonNull
+  private AchievementCategory category;
 
-    @Schema(description = "Description of the achievement.")
-    @Column(name = "description", nullable = false)
-    @NonNull
-    private String description;
+  @Schema(description = "Description of the achievement.")
+  @Column(name = "description", nullable = false)
+  @NonNull
+  private String description;
 
-    @ElementCollection
-    @NonNull
-    @Schema(description = "The threshold of the achievable levels of the achievement.")
-    @CollectionTable(
-            name = "thresholds",
-            joinColumns = @JoinColumn(name = "achievement_id")
-    )
-    @Column( name = "threshold")
-    private List<Integer> thresholds;
+  @ElementCollection
+  @NonNull
+  @Schema(description = "The threshold of the achievable levels of the achievement.")
+  @CollectionTable(
+      name = "thresholds",
+      joinColumns = @JoinColumn(name = "achievement_id")
+  )
+  @Column(name = "threshold")
+  private List<Integer> thresholds;
 
 
 }

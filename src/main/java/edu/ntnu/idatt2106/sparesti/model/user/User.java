@@ -1,13 +1,22 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
-import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
+import edu.ntnu.idatt2106.sparesti.model.goal.SavingContribution;
+import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -83,7 +92,7 @@ public class User implements UserDetails {
   private UserInfo userInfo;
 
   @Schema(description = "The user's streak.")
-  @OneToOne(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private Streak streak;
 
   @Schema(description = "The user's bank statements.")

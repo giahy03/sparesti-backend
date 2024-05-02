@@ -1,16 +1,14 @@
 package edu.ntnu.idatt2106.sparesti.model.saving;
 
 import edu.ntnu.idatt2106.sparesti.model.saving.util.SavingGoalUtility;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
+import edu.ntnu.idatt2106.sparesti.model.goal.GoalState;
+import edu.ntnu.idatt2106.sparesti.model.goal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -8,11 +8,9 @@ package edu.ntnu.idatt2106.sparesti.model.badge;
  */
 
 public enum AchievementCategory {
-
     SAVING_STREAK,
     AMOUNT_SAVED,
     NUMBER_OF_CHALLENGES_COMPLETED,
     NUMBER_OF_SAVING_GOALS_ACHIEVED,
     EDUCATION,
-
 }
