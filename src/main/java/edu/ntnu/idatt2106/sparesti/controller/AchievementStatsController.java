@@ -44,7 +44,7 @@ public class AchievementStatsController {
      * Responds to post requests that specify an achievement type to update the user stats for and,
      * if the user qualified for a new badge, returns a DTO providing a preview of the new badge.
      * @param principal The authenticated user
-     * @param checkForAchievementDto DTO specifying the achievement type to check and the date.
+     * @param category DTO specifying the achievement type to check and the date.
      * @return ResponseEntity containing OK if the user stat was just updated, CREATED if the user
      * was additionally rewarded with a new badge along with a DTO representing the badge.
      */
@@ -59,15 +59,20 @@ public class AchievementStatsController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
-    @PostMapping("/stats")
+    @GetMapping("/stats/{category}")
     public ResponseEntity<BadgePreviewDto> checkForAchievement(Principal principal, @PathVariable AchievementCategory category) {
 
+        log.info("Checking if badge of the category " + category + " was qualified for.");
         int level = achievementStatsService.updateAndCheckAchievement(category, principal);
 
+        log.info("If 0, no badge awarded, if a number, a badge of that level was awarded: " + level);
+
         if (level > 0) {
+            log.info("Returning a badge preview DTO");
             BadgePreviewDto createdBadge = achievementStatsService.createBadge(category, principal, level);
             return new ResponseEntity<>(createdBadge, HttpStatus.CREATED);
         } else {
+            log.info("No new badge received, but the stats were updated");
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }

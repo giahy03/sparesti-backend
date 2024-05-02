@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
+import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
@@ -37,6 +38,8 @@ public class LoadTestData implements CommandLineRunner {
   private final UserRepository userRepository;
 
   private final ChallengesRepository challengesRepository;
+
+  private final AchievementStatsRepository achievementStatsRepository;
 
   private final BadgeRepository badgeRepository;
 
@@ -186,6 +189,19 @@ public class LoadTestData implements CommandLineRunner {
 
     userRepository.save(user);
     userRepository.save(user2);
+
+
+    AchievementStats achievementStatsA = AchievementStats.builder()
+            .challengesAchieved(3)
+            .savingGoalsAchieved(1)
+            .streak(7)
+            .totalSaved(1005)
+            .readNews(false)
+            .user(user2)
+            .build();
+
+    achievementStatsRepository.save(achievementStatsA);
+
 
     challengesRepository.save(sharedChallenge);
     challengesRepository.save(sharedChallenge2);
