@@ -1,8 +1,13 @@
 package edu.ntnu.idatt2106.sparesti.dto.saving;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
+ * Dto for adding a shared goal to a user.
  *
  * @author Hanne-Sofie Søreide
  */
@@ -12,5 +17,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddSharedGoalToUserDto {
-    private String joinCode;
+  private String joinCode;
 }

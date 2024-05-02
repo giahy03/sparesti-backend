@@ -13,8 +13,8 @@ import lombok.experimental.SuperBuilder;
  * Represents a saving challenge dto.
  * The saving challenge dto contains the total amount and current amount of the challenge.
  *
- * @version 1.0
  * @author Jeffrey Yaw Annor Tabiri
+ * @version 1.0
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -24,5 +24,5 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @JsonTypeName("SharedChallengeDto")
 public class SharedChallengeDto extends ChallengeDto {
-    private long sharedChallengeId;
+  private long sharedChallengeId;
 }

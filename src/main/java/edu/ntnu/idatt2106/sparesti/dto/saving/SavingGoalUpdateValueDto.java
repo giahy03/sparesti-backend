@@ -13,6 +13,6 @@ import lombok.Data;
 @Data
 @Builder
 public class SavingGoalUpdateValueDto {
-    private long id;
-    private int value;
+  private long id;
+  private int value;
 }

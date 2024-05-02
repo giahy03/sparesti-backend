@@ -1,6 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.mapper;
 
-import edu.ntnu.idatt2106.sparesti.dto.achievementStats.AchievementPreviewDto;
+import edu.ntnu.idatt2106.sparesti.dto.achievementstats.AchievementPreviewDto;
 import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
