@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.service.achievementStats;
 
 
-import edu.ntnu.idatt2106.sparesti.dto.achievementStats.CheckForAchievementDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
 import edu.ntnu.idatt2106.sparesti.model.achievementStats.util.AchievementStatsUtility;
@@ -12,9 +11,9 @@ import edu.ntnu.idatt2106.sparesti.model.badge.util.BadgeUtility;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.saving.util.SavingGoalUtility;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.GoalState;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
+import edu.ntnu.idatt2106.sparesti.model.goal.GoalState;
+import edu.ntnu.idatt2106.sparesti.model.goal.SavingContribution;
+import edu.ntnu.idatt2106.sparesti.model.goal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;

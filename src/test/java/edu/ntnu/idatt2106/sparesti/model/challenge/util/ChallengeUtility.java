@@ -18,7 +18,7 @@ import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
-import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
+import edu.ntnu.idatt2106.sparesti.model.goal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
