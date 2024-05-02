@@ -60,7 +60,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     token = authHeader.substring(7);
-    log.info("JWT received through the HTTP request: {}", token);
 
     username = jwtService.extractUsername(token);
 
