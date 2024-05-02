@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository interface for  contributions made to saving goals by users
+ * Repository interface for managing the saving contributions made by users
+ * to various saving goals.
  * The Jpa-interface supports basic CRUD (Create, Read, Update, Delete) operations.
  *
  * @author Hanne-Sofie Søreide
