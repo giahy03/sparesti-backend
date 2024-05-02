@@ -13,42 +13,34 @@ class CheckForAchievementDtoTest {
   void testGettersAndSetters() {
     // Arrange
     AchievementCategory achievement = AchievementCategory.AMOUNT_SAVED;
-    LocalDate achievementDate = LocalDate.now();
 
     // Act
     CheckForAchievementDto dto = CheckForAchievementDto.builder().build();
     dto.setAchievement(achievement);
-    dto.setAchievementDate(achievementDate);
 
     // Assert
     assertEquals(achievement, dto.getAchievement());
-    assertEquals(achievementDate, dto.getAchievementDate());
 
     // Act
-    AchievementCategory newAchievement = AchievementCategory.CHALLENGE_STREAK;
-    LocalDate newAchievementDate = LocalDate.now().plusDays(1);
+    AchievementCategory newAchievement = AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED;
     dto.setAchievement(newAchievement);
-    dto.setAchievementDate(newAchievementDate);
+
 
     // Assert
     assertEquals(newAchievement, dto.getAchievement());
-    assertEquals(newAchievementDate, dto.getAchievementDate());
   }
 
   @Test
   void testBuilder() {
     // Arrange
     AchievementCategory achievement = AchievementCategory.AMOUNT_SAVED;
-    LocalDate achievementDate = LocalDate.now();
 
     // Act
     CheckForAchievementDto dto = CheckForAchievementDto.builder()
         .achievement(achievement)
-        .achievementDate(achievementDate)
         .build();
 
     // Assert
     assertEquals(achievement, dto.getAchievement());
-    assertEquals(achievementDate, dto.getAchievementDate());
   }
 }
