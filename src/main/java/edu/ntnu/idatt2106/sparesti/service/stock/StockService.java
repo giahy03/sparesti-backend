@@ -7,6 +7,7 @@ import edu.ntnu.idatt2106.sparesti.exception.stock.StockNotFoundException;
 import edu.ntnu.idatt2106.sparesti.exception.stock.StockProcessingException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -31,13 +32,14 @@ import org.springframework.web.client.RestTemplate;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class StockService {
 
   private static final String API_KEY = "pDXb7Jx7ATG42CHvttBBTuuq7g5AW4Gc";
   private static final String API_URL = "https://api.polygon.io/v2/aggs/ticker/%s/range/1/day/%s/%s?adjusted=true&sort=asc&limit=120&apiKey=%s";
 
-  private final RestTemplate restTemplate = new RestTemplate();
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final RestTemplate restTemplate;
+  private final ObjectMapper objectMapper;
 
   /**
    * Retrieves stock data for the specified symbol.
