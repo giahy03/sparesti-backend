@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class AutomaticChallengeService {
-  @NonNull
+
   private final UserRepository userRepository;
   private static final int MINIMUM_DAYS = 5;
   private static final int MAX_DAYS = 30;

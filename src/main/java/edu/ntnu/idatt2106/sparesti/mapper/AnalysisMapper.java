@@ -5,25 +5,23 @@ import edu.ntnu.idatt2106.sparesti.dto.analysis.BankStatementAnalysisDto;
 import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 /**
  * Mapper for the BankStatementAnalysis entity.
+ *
+ * @author Tobias Oftedal
  */
 @Mapper(componentModel = "spring", uses = {AnalysisItemMapper.class})
 public interface AnalysisMapper {
   AnalysisMapper INSTANCE = Mappers.getMapper(AnalysisMapper.class);
 
-  @Mappings({
-      @Mapping(target = "id", source = "id"),
-      @Mapping(target = "analysisItems", source = "analysisItems", qualifiedByName =
-          "mapAnalysisItems")
-  })
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "analysisItems", source = "analysisItems", qualifiedByName =
+      "mapAnalysisItems")
   BankStatementAnalysisDto bankStatementAnalysisIntoBankStatementAnalysisDto(
       BankStatementAnalysis bankStatementAnalysis);
 
@@ -37,7 +35,7 @@ public interface AnalysisMapper {
   default List<AnalysisItemDto> mapAnalysisItems(List<AnalysisItem> analysisItems) {
     return analysisItems.stream()
         .map(AnalysisItemMapper.INSTANCE::toAnalysisItemDto)
-        .collect(Collectors.toList());
+        .toList();
   }
 }
 

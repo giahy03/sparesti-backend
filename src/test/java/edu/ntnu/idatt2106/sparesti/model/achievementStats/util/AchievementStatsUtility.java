@@ -17,8 +17,8 @@ public class AchievementStatsUtility {
 
         return AchievementStats.builder()
                 .id(1L)
-                .challengesAchieved(9)
-                .savingGoalsAchieved(9)
+                .challengesAchieved(2)
+                .savingGoalsAchieved(1)
                 .readNews(false)
                 .streak(9)
                 .totalSaved(99.0)

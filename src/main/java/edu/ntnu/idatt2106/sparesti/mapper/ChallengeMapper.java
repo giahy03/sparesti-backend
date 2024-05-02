@@ -10,17 +10,29 @@ import org.mapstruct.Mapping;
  * A mapper for mapping between Challenge and ChallengeDto.
  * The mapper is used to map between the two classes.
  *
- * @see Challenge
  * @author Jeffrey Yaw Annor Tabiri
  * @version 1.0
+ * @see Challenge
  */
 @Mapper
 public interface ChallengeMapper {
   @Mapping(target = "user", ignore = true)
   Challenge challengeDtoToChallenge(ChallengeDto challengeDto);
 
+  /**
+   * Maps a Challenge object to a ChallengePreviewDto object.
+   *
+   * @param challenge The Challenge object to map.
+   * @return A ChallengePreviewDto object.
+   */
   ChallengePreviewDto challengeIntoChallengePreviewDto(Challenge challenge);
 
+  /**
+   * Maps a Challenge object to a ChallengeDto object.
+   *
+   * @param challenge The Challenge object to map.
+   * @return A ChallengeDto object.
+   */
   ChallengeDto challengeIntoChallengeDto(Challenge challenge);
 
 }

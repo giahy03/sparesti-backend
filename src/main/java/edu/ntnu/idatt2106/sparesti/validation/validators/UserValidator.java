@@ -16,7 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public class UserValidator extends SimpleValidator {
 
-  private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+  private static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+  public static void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+    UserValidator.passwordEncoder = passwordEncoder;
+  }
 
   /**
    * The method validates the password based on predefined rules.

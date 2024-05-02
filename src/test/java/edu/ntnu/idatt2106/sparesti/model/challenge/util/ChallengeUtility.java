@@ -1,17 +1,24 @@
 package edu.ntnu.idatt2106.sparesti.model.challenge.util;
 
+import edu.ntnu.idatt2106.sparesti.dto.analysis.TransactionDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeUpdateRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.SharedChallengeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.LoginRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.RegistrationDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
+import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
+import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
+import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
+import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
@@ -19,10 +26,13 @@ import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.MonthDay;
+import java.time.YearMonth;
 import java.util.List;
 
 
 public class ChallengeUtility {
+
 
   public static Streak createStreak1() {
     return Streak.builder()
@@ -213,7 +223,7 @@ public class ChallengeUtility {
             .build();
   }
 
-  public static SharedChallenge createSharedChallenge1() {
+  public static SharedChallenge createSharedChallenge2() {
     return SharedChallenge.builder()
             .id(1L)
             .title("Challenge")
@@ -222,6 +232,56 @@ public class ChallengeUtility {
             .description("Description")
             .progress(Progress.IN_PROGRESS)
             .difficulty(Difficulty.EASY)
+            .build();
+  }
+
+  public static SharedChallenge createSharedChallenge3() {
+    return SharedChallenge.builder()
+            .id(1L)
+            .title("Challenge")
+            .startDate(LocalDate.parse("2021-10-10"))
+            .endDate(LocalDate.parse("2021-10-20"))
+            .description("Description")
+            .progress(Progress.COMPLETED)
+            .difficulty(Difficulty.EASY)
+            .build();
+  }
+
+  public static SavingContribution createSavingContribution() {
+    return SavingContribution.builder()
+            .contribution(100)
+            .build();
+  }
+
+  public static BankStatement createBankStatement1() {
+    return new BankStatement("123456789", List.of(), YearMonth.now());
+  }
+
+  public static Transaction createTransaction1() {
+    return new Transaction(MonthDay.now(), "Transaction", 100.0, false);
+  }
+
+  public static BankStatementAnalysis createBankStatementAnalysis1(List<AnalysisItem> analysisItems) {
+    return new BankStatementAnalysis(analysisItems);
+  }
+
+  public static AnalysisItem createAnalysisItem1() {
+    AnalysisItem analysisItem = new AnalysisItem();
+    analysisItem.setId(1L);
+    analysisItem.setPurchaseCategory(SsbPurchaseCategory.FOOD);
+    analysisItem.setExpectedValue(100.0);
+    analysisItem.setActualValue(100.0);
+    return analysisItem;
+
+  }
+
+  public static TransactionDto createTransactionDto1() {
+    return TransactionDto.builder()
+            .amount(100.0)
+            .category(SsbPurchaseCategory.EDUCATION)
+            .description("Transaction")
+            .isIncoming(false)
+            .date(MonthDay.now())
             .build();
   }
 }

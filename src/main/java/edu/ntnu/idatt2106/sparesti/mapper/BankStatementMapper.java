@@ -10,6 +10,8 @@ import org.mapstruct.factory.Mappers;
 
 /**
  * Mapper for the BankStatement entity.
+ *
+ * @author Tobias Oftedal
  */
 @Mapper(componentModel = "spring", uses = {AnalysisMapper.class})
 public interface BankStatementMapper {
