@@ -54,7 +54,8 @@ public class SavingGoalControllerTest {
     @InjectMocks
     SavingGoalController savingGoalController;
 
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
     @Mock
     private Pageable pageable;
