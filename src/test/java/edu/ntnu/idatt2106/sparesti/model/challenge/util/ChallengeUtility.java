@@ -12,6 +12,7 @@ import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
+import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
@@ -213,7 +214,7 @@ public class ChallengeUtility {
             .build();
   }
 
-  public static SharedChallenge createSharedChallenge1() {
+  public static SharedChallenge createSharedChallenge2() {
     return SharedChallenge.builder()
             .id(1L)
             .title("Challenge")
@@ -222,6 +223,24 @@ public class ChallengeUtility {
             .description("Description")
             .progress(Progress.IN_PROGRESS)
             .difficulty(Difficulty.EASY)
+            .build();
+  }
+
+  public static SharedChallenge createSharedChallenge3() {
+    return SharedChallenge.builder()
+            .id(1L)
+            .title("Challenge")
+            .startDate(LocalDate.parse("2021-10-10"))
+            .endDate(LocalDate.parse("2021-10-20"))
+            .description("Description")
+            .progress(Progress.COMPLETED)
+            .difficulty(Difficulty.EASY)
+            .build();
+  }
+
+  public static SavingContribution createSavingContribution() {
+    return SavingContribution.builder()
+            .contribution(100)
             .build();
   }
 }
