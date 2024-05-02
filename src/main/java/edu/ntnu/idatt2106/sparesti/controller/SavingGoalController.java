@@ -234,7 +234,7 @@ public class SavingGoalController {
                     }),
             @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
     })
-    @GetMapping("/goal/save")
+    @PostMapping("/goal/save")
     public ResponseEntity<Double> getCurrentlySavedTotal(Principal principal, @RequestBody  SavingGoalIdDto savingGoalIdDto) {
 
         log.info("Get currently saved up amount for goal: " + savingGoalIdDto.getId());
@@ -268,7 +268,7 @@ public class SavingGoalController {
         SavingGoalIdDto updatedGoal = savingGoalService.updateGoalState(principal, updateStateDto);
         log.info("New state of goal: " + updatedGoal.getState());
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("The status of the saving goal was updated.", HttpStatus.OK);
     }
 
 

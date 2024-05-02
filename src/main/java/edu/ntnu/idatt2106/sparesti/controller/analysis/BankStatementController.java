@@ -172,25 +172,23 @@ public class BankStatementController {
       @ApiResponse(responseCode = "500", description = "The bank statements were not retrieved "
           + "because of an internal server error")})
   @GetMapping("/")
-  public ResponseEntity<List<BankStatementDto>> getAllStatementsForUser(Principal principal,
-                                                                        @RequestParam(defaultValue = "0")
-                                                                        Integer month,
-                                                                        @RequestParam(defaultValue = "0")
-                                                                        Integer year
-  )
+  public ResponseEntity<List<BankStatementDto>>
+      getAllStatementsForUser(Principal principal,
+                          @RequestParam(defaultValue = "0")
+                          Integer month,
+                          @RequestParam(defaultValue = "0")
+                          Integer year)
       throws NullPointerException {
     List<BankStatement> bankStatements = bankStatementService.getAllBankStatements(principal);
 
     if (month > 0 && year > 0) {
       return ResponseEntity.ok(bankStatements.stream()
           .filter(bankStatement -> bankStatement.getTimestamp().equals(YearMonth.of(year, month)))
-          .map(BankStatementMapper.INSTANCE::bankStatementIntoBankStatementDto)
-          .toList());
+          .map(BankStatementMapper.INSTANCE::bankStatementIntoBankStatementDto).toList());
     }
 
     List<BankStatementDto> bankStatementDtoList =
-        bankStatements.stream()
-            .map(BankStatementMapper.INSTANCE::bankStatementIntoBankStatementDto)
+        bankStatements.stream().map(BankStatementMapper.INSTANCE::bankStatementIntoBankStatementDto)
             .toList();
 
     return ResponseEntity.ok(bankStatementDtoList);
@@ -270,6 +268,8 @@ public class BankStatementController {
             .map(BankStatement::getAnalysis).findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Analysis not found"));
 
+    log.info("Deleting items");
+    bankStatementService.deleteAnalysisItems(savedAnalysis);
 
     List<AnalysisItem> newItems =
         bankStatementAnalysisDto.getAnalysisItems().stream().map(analysisItemDto -> {
@@ -280,19 +280,16 @@ public class BankStatementController {
           return item;
         }).toList();
 
-    savedAnalysis.getAnalysisItems().clear();
-
-    log.info("Adding {} new items to the analysis", newItems.size());
-    if (newItems.size() > SsbPurchaseCategory.values().length) {
-      throw new IllegalArgumentException("Too many items were added");
-    }
-
     savedAnalysis.getAnalysisItems().addAll(newItems);
 
     if (savedAnalysis.getBankStatement() == null) {
       throw new IllegalArgumentException("The analysis does not have a bank statement");
     }
-    bankStatementService.saveBankStatement(savedAnalysis.getBankStatement());
+
+    var newlySaved = bankStatementService.saveBankStatement(savedAnalysis.getBankStatement());
+
+    log.info("ANALYSIS UPDATED, it now has {} items",
+        newlySaved.getAnalysis().getAnalysisItems().size());
     return null;
   }
 
@@ -313,8 +310,8 @@ public class BankStatementController {
           + "because of an internal server error")})
   @DeleteMapping("/{statementId}")
   public ResponseEntity<String> deleteBankStatement(
-      @PathVariable(name = "statementId") Long statementId, Principal principal) throws
-      NoSuchElementException {
+      @PathVariable(name = "statementId") Long statementId, Principal principal)
+      throws NoSuchElementException {
     log.info("Deleting bank statement with id: {} for user: {}", statementId, principal.getName());
     bankStatementService.deleteBankStatement(statementId, principal);
     return ResponseEntity.ok("Bank statement deleted");

@@ -75,24 +75,7 @@ public class BadgeControllerTest {
         assertThat(badgeController).isNotNull();
     }
 
-/*
 
-    @DisplayName("Test that badge controller returns a badge correctly.")
-    @Test
-    @WithMockUser(roles = "USER")
-    public void getBadgeByIdReturnsCorrectJson() throws Exception {
-
-        when(badgeService.getBadgeById(any(BadgeIdDto.class))).thenReturn(BadgeUtility.createBadgePreviewDto());
-
-        mockMvc
-                .perform(get(url + "badge").with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(BadgeUtility.createBadgeIdDtoJson()))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().json(BadgeUtility.createBadgePreviewDtoJson()));
-    }
-*/
 
 
 
@@ -115,24 +98,5 @@ public class BadgeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(BadgeUtility.createBadgePreviewDtoListJson()));
     }
-
-/*
-
-    @DisplayName("Test that the badge controller responds correctly to delete request.")
-    @Test
-    @WithMockUser
-    public void controllerDeletesBadgeCorrectly() throws Exception {
-
-      //  doNothing().when(badgeService.deleteBadgeById(any(Principal.class), any(BadgeIdDto.class)));
-
-        mockMvc
-                .perform(delete(url + "badge").with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(BadgeUtility.createBadgeIdDtoJson()))
-                .andExpect(status().isOk());
-    }
-
-*/
-
 
 }

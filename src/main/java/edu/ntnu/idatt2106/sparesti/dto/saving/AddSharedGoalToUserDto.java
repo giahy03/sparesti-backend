@@ -1,8 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.dto.saving;
 
-import lombok.Builder;
-import lombok.Setter;
-import lombok.Getter;
+import lombok.*;
 
 /**
  *
@@ -11,6 +9,8 @@ import lombok.Getter;
 @Setter
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AddSharedGoalToUserDto {
     private String joinCode;
 }

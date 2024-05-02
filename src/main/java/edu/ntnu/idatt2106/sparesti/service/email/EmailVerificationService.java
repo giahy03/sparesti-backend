@@ -4,6 +4,7 @@ import edu.ntnu.idatt2106.sparesti.dto.email.EmailCodeExpirationDto;
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
 import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
 import edu.ntnu.idatt2106.sparesti.exception.email.VerificationCodeExpiredException;
+import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import edu.ntnu.idatt2106.sparesti.repository.EmailCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
@@ -127,14 +128,27 @@ public class EmailVerificationService {
   }
 
   /**
-   * Verifies if the provided email already exists in the database.
+   * Verifies if the provided email is available to use by checking if it already exists
+   * in the database.
    *
    * @param email the email address to be verified.
    * @throws EmailAlreadyExistsException If the email already exists.
    */
-  public void verifyEmailExist(String email) {
+  public void verifyEmailIsAvailable(String email) {
     if (userRepository.findUserByEmailIgnoreCase(email).isPresent()) {
       throw new EmailAlreadyExistsException();
+    }
+  }
+
+  /**
+   * Verifies if the provided email already exists in the database.
+   *
+   * @param email the email address to be verified.
+   * @throws UserNotFoundException If the user based on email is not found.
+   */
+  public void verifyEmailExist(String email) {
+    if (userRepository.findUserByEmailIgnoreCase(email).isEmpty()) {
+      throw new UserNotFoundException("User with email " + email + " not found.");
     }
   }
 

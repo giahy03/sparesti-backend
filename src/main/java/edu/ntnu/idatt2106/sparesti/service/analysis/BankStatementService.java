@@ -6,13 +6,16 @@ import edu.ntnu.idatt2106.sparesti.filehandling.BankStatementReader;
 import edu.ntnu.idatt2106.sparesti.filehandling.DnbReader;
 import edu.ntnu.idatt2106.sparesti.filehandling.HandelsBankenReader;
 import edu.ntnu.idatt2106.sparesti.mapper.TransactionMapper;
+import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
 import edu.ntnu.idatt2106.sparesti.model.banking.Bank;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import edu.ntnu.idatt2106.sparesti.repository.AnalysisItemRepository;
 import edu.ntnu.idatt2106.sparesti.repository.BankStatementRepository;
 import edu.ntnu.idatt2106.sparesti.repository.TransactionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import jakarta.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,6 +52,9 @@ public class BankStatementService {
   private final BankStatementRepository bankStatementRepository;
   @NonNull
   private final TransactionRepository transactionRepository;
+  @NonNull
+  private final AnalysisItemRepository analysisItemRepository;
+
 
   /**
    * Saves a bank statement.
@@ -59,6 +65,20 @@ public class BankStatementService {
   public BankStatement saveBankStatement(BankStatement bankStatement) {
     return bankStatementRepository.save(bankStatement);
   }
+
+  @Transactional
+  public void deleteAnalysisItems(BankStatementAnalysis analysis) {
+    log.info("BEFORE DELETE:");
+    analysisItemRepository.findAllByBankStatementAnalysis(analysis).forEach(
+        a -> log.info("AnalysisItem: {} {}", a.getId(), a.getExpectedValue())
+    );
+    analysisItemRepository.deleteAnalysisItemByBankStatementAnalysis(analysis);
+    log.info("AFTER DELETE:");
+    analysisItemRepository.findAll().forEach(
+        a -> log.info("AnalysisItem: {} {}", a.getId(), a.getExpectedValue())
+    );
+  }
+
 
   /**
    * Saves a bank statement from a file.

@@ -7,6 +7,7 @@ import edu.ntnu.idatt2106.sparesti.dto.user.edit.IncomeChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.LastNameChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.LivingStatusChangeDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.PasswordChangeDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.edit.ResetPasswordDto;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2106.sparesti.mapper.UserInfoMapper;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Service;
  * It uses the {@link UserRepository} to perform the operations in the database.
  *
  * @author Ramtin Samavat
- * @version  1.0
+ * @version 1.0
  */
 @Service
 @RequiredArgsConstructor
@@ -44,16 +45,36 @@ public class UserService {
    * The method edits the password of the user.
    *
    * @param passwordChangeDto The DTO containing old and new password.
-   * @param email The email of the user.
+   * @param email             The email of the user.
    */
   public void editPassword(@NonNull PasswordChangeDto passwordChangeDto, @NonNull String email) {
     User user = findUser(email);
 
     UserValidator.validatePasswordChange(user.getPassword(),
-            passwordChangeDto.getOldPassword(),
-            passwordChangeDto.getNewPassword());
+        passwordChangeDto.getOldPassword(),
+        passwordChangeDto.getNewPassword());
 
     user.setPassword(passwordEncoder.encode(passwordChangeDto.getNewPassword()));
+
+    userRepository.save(user);
+  }
+
+  /**
+   * The method resets the user's password by verifying the email verification code, validating
+   * the new password, updating the user's password in the database, and saving the changes.
+   *
+   * @param resetPasswordDto The DTO containing the email, verification code, and new password.
+   */
+  public void resetPassword(@NonNull ResetPasswordDto resetPasswordDto) {
+
+    emailVerificationService.verifyEmailCode(resetPasswordDto.getEmail(),
+        resetPasswordDto.getEmailVerificationCode());
+
+    UserValidator.validatePassword(resetPasswordDto.getNewPassword());
+
+    User user = findUser(resetPasswordDto.getEmail());
+
+    user.setPassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
 
     userRepository.save(user);
   }
@@ -62,7 +83,7 @@ public class UserService {
    * The method edits the first name of the user.
    *
    * @param firstNameChangeDto The DTO containing new first name.
-   * @param email The email of the user.
+   * @param email              The email of the user.
    */
   public void editFirstName(@NonNull FirstNameChangeDto firstNameChangeDto, @NonNull String email) {
     UserValidator.validateFirstName(firstNameChangeDto.getNewFirstName());
@@ -78,7 +99,7 @@ public class UserService {
    * The method edits the last name of the user.
    *
    * @param lastNameChangeDto The DTO containing new last name.
-   * @param email The email of the user.
+   * @param email             The email of the user.
    */
   public void editLastName(@NonNull LastNameChangeDto lastNameChangeDto, @NonNull String email) {
     UserValidator.validateLastName(lastNameChangeDto.getNewLastName());
@@ -94,7 +115,7 @@ public class UserService {
    * The method edits the user's income.
    *
    * @param incomeChangeDto The DTO containing new income.
-   * @param email The email of the user.
+   * @param email           The email of the user.
    */
   public void editIncome(@NonNull IncomeChangeDto incomeChangeDto, @NonNull String email) {
     UserValidator.validateIncome(incomeChangeDto.getNewIncome());
@@ -110,7 +131,7 @@ public class UserService {
    * The method edits the last name of the user.
    *
    * @param livingStatusChangeDto The DTO containing new last name.
-   * @param email The email of the user.
+   * @param email                 The email of the user.
    */
   public void editLivingStatus(@NonNull LivingStatusChangeDto livingStatusChangeDto,
                                @NonNull String email) {
@@ -118,7 +139,7 @@ public class UserService {
     User user = findUser(email);
 
     SsbLivingStatus newLivingStatus = SsbLivingStatus.fromInteger(
-            livingStatusChangeDto.getNewLivingStatus());
+        livingStatusChangeDto.getNewLivingStatus());
 
     user.getUserInfo().setLivingStatus(newLivingStatus);
 
@@ -146,7 +167,7 @@ public class UserService {
    * The method adds additional information about the user.
    *
    * @param userInfoDto The DTO containing user additional information.
-   * @param email The email of the user.
+   * @param email       The email of the user.
    */
   public void addUserInfo(@NonNull UserInfoDto userInfoDto, @NonNull String email) {
     UserValidator.validateIncome(userInfoDto.getIncome());
@@ -165,7 +186,7 @@ public class UserService {
   /**
    * The method deletes a user by email.
    *
-   * @param email The email of the user to be deleted.
+   * @param email            The email of the user to be deleted.
    * @param verificationCode The verification code used to authenticate the deletion request.
    */
   public void deleteUserByEmail(@NonNull String email, @NonNull String verificationCode) {
@@ -183,6 +204,6 @@ public class UserService {
    */
   public User findUser(@NonNull String email) throws UserNotFoundException {
     return userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
-            new UserNotFoundException("User with email " + email + " not found."));
+        new UserNotFoundException("User with email " + email + " not found."));
   }
 }

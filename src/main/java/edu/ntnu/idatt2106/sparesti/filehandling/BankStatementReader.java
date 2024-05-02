@@ -2,7 +2,6 @@ package edu.ntnu.idatt2106.sparesti.filehandling;
 
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import java.io.File;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -35,22 +34,15 @@ public abstract class BankStatementReader {
       bankStatement.setTransactions(new ArrayList<>());
 
       String firstPageText = readPageToText(1, file);
-      log.info("First page text: " + firstPageText);
+      log.info("First page text: {}", firstPageText);
       readFirstPage(firstPageText, bankStatement);
 
       for (int i = 2; i < document.getNumberOfPages() + 1; i++) {
         String pageText = readPageToText(i, file);
-        try {
-          readStandardPage(pageText, bankStatement);
-        } catch (Exception e) {
-          log.error("Error reading SpareBank1 statement from file:" + file, e);
-          throw new IllegalArgumentException(
-              "Error reading SpareBank1 statement from file:" + file + "are you sure the file is "
-                  + "in a valid format?");
-        }
+        readStandardPage(pageText, bankStatement);
       }
 
-      log.info("finalised reading statement from file:" + file.getName());
+      log.info("finalised reading statement from file:{}", file.getName());
 
       if (bankStatement.getTransactions().isEmpty()) {
         throw new IllegalArgumentException(
@@ -59,27 +51,8 @@ public abstract class BankStatementReader {
 
       return bankStatement;
     } catch (Exception e) {
-      log.error("Error reading SpareBank1 statement from file:" + file.toString(), e);
+      log.error("Error reading bank statement from file: {}", file.toString(), e);
       throw new IllegalArgumentException("Error reading SpareBank1 statement from file:" + file);
-    }
-  }
-
-  /**
-   * Just for testing purposes. Should not be used in production.
-   *
-   * @param fileLocation The location of the file to read.
-   */
-  public void logStatementFully(Path fileLocation) {
-    try (PDDocument document = Loader.loadPDF(new File(fileLocation.toString()))) {
-      log.info("logging file: " + fileLocation);
-      PDFTextStripper pdfStripper = new PDFTextStripper();
-      String text = pdfStripper.getText(document);
-      String[] splitText = text.split("\n");
-      for (int i = 0; i < splitText.length; i++) {
-        log.info("i: " + i + ", " + splitText[i]);
-      }
-    } catch (Exception e) {
-      log.error("Error reading SpareBank1 statement from file:" + fileLocation.toString(), e);
     }
   }
 
@@ -95,7 +68,7 @@ public abstract class BankStatementReader {
       PDFTextStripper stripper = new PDFTextStripper();
       stripper.setStartPage(pageNumber);
       stripper.setEndPage(pageNumber);
-      return stripper.getText(document).replaceAll("\r", "");
+      return stripper.getText(document).replace("\r", "");
     } catch (Exception e) {
       throw new IllegalArgumentException("Invalid pdf file");
     }

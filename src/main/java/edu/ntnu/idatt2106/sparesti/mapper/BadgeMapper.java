@@ -1,9 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.mapper;
 
-import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;
-import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +19,10 @@ import java.time.LocalDate;
 public class BadgeMapper {
 
     public BadgePreviewDto mapToBadgePreviewDto(Badge badge) {
+
         return BadgePreviewDto.builder()
-                .id(badge.getId())
                 .achievement(badge.getAchievement().getCategory())
                 .threshold(badge.getAchievement().getThresholds().get(badge.getLevel()))
-                .level(badge.getLevel())
                 .achievementDate(badge.getAchievedDate())
                 .build();
     }
@@ -37,15 +34,6 @@ public class BadgeMapper {
                 .achievedDate(LocalDate.now())
                 .level(createBadgeDto.getLevel())
                 .achievement(createBadgeDto.getAchievement())
-                .build();
-    }
-
-    public BadgeCreateDto mapToBadgeCreateDto(BadgeCreateRequestDto createBadgeRequestDto, Achievement achievement) {
-
-        return BadgeCreateDto.builder()
-                .achievementDate(createBadgeRequestDto.getAchievementDate())
-                .level(createBadgeRequestDto.getLevel())
-                .achievement(achievement)
                 .build();
     }
 
