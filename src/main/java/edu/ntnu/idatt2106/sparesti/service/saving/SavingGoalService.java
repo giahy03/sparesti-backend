@@ -50,7 +50,7 @@ public class SavingGoalService {
         String email = principal.getName();
         User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
                 new UserNotFoundException("User with email " + email + " not found"));
-        
+        System.out.println(savingGoalCreationRequestDto);
         SavingGoal createdSavingGoal = savingGoalMapper.mapToSavingGoal(savingGoalCreationRequestDto, user);
         SavingContribution startingContribution = SavingContribution.builder()
                 .user(user)
