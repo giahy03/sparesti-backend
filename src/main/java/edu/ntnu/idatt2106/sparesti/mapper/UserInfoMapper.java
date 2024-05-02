@@ -5,7 +5,6 @@ import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
@@ -29,12 +28,10 @@ public interface UserInfoMapper {
    * @param userInfoDto UserInfoDto object to be converted.
    * @return UserInfo entity converted from UserInfoDto.
    */
-  @Mappings({
-      @Mapping(target = "id", ignore = true),
-      @Mapping(target = "income", source = "income"),
-      @Mapping(target = "livingStatus", qualifiedByName = "mapLivingStatus"),
-      @Mapping(target = "user", ignore = true),
-  })
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "income", source = "income")
+  @Mapping(target = "livingStatus", qualifiedByName = "mapLivingStatus")
+  @Mapping(target = "user", ignore = true)
   UserInfo toUserInfo(UserInfoDto userInfoDto);
 
   /**
