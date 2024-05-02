@@ -2,8 +2,12 @@ package edu.ntnu.idatt2106.sparesti.model.news.util;
 
 import edu.ntnu.idatt2106.sparesti.dto.NewsDto;
 
+/**
+ * Utility class to support tests of news.
+ *
+ * @author Hanne-Sofie Søreide
+ */
 public class NewsUtility {
-
 
     public static String createNewsDtoJson() {
 
