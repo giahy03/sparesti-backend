@@ -1,6 +1,9 @@
 package edu.ntnu.idatt2106.sparesti.model.user.util;
 
+import edu.ntnu.idatt2106.sparesti.dto.user.UserDetailsDto;
+import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.PasswordChangeDto;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 
 /**
  * Utility class that creates objects to support testing classes.
@@ -50,6 +53,45 @@ public class UserUtility {
     }
 
 
+    public static String createUserDetailsDtoJson() {
+        String livingStatus = SsbLivingStatus.fromInteger(2).getStatus();
+        return  "{"
+                + "\"firstName\":\"Ole\","
+                + "\"lastName\":\"Hansen\","
+                + "\"income\":50000.0,"
+                + "\"livingStatus\":\"LivingStatus\""
+                + "}";
+    }
 
+    public static UserDetailsDto createUserDetailsDto() {
+        return UserDetailsDto.builder()
+                .firstName("Ole")
+                .lastName("Hansen")
+                .income(50000.0)
+                .livingStatus("LivingStatus")
+                .build();
+    }
 
+    public static UserInfoDto createUserInfoDto() {
+
+        return UserInfoDto.builder()
+                .income(30000.0)
+                .livingStatus(2)
+                .build();
+    }
+
+    public static String createUserInfoDtoJson() {
+        return "{"
+                + "\"income\":50000.0,"
+                + "\"livingStatus\":2"
+                + "}";
+    }
+
+    public static String createResetPasswordDtoJson() {
+        return "{"
+                + "\"email\":\"abc@email.com\","
+                + "\"emailVerificationCode\":\"CODE\","
+                + "\"newPassword\":\"long-password\""
+                + "}";
+    }
 }

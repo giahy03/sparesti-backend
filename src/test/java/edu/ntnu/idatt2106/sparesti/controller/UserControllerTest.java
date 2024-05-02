@@ -16,6 +16,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -24,8 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -116,6 +117,54 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("Test retrieval of user details")
+    @Test
+    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+    public void controller_getUserDetails() throws Exception {
+
+        when(userService.getUserDetails("abc@email.com")).thenReturn(UserUtility.createUserDetailsDto());
+
+        mockMvc
+                .perform(get(url + "/details").with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(UserUtility.createUserDetailsDtoJson()));
+    }
+
+    @DisplayName("Test registration of additional user information")
+    @Test
+    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+    public void controller_registerAdditionalUserInfo() throws Exception {
+
+        mockMvc
+                .perform(post(url + "/info").with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(UserUtility.createUserInfoDtoJson()))
+                .andExpect(status().isCreated());
+    }
+
+
+    @DisplayName("Test deletion of user account")
+    @Test
+    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+    public void controller_deleteUserAccount() throws Exception {
+
+        mockMvc
+                .perform(delete(url).with(csrf())
+                        .param("verificationCode","CODE"))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("Test reset of user password")
+    @Test
+    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+    public void controller_resetUserPassword() throws Exception {
+
+        mockMvc
+                .perform(put(url + "/password-reset").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(UserUtility.createResetPasswordDtoJson()))
+                .andExpect(status().isOk());
+    }
 
 
 }
