@@ -14,8 +14,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
     info = @Info(
         title = "QuizApp API",
         version = "1.0",
-        description = "API for SpareSti, a personal economy app. The app is part of the final " +
-            "project of IDATT-2106 Systemutvikling 2.",
+        description = "API for SpareSti, a personal economy app. The app is part of the final "
+            + "project of IDATT-2106 Systemutvikling 2.",
         contact = @Contact(
             email = "tobiasof@ntnu.no"
         )

@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 
 /**
- * Reader for HandelsBanken bank statements.
+ * Reader for dnb {@link BankStatement bank statements}.
  *
  * @author Tobias Offtedal
  */
@@ -35,13 +35,14 @@ public class DnbReader extends BankStatementReader {
       throw new IllegalArgumentException("Could not find account number in DNB statement");
     }
 
-    String[] accountLineSplit = accountLine.getFirst().get().split("\\s+");
-
+    String[] accountLineSplit = accountLine
+        .getFirst()
+        .orElseThrow()
+        .split("\\s+");
 
     bankStatement.setAccountNumber(accountLineSplit[2]);
     Optional<String> accountName = getAccountName(accountLineSplit);
     if (accountName.isPresent()) {
-      log.info("Account name is: {}", accountName.get());
       bankStatement.setAccountName(accountName.get());
     } else {
       bankStatement.setAccountName("Unknown");
@@ -60,7 +61,6 @@ public class DnbReader extends BankStatementReader {
    */
   @Override
   public void readStandardPage(String pageText, BankStatement bankStatement) {
-    log.debug("Reading new page");
 
     String[] splitText = pageText.split("\n");
     int lineIndex = 0;
@@ -95,29 +95,27 @@ public class DnbReader extends BankStatementReader {
         continue;
       }
       try {
-        Transaction parsedTransaction = parseTransaction(currentString.toString(), true);
+        Transaction parsedTransaction = parseTransaction(currentString.toString());
 
         bankStatement.getTransactions().add(parsedTransaction);
 
-        log.debug("{} was a valid transaction", currentString);
         currentString = new StringBuilder();
       } catch (Exception e) {
-        log.debug("could not parse: {}", e.getMessage());
+        //If this line is reached, the line is not a transaction, but this error
+        // is ignored as it is expected to happen
       }
     }
   }
 
   /**
-   * Parses a transaction from a line in the SpareBank1 pdf.
+   * Parses a transaction from a line in the DNB pdf. If a part of the transaction is not
+   * valid, the method will set it to a default value.
    *
-   * @param line     The line to parse.
-   * @param incoming Whether the transaction is incoming or outgoing.
+   * @param line The line to parse.
    * @return The parsed transaction.
    * @throws IllegalArgumentException If the line is not a transaction
    */
-  private Transaction parseTransaction(String line, boolean incoming) {
-    //TODO parse the transaction so that incoming is not always false
-    log.info("Parsing transaction: {}", line);
+  private Transaction parseTransaction(String line) {
     String[] splitLine = line.trim().split("\\s+");
 
     int archiveReference = Integer.parseInt(splitLine[splitLine.length - 1]);
@@ -132,13 +130,13 @@ public class DnbReader extends BankStatementReader {
           Arrays.copyOfRange(splitLine, 2, splitLine.length - 2));
       transaction.setDescription(description);
     } catch (Exception e) {
-      log.info("Error while parsing description: {}", e.getMessage());
+      transaction.setDescription("Unknown");
     }
     try {
       MonthDay date = MonthDay.parse(splitLine[splitLine.length - 2], formatter);
       transaction.setDate(date);
     } catch (Exception e) {
-      log.info("Error while parsing date: {}", e.getMessage());
+      transaction.setDate(MonthDay.now());
     }
 
     try {
@@ -148,14 +146,19 @@ public class DnbReader extends BankStatementReader {
       );
       transaction.setAmount(amount);
     } catch (Exception e) {
-      log.info("Error while parsing amount: {}", e.getMessage());
+      transaction.setAmount(0.0);
     }
 
-    transaction.setIsIncoming(incoming);
+    transaction.setIsIncoming(true);
     return transaction;
   }
 
-
+  /**
+   * Gets the account name from the line containing the account number and date.
+   *
+   * @param accountAndDateLineSplit The split account and date line.
+   * @return The account name.
+   */
   private Optional<String> getAccountName(String[] accountAndDateLineSplit) {
     for (int i = accountAndDateLineSplit.length; i > 0; i--) {
       try {
