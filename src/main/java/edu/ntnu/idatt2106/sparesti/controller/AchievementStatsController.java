@@ -2,8 +2,9 @@ package edu.ntnu.idatt2106.sparesti.controller;
 
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
+import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
+import edu.ntnu.idatt2106.sparesti.repository.AchievementStatsRepository;
 import edu.ntnu.idatt2106.sparesti.service.achievementStats.AchievementStatsService;
-import edu.ntnu.idatt2106.sparesti.service.badge.BadgeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,6 +32,8 @@ import java.security.Principal;
 public class AchievementStatsController {
 
     private final AchievementStatsService achievementStatsService;
+    private final AchievementRepository achievementRepository;
+    private final AchievementStatsRepository achievementStatsRepository;
 
     /**
      * Responds to post requests that specify an achievement type to update the user stats for and,
@@ -68,5 +71,30 @@ public class AchievementStatsController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
+
+    /**
+     * Get the total amount saved in Sparesti by the current user.
+     *
+     * @param principal The authenticated user.
+     * @return The toal amount saved by the user.
+     */
+    @Operation(summary = "Get the total amount of money saved by the current user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "The total saved amount was retrieved",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = Double.class))
+                    }),
+            @ApiResponse(responseCode = "500", description = "Unknown internal server error", content = @Content)
+    })
+    @GetMapping("/total")
+    public ResponseEntity<Double> getTotalSavedByUser(Principal principal) {
+
+        log.info("Returning total saved amount by user: " + principal.getName());
+        double total = achievementStatsRepository.findAchievementStatsByUserEmail(principal.getName()).orElseThrow().getTotalSaved();
+        log.info("Total saved amount in Sparesti: " + total);
+
+        return new ResponseEntity<>(total, HttpStatus.OK);
+    }
+
 
 }

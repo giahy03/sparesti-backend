@@ -5,6 +5,7 @@ import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
+import edu.ntnu.idatt2106.sparesti.model.banking.Bank;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
@@ -15,8 +16,20 @@ import edu.ntnu.idatt2106.sparesti.model.savingGoal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
-import edu.ntnu.idatt2106.sparesti.repository.*;
+import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
+import edu.ntnu.idatt2106.sparesti.repository.AchievementStatsRepository;
+import edu.ntnu.idatt2106.sparesti.repository.BadgeRepository;
+import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
+import edu.ntnu.idatt2106.sparesti.repository.SavingContributionRepository;
+import edu.ntnu.idatt2106.sparesti.repository.SavingGoalRepository;
+import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import edu.ntnu.idatt2106.sparesti.service.analysis.BankStatementService;
+import java.io.File;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -47,6 +60,7 @@ public class LoadTestData implements CommandLineRunner {
   private final SharedChallengeCodeRepository sharedChallengeCodeRepository;
   private final SavingGoalRepository savingGoalRepository;
   private final SavingContributionRepository savingContributionRepository;
+  private final BankStatementService bankStatementService;
 
   @Override
   public void run(String... args) throws Exception {
@@ -252,6 +266,12 @@ public class LoadTestData implements CommandLineRunner {
     savingContributionRepository.save(savingContribution1);
     savingContributionRepository.save(savingContribution2);
     savingContributionRepository.save(savingContribution3);
+
+    bankStatementService.readAndSaveBankStatement(new File("src/main/resources"
+        + "/bankstatements/handelsbanken/handelsbankenExample.pdf"), user, Bank.HANDELSBANKEN);
+    bankStatementService.readAndSaveBankStatement(new File(
+            "src/main/resources/bankstatements/sparebank1/sparebank1example.pdf"), user,
+        Bank.HANDELSBANKEN);
 
   }
 }

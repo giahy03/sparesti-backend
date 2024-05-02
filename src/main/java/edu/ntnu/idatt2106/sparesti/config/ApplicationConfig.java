@@ -1,6 +1,5 @@
 package edu.ntnu.idatt2106.sparesti.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -93,15 +92,5 @@ public class ApplicationConfig {
   @Bean
   public RestTemplate restTemplate() {
     return new RestTemplate();
-  }
-
-  /**
-   * The method defines an ObjectMapper bean for handling JSON data.
-   *
-   * @return An implementation of ObjectMapper.
-   */
-  @Bean
-  public ObjectMapper objectMapper() {
-    return new ObjectMapper();
   }
 }

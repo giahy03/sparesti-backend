@@ -26,8 +26,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BankStatementAnalysisService {
-  @NonNull SsbDataService ssbDataService;
-  @NonNull TransactionService transactionService;
+  @NonNull
+  SsbDataService ssbDataService;
+  @NonNull
+  TransactionService transactionService;
 
   /**
    * Analyzes a bank statement and compares it to the expected usage of the given demography.
@@ -37,7 +39,9 @@ public class BankStatementAnalysisService {
    * @return The analysis of the bank statement.
    */
   public BankStatementAnalysis analyze(@NonNull BankStatement bankStatement,
-                                       @NonNull UserInfo userInfo)
+                                       @NonNull UserInfo userInfo,
+                                       boolean categorize
+  )
       throws ExternalApiException, NullPointerException {
     HashMap<SsbPurchaseCategory, Double> expectedUsage;
     try {
@@ -48,7 +52,12 @@ public class BankStatementAnalysisService {
     }
 
     try {
-      categorizeTransactions(bankStatement);
+      if (categorize) {
+        log.info("Categorizing transactions in bank statement.");
+        categorizeTransactions(bankStatement);
+      } else {
+        categorizeToOtherIfNotSet(bankStatement);
+      }
     } catch (Exception e) {
       throw new ExternalApiException("There was an error categorizing transactions using openai.");
     }
@@ -89,6 +98,18 @@ public class BankStatementAnalysisService {
   }
 
   /**
+   * Categorizes the transactions in the bank statement to "OTHER" if they are not already set.
+   * @param bankStatement The bank statement to categorize.
+   */
+  private void categorizeToOtherIfNotSet(@NonNull BankStatement bankStatement) {
+    bankStatement.getTransactions().forEach(transaction -> {
+      if (transaction.getCategory() == null) {
+        transaction.setCategory(SsbPurchaseCategory.OTHER);
+      }
+    });
+  }
+
+  /**
    * Returns the actual usage of the bank statement, per category.
    *
    * @param bankStatement The bank statement to analyze.
@@ -104,9 +125,9 @@ public class BankStatementAnalysisService {
         .stream()
         .filter(transaction -> !transaction.getIsIncoming())
         .forEach(transaction -> {
-      SsbPurchaseCategory category = transaction.getCategory();
-      actualUsage.put(category, actualUsage.get(category) + transaction.getAmount());
-    });
+          SsbPurchaseCategory category = transaction.getCategory();
+          actualUsage.put(category, actualUsage.get(category) + transaction.getAmount());
+        });
     return actualUsage;
   }
 }

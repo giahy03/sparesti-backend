@@ -93,24 +93,29 @@ public class BankStatementService {
     final User user = userRepository.findUserByEmailIgnoreCase(principal.getName())
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+    File tempFile = File.createTempFile("bank-statement-", "-" + file.getOriginalFilename());
+    file.transferTo(tempFile);
+    BankStatement bankStatement = readAndSaveBankStatement(tempFile, user, bank);
+    Files.delete(tempFile.toPath());
+    return bankStatement;
+  }
+
+  public BankStatement readAndSaveBankStatement(File file, User user, Bank bank)
+      throws NoSuchElementException {
+
     BankStatementReader bankStatementReader = switch (bank) {
       case Bank.DNB -> new DnbReader();
       case Bank.HANDELSBANKEN, Bank.SPAREBANK1, Bank.OTHER -> new HandelsBankenReader();
     };
 
-    File tempFile = File.createTempFile("bank-statement-", "-" + file.getOriginalFilename());
-    file.transferTo(tempFile);
-
-    BankStatement bankStatement = bankStatementReader.readStatement(tempFile);
+    BankStatement bankStatement = bankStatementReader.readStatement(file);
 
 
-    if (file.getOriginalFilename() == null) {
+    if (file.getName().isEmpty()) {
       bankStatement.setFileName("unnamed-bank-statement" + bankStatement.getTimestamp());
     } else {
-      bankStatement.setFileName(file.getOriginalFilename());
+      bankStatement.setFileName(file.getName());
     }
-
-    Files.delete(tempFile.toPath());
 
     bankStatement.setUser(user);
     bankStatement.getTransactions()
@@ -196,15 +201,9 @@ public class BankStatementService {
     List<TransactionDto> transactionDtoList = new ArrayList<>();
 
     for (Transaction transaction : bankStatement) {
-      Month month =
-          transaction.getDate().getMonth(); // Assuming getMonth() returns the month (0-indexed)
-      int day =
-          transaction.getDate().getDayOfMonth(); // Assuming getDay() returns the day of the month
-      int year = transaction.getBankStatement().getTimestamp().getYear();
 
       TransactionDto transactionDto =
           TransactionMapper.INSTANCE.transactionToTransactionDto(transaction);
-      transactionDto.setFullDate(LocalDate.of(year, month, day));
       transactionDtoList.add(transactionDto);
     }
     return transactionDtoList;

@@ -23,5 +23,9 @@ public class StreakUtility {
             .build();
   }
 
+  public static String createStreakRequestDtoJson() {
+        return "{\"increment\": true}";
+  }
+
 
 }
