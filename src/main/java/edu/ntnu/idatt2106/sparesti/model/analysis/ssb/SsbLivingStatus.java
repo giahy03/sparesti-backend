@@ -38,7 +38,9 @@ public enum SsbLivingStatus {
       case 1 -> LIVING_ALONE;
       case 2 -> COUPLE_WITHOUT_CHILDREN;
       case 3, 4 -> COUPLE_WITH_CHILDREN;
-      default -> throw new IllegalArgumentException("Invalid integer value for SsbLivingStatus: " + value);
+      default -> throw new IllegalArgumentException(
+          "Invalid integer value for SsbLivingStatus: " + value
+      );
     };
   }
 }
