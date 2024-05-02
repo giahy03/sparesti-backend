@@ -72,7 +72,7 @@ public class AchievementStatsService {
             case NUMBER_OF_SAVING_GOALS_ACHIEVED ->
                     updateSavingGoalsAchieved(user, principal) ? checkGoalsCompleted(principal, user) : 0;
             case EDUCATION ->
-                    updateEducation(user) ? checkEducation(user) : 0;
+                    updateEducation(user);// ? checkEducation(user) : 0;
         };
     }
 
@@ -218,13 +218,13 @@ public class AchievementStatsService {
      * @param user The user for which the education stat may be updated.
      * @return True if the user's stat related to reading news is updated, false otherwise.
      */
-    private boolean updateEducation(User user) {
+    private int updateEducation(User user) {
 
         if (user.getStats().isReadNews()){
-            return false;
+            return 0;
         } else {
             user.getStats().setReadNews(true);
-            return true;
+            return 1;
         }
     }
 
