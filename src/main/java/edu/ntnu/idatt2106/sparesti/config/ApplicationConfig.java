@@ -16,7 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Configuration class for the application's security settings.
+ * <p>
+ * Configuration class for the application's settings and beans.
+ * </p>
+ *
  * <p>
  * This code is inspired by a tutorial on YouTube: <a href="https://www.youtube.com/watch?v=KxqlJblhzfI&t=3457s">...</a>
  * </p>
@@ -81,7 +84,6 @@ public class ApplicationConfig {
     return new BCryptPasswordEncoder();
   }
 
-
   /**
    * The method defines a RestTemplate bean for making HTTP requests.
    *
@@ -91,5 +93,4 @@ public class ApplicationConfig {
   public RestTemplate restTemplate() {
     return new RestTemplate();
   }
-
 }
