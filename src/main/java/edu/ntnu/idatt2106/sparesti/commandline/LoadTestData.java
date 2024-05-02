@@ -244,6 +244,7 @@ public class LoadTestData implements CommandLineRunner {
 
     badgeRepository.save(badgeA);
     badgeRepository.save(badgeB);
+    badgeRepository.save(badgeC);
 
     savingGoalRepository.save(savingGoalA);
     savingGoalRepository.save(savingGoalB);
