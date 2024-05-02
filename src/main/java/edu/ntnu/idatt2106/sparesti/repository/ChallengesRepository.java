@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
  *
  * @author Jeffrey Yaw Annor Tabiri
  * @version 1.0
- * @see Challenge
  */
 @Repository
 public interface ChallengesRepository extends JpaRepository<Challenge, Long> {

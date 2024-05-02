@@ -1,9 +1,9 @@
 package edu.ntnu.idatt2106.sparesti.repository;
 
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
 
 
 /**
@@ -15,6 +15,6 @@ import java.util.List;
  */
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-  List<Transaction> findByBankStatement_AccountNumberAndBankStatement_User_Email(String accountNumber, String email, Pageable pageable);
-
+  List<Transaction> findByBankStatement_AccountNumberAndBankStatement_User_Email(
+          String accountNumber, String email, Pageable pageable);
 }
