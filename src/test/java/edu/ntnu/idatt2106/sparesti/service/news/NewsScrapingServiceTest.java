@@ -1,5 +1,12 @@
 package edu.ntnu.idatt2106.sparesti.service.news;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+
 import edu.ntnu.idatt2106.sparesti.dto.NewsDto;
 import java.io.IOException;
 import java.util.List;
@@ -13,10 +20,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+
+
+
 
 /**
  * Test class for NewsScrapingService.
@@ -36,7 +42,7 @@ class NewsScrapingServiceTest {
   Elements elements;
 
   @Test
-  void Service_ScrapeDN_ReturnsNewsDtoList() throws IOException {
+  void service_ScrapeDn_ReturnsNewsDtoList() throws IOException {
 
     // Arrange
     mockStatic(Jsoup.class);

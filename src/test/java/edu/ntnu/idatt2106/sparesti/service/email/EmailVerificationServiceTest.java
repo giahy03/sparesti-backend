@@ -1,25 +1,28 @@
 package edu.ntnu.idatt2106.sparesti.service.email;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
 import edu.ntnu.idatt2106.sparesti.exception.email.VerificationCodeExpiredException;
-import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
+import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.EmailCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
 
 /**
  * A test class for the EmailVerificationService class.
@@ -50,32 +53,42 @@ class EmailVerificationServiceTest {
   }
 
   @Test
-  void Service_SendCodeToEmail_ThenVerified() {
+  @DisplayName("Service send code to email should save code")
+  void service_SendCodeToEmail_ThenVerified() {
     emailVerificationService.sendCodeToEmail(user.getEmail());
     verify(emailCodeRepository).save(any(EmailCode.class));
   }
 
   @Test
-  void Service_VerifyEmailCode_DoesNotThrowExceptions() {
-    when(emailCodeRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(EmailVerificationUtility.createVerificationCodeA(user.getEmail())));
+  @DisplayName("Service verify email code should not throw exceptions")
+  void service_VerifyEmailCode_DoesNotThrowExceptions() {
+    when(emailCodeRepository.findByEmail(user.getEmail())).thenReturn(
+            Optional.of(EmailVerificationUtility.createVerificationCodeA(user.getEmail())));
     assertDoesNotThrow(() -> emailVerificationService.verifyEmailCode(user.getEmail(), "123456"));
   }
 
   @Test
-  void Service_VerifyEmailCode_ThrowsExceptions() {
-    when(emailCodeRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(EmailVerificationUtility.createVerificationCodeB(user.getEmail())));
-    assertThrows(VerificationCodeExpiredException.class, () -> emailVerificationService.verifyEmailCode(user.getEmail(), "123456"));
-    assertThrows(IllegalArgumentException.class, () -> emailVerificationService.verifyEmailCode(user.getEmail(), "12345"));
+  @DisplayName("Service verify email code should throw exceptions")
+  void service_VerifyEmailCode_ThrowsExceptions() {
+    when(emailCodeRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(
+            EmailVerificationUtility.createVerificationCodeB(user.getEmail())));
+    assertThrows(VerificationCodeExpiredException.class, () ->
+            emailVerificationService.verifyEmailCode(user.getEmail(), "123456"));
+    assertThrows(IllegalArgumentException.class,
+            () -> emailVerificationService.verifyEmailCode(user.getEmail(), "12345"));
   }
 
   @Test
-  void Service_VerifyEmailIsAvailable_ThrowsException() {
+  @DisplayName("Service verify email is available should not throw exception")
+  void service_VerifyEmailIsAvailable_ThrowsException() {
     when(userRepository.findUserByEmailIgnoreCase(user.getEmail())).thenReturn(Optional.of(user));
-    assertThrows(EmailAlreadyExistsException.class, () -> emailVerificationService.verifyEmailIsAvailable(user.getEmail()));
+    assertThrows(EmailAlreadyExistsException.class, () ->
+            emailVerificationService.verifyEmailIsAvailable(user.getEmail()));
   }
 
   @Test
-  void Service_ClearEmailCode_VerifyDelete() {
+  @DisplayName("Service clear email code should delete all expired codes")
+  void service_ClearEmailCode_VerifyDelete() {
     emailVerificationService.cleanupExpiredCodes();
     verify(emailCodeRepository).deleteAllByExpiryTimestamp(any(LocalDateTime.class));
   }

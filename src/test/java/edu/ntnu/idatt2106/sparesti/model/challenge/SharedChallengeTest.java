@@ -1,14 +1,16 @@
 package edu.ntnu.idatt2106.sparesti.model.challenge;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for the SavingChallenge class.
@@ -27,7 +29,7 @@ class SharedChallengeTest {
 
   @Test
   @DisplayName("Challenge NoArgsConstructor Return Challenge Object")
-  void Challenge_NoArgsConstructor_ReturnChallenge() {
+  void challenge_NoArgsConstructor_ReturnChallenge() {
     //Arrange
     SharedChallenge challenge = new SharedChallenge();
     //Assert
@@ -36,7 +38,7 @@ class SharedChallengeTest {
 
   @Test
   @DisplayName("Challenge AllArgsConstructor Returns Expected Values")
-  void Challenge_AllArgsConstructor_ReturnsExpectedValues() {
+  void challenge_AllArgsConstructor_ReturnsExpectedValues() {
     //Arrange
     Long expectedId = 1L;
     String expectedTitle = "Challenge";
@@ -75,7 +77,7 @@ class SharedChallengeTest {
 
   @Test
   @DisplayName("Challenge SetChallenge Returns Expected Values")
-  void Challenge_SetChallenge_ReturnsExpectedValues() {
+  void challenge_SetChallenge_ReturnsExpectedValues() {
     //Arrange
     String expectedTitle = "newChallenge";
     LocalDate expectedStartDate = LocalDate.parse("2022-12-12");
@@ -109,7 +111,7 @@ class SharedChallengeTest {
 
   @Test
   @DisplayName("Challenge Set With Null Values Throws Exception")
-  void Challenge_SetChallengeWithNull_ThrowsException() {
+  void challenge_SetChallengeWithNull_ThrowsException() {
     //Act & Assert
     assertThrows(NullPointerException.class, () -> challenge.setTitle(null));
     assertThrows(NullPointerException.class, () -> challenge.setStartDate(null));

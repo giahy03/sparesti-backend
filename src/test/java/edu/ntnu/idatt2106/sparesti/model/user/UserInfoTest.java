@@ -1,12 +1,12 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * A test class for the UserInfo class.
@@ -31,7 +31,7 @@ class UserInfoTest {
 
   @Test
   @DisplayName("Test that userInfo constructor returns a userInfo object")
-  void UserInfo_UserInfoConstructor_ReturnUserInfo() {
+  void userInfo_UserInfoConstructor_ReturnUserInfo() {
     // Arrange
     double expectedIncome = 1000;
     SsbLivingStatus expectedLivingStatus = SsbLivingStatus.fromInteger(1);
@@ -53,7 +53,7 @@ class UserInfoTest {
 
   @Test
   @DisplayName("Test UserInfo constructor with no args returns a userInfo object.")
-  void UserInfo_UserInfoConstructorWithNoArgs_ReturnUserInfo() {
+  void userInfo_UserInfoConstructorWithNoArgs_ReturnUserInfo() {
     // Arrange
     double expectedIncome = 0;
     SsbLivingStatus expectedLivingStatus = SsbLivingStatus.fromInteger(0);

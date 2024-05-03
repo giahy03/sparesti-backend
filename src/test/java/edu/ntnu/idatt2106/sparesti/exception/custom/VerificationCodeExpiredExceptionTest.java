@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.ntnu.idatt2106.sparesti.exception.email.VerificationCodeExpiredException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the VerificationCodeExpiredException.
+ *
+ * @author Tobias Oftedal
+ */
 class VerificationCodeExpiredExceptionTest {
   @Test
   void testConstructorWithMessage() {

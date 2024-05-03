@@ -1,5 +1,8 @@
 package edu.ntnu.idatt2106.sparesti.service;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
+
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeRecommendationDto;
 import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
@@ -9,19 +12,21 @@ import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import java.security.Principal;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.security.Principal;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-
+/**
+ * The class tests the automatic challenge service.
+ *
+ * @author Jeffrey Yaw Annor Tabiri
+ */
 @ExtendWith(MockitoExtension.class)
 class AutomaticChallengeServiceTest {
 
@@ -42,9 +47,12 @@ class AutomaticChallengeServiceTest {
     Transaction transaction = ChallengeUtility.createTransaction1();
     transaction.setCategory(SsbPurchaseCategory.EDUCATION);
     transaction.setBankStatement(bankStatement);
-    bankStatement.setTransactions((List.of(transaction, transaction, transaction, transaction, transaction)));
+    bankStatement.setTransactions((
+            List.of(transaction, transaction, transaction, transaction, transaction)));
     AnalysisItem analysisItem = ChallengeUtility.createAnalysisItem1();
-    BankStatementAnalysis bankStatementAnalysis = ChallengeUtility.createBankStatementAnalysis1(List.of(analysisItem, analysisItem, analysisItem, analysisItem, analysisItem));
+    BankStatementAnalysis bankStatementAnalysis =
+            ChallengeUtility.createBankStatementAnalysis1(
+                    List.of(analysisItem, analysisItem, analysisItem, analysisItem, analysisItem));
 
     analysisItem.setBankStatementAnalysis(bankStatementAnalysis);
     bankStatement.setAnalysis(bankStatementAnalysis);
@@ -53,12 +61,15 @@ class AutomaticChallengeServiceTest {
   }
 
   @Test
-  void AutomaticChallenge_GetChallengeRecommendationsForUser() {
+  @DisplayName("Service get challenge recommendations for user should return recommendations")
+  void automaticChallenge_GetChallengeRecommendationsForUser() {
     // Arrange
-    when(userRepository.findUserByEmailIgnoreCase(principal.getName())).thenReturn(java.util.Optional.of(user));
+    when(userRepository.findUserByEmailIgnoreCase(
+            principal.getName())).thenReturn(java.util.Optional.of(user));
 
     // Act
-    List<ChallengeRecommendationDto> listDto = automaticChallengeService.getChallengeRecommendationsForUser(principal);
+    List<ChallengeRecommendationDto> listDto =
+            automaticChallengeService.getChallengeRecommendationsForUser(principal);
 
     // Assert
     assertNotNull(listDto);

@@ -1,7 +1,10 @@
 package edu.ntnu.idatt2106.sparesti.service.email;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,8 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+
 
 /**
  * A test class for the EmailServiceImpl class.
@@ -38,7 +40,8 @@ class EmailServiceImplTest {
   }
 
   @Test
-  void Service_SendEmail_VerifyMailSend() {
+  @DisplayName("Service send email should send email")
+  void service_SendEmail_VerifyMailSend() {
     emailService.sendEmail(emailDetailsDto);
     Mockito.verify(javaMailSender).send(any(SimpleMailMessage.class));
   }

@@ -3,7 +3,7 @@ package edu.ntnu.idatt2106.sparesti.controller;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.repository.AchievementStatsRepository;
-import edu.ntnu.idatt2106.sparesti.service.achievementStats.AchievementStatsService;
+import edu.ntnu.idatt2106.sparesti.service.achievementstats.AchievementStatsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.security.Principal;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,10 +36,14 @@ public class AchievementStatsController {
   private final AchievementStatsRepository achievementStatsRepository;
 
   /**
-   * Controller class that responds to requests that specify an achievement type
-   * to update the user stats for it and, if the user qualified for one or several new badges,
-   * create the badges and return a DTO providing a preview of the badge created with the highest level.
-   * The controller also provides the total amount saved by the current user.
+   * Controller class that responds to
+   * requests that specify an achievement type
+   * to update the user stats for it and,
+   * if the user qualified for one or several new badges,
+   * create the badges and return a DTO
+   * providing a preview of the badge created with the highest level.
+   * The controller also provides the
+   * total amount saved by the current user.
    *
    * @param principal The authenticated user
    * @param category  DTO specifying the achievement type to check and the date.
@@ -48,37 +51,42 @@ public class AchievementStatsController {
    *        was additionally rewarded with a new badge along with a DTO representing the badge.
    */
   @Operation(summary =
-      "Post request to update user stats related to achievements and receive a badge in return if"
-          + "the user was rewarded a new one.")
+          "Post request to update user stats related to "
+                  + "achievements and receive a badge in return if"
+                  + "the user was rewarded a new one.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "The user was awarded a new badge",
-          content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation =
-                  BadgePreviewDto.class))
-          }),
+              content = {
+                  @Content(mediaType = "application/json", schema = @Schema(implementation =
+                          BadgePreviewDto.class))
+              }),
       @ApiResponse(responseCode = "200", description = "The user stats were updated",
-          content = @Content),
+              content = @Content),
       @ApiResponse(responseCode = "500", description = "Unknown internal server error", content =
       @Content)
   })
   @GetMapping("/stats/{category}")
   public ResponseEntity<BadgePreviewDto> checkForAchievement(
-      Principal principal, @PathVariable AchievementCategory category) {
+          Principal principal, @PathVariable AchievementCategory category) {
 
     log.info("Checking if badge of the category {} was qualified for.", category);
 
-    List<Integer> levelChange = achievementStatsService.updateAndCheckAchievement(category, principal);
+    List<Integer> levelChange = achievementStatsService
+            .updateAndCheckAchievement(category, principal);
 
-    log.info("If 0, no badge awarded, if a number, badge(s) up to that level was awarded: {}", levelChange.getFirst());
+    log.info("If 0, no badge awarded, if a number, badge(s) "
+            + "up to that level was awarded: {}", levelChange.getFirst());
 
     if (levelChange.get(1) > 1) {
-      for (int i = levelChange.getFirst() - 1; i > levelChange.getFirst() - levelChange.getLast(); i--) {
+      for (int i = levelChange.getFirst() - 1;
+           i > levelChange.getFirst() - levelChange.getLast(); i--) {
         achievementStatsService.createBadge(category, principal, i);
       }
     }
 
-    if(levelChange.getFirst() != 0) {
-      BadgePreviewDto createdBadge = achievementStatsService.createBadge(category, principal, levelChange.getFirst());
+    if (levelChange.getFirst() != 0) {
+      BadgePreviewDto createdBadge = achievementStatsService
+              .createBadge(category, principal, levelChange.getFirst());
 
       return new ResponseEntity<>(createdBadge, HttpStatus.CREATED);
 
@@ -99,10 +107,10 @@ public class AchievementStatsController {
   @Operation(summary = "Get the total amount of money saved by the current user")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "The total saved amount was retrieved",
-          content = {
-              @Content(mediaType = "application/json", schema = @Schema(implementation =
-                  Double.class))
-          }),
+              content = {
+                  @Content(mediaType = "application/json", schema = @Schema(implementation =
+                          Double.class))
+              }),
       @ApiResponse(responseCode = "500", description = "Unknown internal server error", content =
       @Content)
   })
@@ -111,10 +119,12 @@ public class AchievementStatsController {
 
     log.info("Returning total saved amount by user: {}", principal.getName());
 
-    List<Integer> levelChange = achievementStatsService.updateAndCheckAchievement(AchievementCategory.AMOUNT_SAVED, principal);
+    List<Integer> levelChange = achievementStatsService
+            .updateAndCheckAchievement(AchievementCategory.AMOUNT_SAVED, principal);
 
     if (levelChange.get(1) >= 1) {
-      for (int i = levelChange.getFirst(); i > levelChange.getFirst() - levelChange.getLast(); i--) {
+      for (int i = levelChange.getFirst();
+           i > levelChange.getFirst() - levelChange.getLast(); i--) {
         achievementStatsService.createBadge(AchievementCategory.AMOUNT_SAVED, principal, i);
       }
     }

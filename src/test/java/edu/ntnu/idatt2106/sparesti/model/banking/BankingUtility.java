@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.model.banking;
 
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
-
 import java.time.MonthDay;
 import java.time.YearMonth;
 
@@ -31,7 +30,7 @@ public class BankingUtility {
   }
 
   /**
-   * Creates a transaction object for tests
+   * Creates a transaction object for tests.
    *
    * @return a transaction object.
    */

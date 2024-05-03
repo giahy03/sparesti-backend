@@ -29,6 +29,11 @@ public enum SsbPurchaseCategory {
     this.categoryCode = categoryCode;
   }
 
+  /**
+   * Translates the purchase category to Norwegian.
+   *
+   * @return the purchase category in Norwegian
+   */
   public String translateToNorwegian() {
     return switch (this) {
       case IN_TOTAL -> "totalt";

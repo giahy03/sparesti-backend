@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.ntnu.idatt2106.sparesti.exception.stock.StockProcessingException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the StockProcessingException.
+ *
+ * @author Tobias Oftedal
+ */
 class StockProcessingExceptionTest {
   @Test
   void testConstructorWithMessage() {

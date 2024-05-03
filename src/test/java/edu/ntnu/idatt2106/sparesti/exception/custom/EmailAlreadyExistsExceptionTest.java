@@ -6,6 +6,11 @@ import edu.ntnu.idatt2106.sparesti.exception.challenge.ChallengeNotFoundExceptio
 import edu.ntnu.idatt2106.sparesti.exception.email.EmailAlreadyExistsException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the EmailAlreadyExistsException.
+ *
+ * @author Tobias Oftedal
+ */
 class EmailAlreadyExistsExceptionTest {
 
   @Test

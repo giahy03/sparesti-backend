@@ -9,21 +9,20 @@ import edu.ntnu.idatt2106.sparesti.dto.user.RegistrationDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
 import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
+import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
-import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
-import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallengeCode;
+import edu.ntnu.idatt2106.sparesti.model.email.EmailCode;
 import edu.ntnu.idatt2106.sparesti.model.goal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.MonthDay;
@@ -31,15 +30,30 @@ import java.time.YearMonth;
 import java.util.List;
 
 
+/**
+ * Utility class for creating challenge related objects for testing.
+ *
+ * @author Jeffrey Yaw Annor Tabiri
+ */
 public class ChallengeUtility {
 
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static Streak createStreak1() {
     return Streak.builder()
             .numberOfDays(20)
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static User createUser1() {
     return User.builder()
             .email("alice.johnson@example.com")
@@ -50,6 +64,11 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static User createUserA() {
     return User.builder()
             .email("example@guide")
@@ -61,6 +80,11 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static User createUser2() {
     return User.builder()
             .email("bob.smith@example.com")
@@ -70,6 +94,12 @@ public class ChallengeUtility {
             .password("password789")
             .build();
   }
+
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static User createUserD() {
     return User.builder()
             .email("Anna@gmail.com")
@@ -82,18 +112,13 @@ public class ChallengeUtility {
             .build();
   }
 
-  public static User createUserE() {
-    return User.builder()
-            .email("Anna@gmail.com")
-            .firstName("Anna")
-            .lastName("Smith")
-            .role(Role.USER)
-            .userInfo(createUserInfoA())
-            .lastName("Guide")
-            .password("password")
-            .build();
-  }
 
+
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static UserInfoDto createUserInfoDtoA() {
     return UserInfoDto.builder()
             .income(1000)
@@ -103,6 +128,11 @@ public class ChallengeUtility {
   }
 
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static UserInfo createUserInfoA() {
     return UserInfo.builder()
             .income(1000)
@@ -111,14 +141,12 @@ public class ChallengeUtility {
             .build();
   }
 
-  public static UserInfo createUserInfoD(User user) {
-    return UserInfo.builder()
-            .income(1000)
-            .livingStatus(SsbLivingStatus.fromInteger(1))
-            .user(user)
-            .build();
-  }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static User createUserB() {
     return User.builder()
             .email("example@guide")
@@ -129,6 +157,11 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static User createUserC() {
     return User.builder()
             .email("test@test.com")
@@ -140,8 +173,11 @@ public class ChallengeUtility {
   }
 
 
-
-
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static SharedChallenge createSharedChallengeA() {
     return SharedChallenge.builder()
             .id(1L)
@@ -155,6 +191,11 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static SharedChallengeDto createSharedChallengeDto() {
     return SharedChallengeDto.builder()
             .title("Challenge")
@@ -167,6 +208,11 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static ChallengeDto createChallengeDto() {
     return ChallengeDto.builder()
             .id(1L)
@@ -179,12 +225,22 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static ChallengeUpdateRequestDto createChallengeUpdateRequestDto() {
     return ChallengeUpdateRequestDto.builder()
             .progress(Progress.IN_PROGRESS)
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static RegistrationDto createRegistrationDtoA() {
     return RegistrationDto.builder()
             .emailVerificationCode("123456")
@@ -195,6 +251,11 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static LoginRequestDto createLoginDtoA() {
     return LoginRequestDto.builder()
             .email("example@guide")
@@ -202,6 +263,11 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static EmailCode createEmailCodeA() {
     return EmailCode.builder()
             .email("example@guide")
@@ -210,6 +276,11 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static SharedChallengeCode createSharedChallengeCodeA() {
     return SharedChallengeCode.builder()
             .joinCode("ABCDEF")
@@ -217,7 +288,11 @@ public class ChallengeUtility {
             .build();
   }
 
-
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static SharedChallengeCode createSharedChallengeCodeB() {
     return SharedChallengeCode.builder()
             .joinCode("12345")
@@ -225,6 +300,11 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static SharedChallenge createSharedChallenge2() {
     return SharedChallenge.builder()
             .id(1L)
@@ -237,6 +317,11 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static SharedChallenge createSharedChallenge3() {
     return SharedChallenge.builder()
             .id(1L)
@@ -249,24 +334,50 @@ public class ChallengeUtility {
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static SavingContribution createSavingContribution() {
     return SavingContribution.builder()
             .contribution(100)
             .build();
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static BankStatement createBankStatement1() {
     return new BankStatement("123456789", List.of(), YearMonth.now());
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static Transaction createTransaction1() {
     return new Transaction(MonthDay.now(), "Transaction", 100.0, false);
   }
 
-  public static BankStatementAnalysis createBankStatementAnalysis1(List<AnalysisItem> analysisItems) {
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
+  public static BankStatementAnalysis createBankStatementAnalysis1(
+          List<AnalysisItem> analysisItems) {
     return new BankStatementAnalysis(analysisItems);
   }
 
+  /**
+   * Creates a streak object for testing.
+   *
+   * @return a streak object
+   */
   public static AnalysisItem createAnalysisItem1() {
     AnalysisItem analysisItem = new AnalysisItem();
     analysisItem.setId(1L);
@@ -274,16 +385,6 @@ public class ChallengeUtility {
     analysisItem.setExpectedValue(100.0);
     analysisItem.setActualValue(100.0);
     return analysisItem;
-
   }
 
-  public static TransactionDto createTransactionDto1() {
-    return TransactionDto.builder()
-            .amount(100.0)
-            .category(SsbPurchaseCategory.EDUCATION)
-            .description("Transaction")
-            .isIncoming(false)
-            .date(MonthDay.now())
-            .build();
-  }
 }

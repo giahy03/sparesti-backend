@@ -1,5 +1,12 @@
 package edu.ntnu.idatt2106.sparesti.service.auth;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import edu.ntnu.idatt2106.sparesti.dto.user.AuthenticationDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.LoginRequestDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.RegistrationDto;
@@ -9,6 +16,8 @@ import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
+import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,26 +26,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 /**
  * Test class for the AuthService class.
- * The AuthService class is responsible for registering new users and authenticating existing users within the database.
+ * The AuthService class is responsible for registering new users
+ * and authenticating existing users within the database.
  *
- * @see AuthService
  * @author Jeffrey Yaw Annor Tabiri
  * @version 1.0
- *  * <p>
- *  * The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/test/java/edu/ntnu/idatt2105/quizapp/services/user/AuthenticationServiceTest.java">...</a>
- *  * </p>
+ *  <p>
+ *  The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/test/java/edu/ntnu/idatt2105/quizapp/services/user/AuthenticationServiceTest.java">...</a>
+ *  </p>
+ * @see AuthService
  */
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
-
   @InjectMocks
   private AuthService authService;
 
@@ -56,8 +59,10 @@ class AuthServiceTest {
   private PasswordEncoder passwordEncoder;
 
   User user;
+
   @Test
-  void Service_RegisterUser_AddsAUser() {
+  @DisplayName("Service register user should add a user")
+  void service_RegisterUser_AddsUser() {
     //Arrange
     RegistrationDto registrationDto = ChallengeUtility.createRegistrationDtoA();
     String expectedPassword = "Password";
@@ -76,14 +81,15 @@ class AuthServiceTest {
   }
 
   @Test
-  void Service_AuthenticateUser_ReturnsToken() {
-
+  @DisplayName("Service register user should throw EmailAlreadyExistsException")
+  void service_AuthenticateUser_ReturnsToken() {
     //Arrange
     LoginRequestDto loginDtoA = ChallengeUtility.createLoginDtoA();
     User mockUser = ChallengeUtility.createUserA();
     String expectedToken = "MockToken";
 
-    when(userRepository.findUserByEmailIgnoreCase("example@guide")).thenReturn(Optional.ofNullable(mockUser));
+    when(userRepository.findUserByEmailIgnoreCase("example@guide"))
+            .thenReturn(Optional.ofNullable(mockUser));
     when(jwtService.generateToken(any(User.class))).thenReturn(expectedToken);
 
     //Act
@@ -96,7 +102,8 @@ class AuthServiceTest {
   }
 
   @Test
-  void Service_AuthenticateUser_ThrowsUserNotFoundException() {
+  @DisplayName("Service authenticate user should throw UserNotFoundException")
+  void service_AuthenticateUser_ThrowsUserNotFoundException() {
     //Arrange
     LoginRequestDto loginDtoA = ChallengeUtility.createLoginDtoA();
     when(userRepository.findUserByEmailIgnoreCase("example@guide")).thenReturn(Optional.empty());
@@ -107,13 +114,16 @@ class AuthServiceTest {
 
 
   @Test
-  void Service_RegisterUser_ThrowsEmailAlreadyExistsException() {
+  @DisplayName("Service register user should throw EmailAlreadyExistsException")
+  void service_RegisterUser_ThrowsEmailAlreadyExistsException() {
     //Arrange
-    RegistrationDto registrationDto = ChallengeUtility.createRegistrationDtoA();
+    RegistrationDto registrationDto =
+            ChallengeUtility.createRegistrationDtoA();
     String expectedEmail = registrationDto.getEmail();
-    when(userRepository.findUserByEmailIgnoreCase(expectedEmail)).thenReturn(Optional.ofNullable(ChallengeUtility.createUserA()));
-    assertThrows(EmailAlreadyExistsException.class, () -> authService.registerUser(registrationDto));
-
+    when(userRepository.findUserByEmailIgnoreCase(expectedEmail))
+            .thenReturn(Optional.ofNullable(ChallengeUtility.createUserA()));
+    assertThrows(EmailAlreadyExistsException.class, () ->
+            authService.registerUser(registrationDto));
   }
 
 }

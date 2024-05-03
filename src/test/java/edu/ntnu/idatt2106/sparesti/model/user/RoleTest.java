@@ -1,9 +1,12 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+
+
 
 /**
  * Tests the enum values.
@@ -12,10 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 1.0
  */
 class RoleTest {
+
+  @DisplayName("Test for the enum values of Role")
   @Test
-  void Role_testEnumValues() {
+  void role_testEnumValues() {
     // Assert
-    Assertions.assertEquals("USER", Role.USER.name());
+    assertEquals("USER", Role.USER.name());
     assertEquals("ADMIN", Role.ADMIN.name());
   }
 

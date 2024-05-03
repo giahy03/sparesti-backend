@@ -1,5 +1,10 @@
 package edu.ntnu.idatt2106.sparesti.service.streak;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import edu.ntnu.idatt2106.sparesti.dto.streak.StreakResponseDto;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
@@ -8,25 +13,21 @@ import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 
 /**
  * Test class for the StreakService class.
  * The class contains tests for the methods in the StreakService class.
  *
+ * @author Jeffrey Yaw Annor Tabiri
  * @version 1.0
  * @see StreakService
- * @author Jeffrey Yaw Annor Tabiri
  */
 @ExtendWith(MockitoExtension.class)
 class StreakServiceTest {
@@ -52,11 +53,13 @@ class StreakServiceTest {
     streak.setUser(user);
   }
 
+
   @Test
-  void Service_UpdateStreak_IncreasesStreakCorrectly() {
+  @DisplayName("Service update streak should increase streak correctly")
+  void service_UpdateStreak_IncreasesStreakCorrectly() {
     //Arrange
-    int oldStreak = streak.getNumberOfDays();
     when(userService.findUser(user.getEmail())).thenReturn(user);
+    int oldStreak = streak.getNumberOfDays();
 
     streakService.updateStreak(StreakUtility.createStreakRequestDto1(), user.getEmail());
     int newStreak = streak.getNumberOfDays();
@@ -67,10 +70,11 @@ class StreakServiceTest {
   }
 
   @Test
-  void Service_UpdateStreak_DoesNotIncreaseStreak() {
+  @DisplayName("Service update streak should not increase streak")
+  void service_UpdateStreak_DoesNotIncreaseStreak() {
     //Arrange
-    int expectedValue = 0;
     when(userService.findUser(user.getEmail())).thenReturn(user);
+    int expectedValue = 0;
 
     streakService.updateStreak(StreakUtility.createStreakRequestDto2(), user.getEmail());
     int actualValue = streak.getNumberOfDays();
@@ -81,7 +85,8 @@ class StreakServiceTest {
   }
 
   @Test
-  void Service_GetStreak_ReturnsCorrectStreak() {
+  @DisplayName("Service get streak should return correct streak")
+  void service_GetStreak_ReturnsCorrectStreak() {
     //Arrange
     when(userService.findUser(user.getEmail())).thenReturn(user);
 
@@ -91,8 +96,10 @@ class StreakServiceTest {
     assertEquals(streak.getNumberOfDays(), streakResponseDto.getNumberOfDays());
   }
 
+
   @Test
-  void Service_InitializeStreak_ReturnsInitializedStreak() {
+  @DisplayName("Service initialize streak should return initialized streak")
+  void service_InitializeStreak_ReturnsInitializedStreak() {
     //Arrange
     user.setStreak(null);
     when(userService.findUser(user.getEmail())).thenReturn(user);
@@ -102,4 +109,5 @@ class StreakServiceTest {
     //Assert
     assertEquals(1, user.getStreak().getNumberOfDays());
   }
+
 }
