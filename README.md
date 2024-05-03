@@ -1,5 +1,4 @@
 # Sparesti: Backend
-
 Sparesti is a full-stack application developed as part of an assessment in the IDATT2106 Software Engineering course
 at the Norwegian University of Science and Technology (NTNU). The application is developed with Spring Boot and Vue.js.
 
@@ -15,30 +14,20 @@ at the Norwegian University of Science and Technology (NTNU). The application is
 
 ## Table of Contents
 - [Overview](#overview)
-- [Wiki](#wiki)
 - [Features](#features)
 - [Installation Manual](#installation-manual)
 - [Test](#test)
 - [Acknowledgements](#acknowledgements)
 
 ## Overview
-Sparesti is a full-stack web application designed to provide a secure
-and efficient platform for users to manage their savings. It includes
-a range of features that support secure authentication, goal tracking,
-and personalized challenges to encourage users to save money.
+Sparesti is a full-stack web application designed to provide a secure and efficient platform for users to manage their
+savings. It includes a range of features that support secure authentication, goal tracking, and personalized challenges
+to encourage users to save money.
 
 The project utilizes the following technologies:
 - Frontend: Vue.js with Node.js.
 - Backend: Spring Boot V3 with Java 21 and Maven.
 - Database: MySQL V8 for runtime and H2 for tests.
-
-## Wiki
-The wiki contains system documents which describe the various aspects of the software system. The documents capture the
-details of the system's design, implementation, operation and maintenance, serving as a reference for developers.
-- [System Architecture Program]()
-- [Class Diagram]()
-- [Sequence diagram for getting quiz]()
-- [Sequence diagram for login user]()
 
 ## Features
 - **Secure Authentication**: Ensures that users can securely log in, register, and manage their accounts. Passwords are encrypted and stored safely to protect user data.
