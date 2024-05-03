@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.service;
 
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeRecommendationDto;
-import edu.ntnu.idatt2106.sparesti.model.analysis.AnalysisItem;
 import edu.ntnu.idatt2106.sparesti.model.analysis.BankStatementAnalysis;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
@@ -9,13 +8,11 @@ import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
@@ -32,6 +29,7 @@ public class AutomaticChallengeService {
   private final UserRepository userRepository;
   private static final int MINIMUM_DAYS = 5;
   private static final int MAX_DAYS = 30;
+  private static final Random random = new Random();
 
   /**
    * Get challenge recommendations for the user.
@@ -43,25 +41,31 @@ public class AutomaticChallengeService {
 
     User user = userRepository.findUserByEmailIgnoreCase(principal.getName())
         .orElseThrow(() -> new IllegalArgumentException("User not found"));
-    List<BankStatementAnalysis> analyses = user.getBankStatements().stream()
-        .sorted(Comparator.comparing(BankStatement::getTimestamp).reversed()).limit(3)
-        .map(BankStatement::getAnalysis).filter(Objects::nonNull).toList();
-
-    if (analyses.isEmpty()) {
-      throw new IllegalStateException("No analyses found for user");
-    }
-
-    BankStatementAnalysis mergedAnalysis = createMergedAnalysis(analyses);
+    BankStatementAnalysis mostRecentAnalysis = user.getBankStatements().stream()
+        .max(Comparator.comparing(BankStatement::getTimestamp))
+        .map(BankStatement::getAnalysis)
+        .orElseThrow();
 
     List<Pair<SsbPurchaseCategory, Double>> recommendations =
-        higherThanExpectedAndSortedAfterDifference(mergedAnalysis);
+        higherThanExpectedAndSortedAfterDifference(mostRecentAnalysis);
 
 
     List<ChallengeRecommendationDto> recommendationDtoObjects = new ArrayList<>();
     for (Pair<SsbPurchaseCategory, Double> recommendation : recommendations) {
+      LocalDate today = LocalDate.now();
+      LocalDate endDate = getRandomDateFromToday();
+      long daysBetween = ChronoUnit.DAYS.between(today, endDate);
+      double dailyAmount = (recommendation.getSecond() / daysBetween);
+
+      String description = "Spend " + dailyAmount + " less on " + recommendation
+          .getFirst() + "over the next " + daysBetween + " days";
+
       ChallengeRecommendationDto challengeRecommendationDto =
-          new ChallengeRecommendationDto("This has no description", LocalDate.now(),
-              getRandomDateFromToday(), recommendation.getSecond(),
+          new ChallengeRecommendationDto(
+              description,
+              today,
+              endDate,
+              dailyAmount,
               recommendation.getFirst().toString());
 
       recommendationDtoObjects.add(challengeRecommendationDto);
@@ -94,36 +98,6 @@ public class AutomaticChallengeService {
    * @return a random date between today and a number of days in the future
    */
   private LocalDate getRandomDateFromToday() {
-    return LocalDate.now().plusDays(new Random().nextInt(MAX_DAYS - MINIMUM_DAYS) + MINIMUM_DAYS);
+    return LocalDate.now().plusDays(random.nextInt(MAX_DAYS - MINIMUM_DAYS) + (long) MINIMUM_DAYS);
   }
-
-  /**
-   * Creates a merged analysis from a list of analyses.
-   *
-   * @param bankStatementAnalyses the analyses to merge
-   * @return a merged analysis
-   */
-  private BankStatementAnalysis createMergedAnalysis(
-      List<BankStatementAnalysis> bankStatementAnalyses) {
-    List<AnalysisItem> totalItems =
-        bankStatementAnalyses.stream().map(BankStatementAnalysis::getAnalysisItems)
-            .flatMap(List::stream).toList();
-
-
-    HashMap<SsbPurchaseCategory, AnalysisItem> mergedItems = new HashMap<>();
-    for (SsbPurchaseCategory category : SsbPurchaseCategory.values()) {
-      mergedItems.put(category, new AnalysisItem(category, 0.0, 0.0));
-    }
-
-    for (AnalysisItem item : totalItems) {
-      SsbPurchaseCategory category = item.getPurchaseCategory();
-      AnalysisItem mergedItem = mergedItems.get(category);
-      mergedItem.setActualValue(mergedItem.getActualValue() + item.getActualValue());
-      mergedItem.setExpectedValue(mergedItem.getExpectedValue() + item.getExpectedValue());
-    }
-
-    return new BankStatementAnalysis(new ArrayList<>(mergedItems.values()));
-  }
-
-
 }
