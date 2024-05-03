@@ -58,8 +58,8 @@ public class AutomaticChallengeService {
       double dailyAmount = (recommendation.getSecond() / daysBetween);
 
       String description = String.format(
-          "Bruk %skr mindre på %s over de neste %d dagene",
-          (int) dailyAmount, recommendation.getFirst(), daysBetween);
+          "Bruk %skr mindre på %s hver dag, over de neste %d dagene",
+          (int) dailyAmount, recommendation.getFirst().translateToNorwegian(), daysBetween);
 
       ChallengeRecommendationDto challengeRecommendationDto =
           new ChallengeRecommendationDto(
