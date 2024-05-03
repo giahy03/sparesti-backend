@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106.sparesti.filehandling;
 import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import java.time.MonthDay;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Optional;
@@ -41,6 +42,7 @@ public class DnbReader extends BankStatementReader {
         .orElseThrow()
         .split("\\s+");
 
+
     bankStatement.setAccountNumber(accountLineSplit[2]);
     Optional<String> accountName = getAccountName(accountLineSplit);
     if (accountName.isPresent()) {
@@ -49,8 +51,13 @@ public class DnbReader extends BankStatementReader {
       bankStatement.setAccountName("Unknown");
     }
 
+    Pair<Optional<String>, Integer> dateLine = skipUntilFind("dato", splitText,
+        accountLine.getSecond());
+    String dateText = dateLine.getFirst().orElseThrow().split("\\s+")[1];
+    int year = Integer.parseInt(dateText.split("\\.")[2]);
+    int month = Integer.parseInt(dateText.split("\\.")[1]);
+    bankStatement.setTimestamp(YearMonth.of(year, month));
     lineIndex = accountLine.getSecond();
-
     readTransactions(bankStatement, splitText, lineIndex);
   }
 
@@ -141,7 +148,7 @@ public class DnbReader extends BankStatementReader {
     }
     try {
       Double amount = Double.parseDouble(splitLine[splitLine.length - 3]
-          .replace("\\.", "")
+          .replace(".", "")
           .replace(",", ".")
       );
       transaction.setAmount(amount);
@@ -150,8 +157,8 @@ public class DnbReader extends BankStatementReader {
     }
 
     try {
-      for (String word : splitLine){
-        if (Arrays.asList(INCOMING_KEYWORDS).contains(word.toLowerCase())){
+      for (String word : splitLine) {
+        if (Arrays.asList(INCOMING_KEYWORDS).contains(word.toLowerCase())) {
           transaction.setIsIncoming(true);
           break;
         }
