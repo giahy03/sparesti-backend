@@ -1,17 +1,9 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import edu.ntnu.idatt2106.sparesti.model.news.util.NewsUtility;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.service.auth.JwtService;
 import edu.ntnu.idatt2106.sparesti.service.news.NewsScrapingService;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +15,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the news controller.
@@ -33,41 +33,42 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(NewsController.class)
 class NewsControllerTest {
 
-  @InjectMocks
-  private NewsController newsController;
+    @InjectMocks
+    private NewsController newsController;
 
-  @MockBean
-  NewsScrapingService newsScrapingService;
-  @MockBean
-  private JwtService jwtService;
-  @MockBean
-  private UserRepository userRepository;
+    @MockBean
+    NewsScrapingService newsScrapingService;
+    @MockBean
+    private JwtService jwtService;
+    @MockBean
+    private UserRepository userRepository;
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  String url = "/api/v1/news";
+    String url = "/api/v1/news";
 
-  @DisplayName("Test that controller is initialized.")
-  @Test
-  public void controllerIsInitialized() {
-    assertThat(newsController).isNotNull();
-  }
+    @DisplayName("Test that controller is initialized.")
+    @Test
+    void controllerIsInitialized() {
+        assertThat(newsController).isNotNull();
+    }
 
 
-  @DisplayName("Test fetching news")
-  @Test
-  @WithMockUser(roles = "USER")
-  void controller_getNews() throws Exception {
+    @DisplayName("Test fetching news")
+    @Test
+    @WithMockUser(roles = "USER")
+    void controller_getNews() throws Exception {
 
-    when(newsScrapingService.scrapeDn(0, 5))
-            .thenReturn(List.of(NewsUtility.createNewsDtoA(), NewsUtility.createNewsDtoB()));
+        when(newsScrapingService.scrapeDn(0, 5))
+                .thenReturn(List.of(NewsUtility.createNewsDtoA(), NewsUtility.createNewsDtoB()));
 
-    mockMvc
-            .perform(get(url + "/news").with(csrf())
-                    .param("page", "0"))
-            .andExpect(status().isOk())
-            .andExpect(content().json(NewsUtility.createNewsDtoJson()));
-  }
+        mockMvc
+                .perform(get(url + "/").with(csrf())
+                        .param("page", "0")
+                        .param("pageSize", "5"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(NewsUtility.createNewsDtoJson()));
+    }
 
 }

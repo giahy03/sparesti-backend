@@ -3,6 +3,7 @@ package edu.ntnu.idatt2106.sparesti.controller;
 import edu.ntnu.idatt2106.sparesti.dto.NewsDto;
 import edu.ntnu.idatt2106.sparesti.service.news.NewsScrapingService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
@@ -39,9 +40,15 @@ public class NewsController {
       @ApiResponse(responseCode = "400", description = "Invalid input from user."),
       @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
-  @GetMapping("/news")
-  public ResponseEntity<List<NewsDto>> getNews(@RequestParam int page) {
-    List<NewsDto> newsEntries = newsService.scrapeDn(page, 5);
+  @GetMapping("/")
+  public ResponseEntity<List<NewsDto>> getNews(@RequestParam
+                                               @Schema(description = "the 0-indexed page to "
+                                                   + "fetch", maximum = "Integer.MAX_VALUE")
+                                               int page,
+                                               @Schema(description = "the number of news entries "
+                                                   + "to fetch", maximum = "30")
+                                               int pageSize) {
+    List<NewsDto> newsEntries = newsService.scrapeDn(page, pageSize);
     log.info("Fetched news from DN with page: {}", page);
     return ResponseEntity.ok(newsEntries);
   }
