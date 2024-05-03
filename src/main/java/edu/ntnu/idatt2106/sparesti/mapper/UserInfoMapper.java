@@ -32,6 +32,7 @@ public interface UserInfoMapper {
   @Mapping(target = "income", source = "income")
   @Mapping(target = "livingStatus", qualifiedByName = "mapLivingStatus")
   @Mapping(target = "user", ignore = true)
+  @Mapping(target = "savingPercentage", source = "savingPercentage")
   UserInfo toUserInfo(UserInfoDto userInfoDto);
 
   /**

@@ -68,6 +68,7 @@ public class UserUtility {
                 .lastName("Hansen")
                 .income(50000.0)
                 .livingStatus("LivingStatus")
+                .savingPercentage(20)
                 .build();
     }
 

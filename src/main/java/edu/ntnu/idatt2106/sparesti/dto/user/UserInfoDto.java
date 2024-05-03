@@ -14,4 +14,5 @@ import lombok.Data;
 public class UserInfoDto {
   private double income;
   private int livingStatus;
+  private int savingPercentage;
 }

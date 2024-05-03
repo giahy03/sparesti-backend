@@ -160,6 +160,7 @@ public class UserService {
         .lastName(user.getLastName())
         .income(userInfo.getIncome())
         .livingStatus(userInfo.getLivingStatus().getStatus())
+        .savingPercentage(userInfo.getSavingPercentage())
         .build();
   }
 
