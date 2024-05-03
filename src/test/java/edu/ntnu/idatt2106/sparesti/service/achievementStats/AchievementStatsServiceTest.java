@@ -119,8 +119,6 @@ class AchievementStatsServiceTest {
     when(userRepository.findUserByEmailIgnoreCase(anyString()))
         .thenReturn(Optional.ofNullable(user));
 
-    when(achievementStatsRepository.findAchievementStatsByUserEmail(principal.getName())).thenReturn(Optional.of(stats));
-
     when(badgeRepository.findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(anyString(), any(AchievementCategory.class)))
             .thenReturn(Optional.of(BadgeUtility.createBadgeA()));
 
