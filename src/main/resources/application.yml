@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: sparesti-backend
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/sparesti
+    username: root
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+      show-sql: false
+
+  mail:
+    host: smtp.gmail.com
+    username: sparestibot@gmail.com
+    password: gvil bkva pdde cmdx
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+springdoc:
+  api-docs:
+    path: /api/v1/docs
+  swagger-ui:
+    path: /api/v1/docs/ui
+    operations-sorter: method

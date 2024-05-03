@@ -1,0 +1,28 @@
+package edu.ntnu.idatt2106.sparesti.dto.challenge;
+
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+
+
+/**
+ * Represents a saving challenge dto.
+ * The saving challenge dto contains the total amount and current amount of the challenge.
+ *
+ * @author Jeffrey Yaw Annor Tabiri
+ * @version 1.0
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@SuperBuilder
+@ToString(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonTypeName("SharedChallengeDto")
+public class SharedChallengeDto extends ChallengeDto {
+  private long sharedChallengeId;
+}
