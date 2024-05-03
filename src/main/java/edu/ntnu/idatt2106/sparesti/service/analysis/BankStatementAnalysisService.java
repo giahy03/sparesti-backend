@@ -21,14 +21,14 @@ import org.springframework.stereotype.Service;
  * Analyzes a bank statement and compares it to the expected usage of the given demography.
  *
  * @author Tobias Oftedal
+ * @version 1.0
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class BankStatementAnalysisService {
-  @NonNull
+
   SsbDataService ssbDataService;
-  @NonNull
   TransactionService transactionService;
 
   /**
@@ -98,7 +98,9 @@ public class BankStatementAnalysisService {
   }
 
   /**
-   * Categorizes the transactions in the bank statement to "OTHER" if they are not already set.
+   * Categorizes the transactions in the
+   * bank statement to "OTHER" if they are not already set.
+   *
    * @param bankStatement The bank statement to categorize.
    */
   private void categorizeToOtherIfNotSet(@NonNull BankStatement bankStatement) {

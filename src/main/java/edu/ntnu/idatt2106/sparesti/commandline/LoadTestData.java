@@ -25,11 +25,13 @@ import edu.ntnu.idatt2106.sparesti.repository.SavingGoalRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.service.analysis.BankStatementService;
+
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -60,7 +62,6 @@ public class LoadTestData implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
 
-    System.out.println("Creating default user");
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -122,10 +123,6 @@ public class LoadTestData implements CommandLineRunner {
     sharedChallengeCode.setSharedChallenges(List.of(sharedChallenge, sharedChallenge2));
 
     sharedChallengeCodeRepository.save(sharedChallengeCode);
-
-
-
-
 
 
     Achievement achievementA = Achievement.builder()
@@ -250,7 +247,7 @@ public class LoadTestData implements CommandLineRunner {
     challengesRepository.save(sharedChallenge);
     challengesRepository.save(sharedChallenge2);
 
-   // user.setBadges(Set.of(badgeA, badgeB, badgeC));
+    // user.setBadges(Set.of(badgeA, badgeB, badgeC));
 
     //achievementStatsRepository.save(achievementStatsA);
 
@@ -268,10 +265,10 @@ public class LoadTestData implements CommandLineRunner {
     savingContributionRepository.save(savingContribution3);
 
     bankStatementService.readAndSaveBankStatement(new File("src/main/resources"
-        + "/bankstatements/handelsbanken/handelsbankenExample.pdf"), user, Bank.HANDELSBANKEN);
+            + "/bankstatements/handelsbanken/handelsbankenExample.pdf"), user, Bank.HANDELSBANKEN);
     bankStatementService.readAndSaveBankStatement(new File(
-            "src/main/resources/bankstatements/sparebank1/sparebank1example.pdf"), user,
-        Bank.HANDELSBANKEN);
+                    "src/main/resources/bankstatements/sparebank1/sparebank1example.pdf"), user,
+            Bank.HANDELSBANKEN);
 
   }
 }

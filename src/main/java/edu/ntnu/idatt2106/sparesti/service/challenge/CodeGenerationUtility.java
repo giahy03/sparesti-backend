@@ -9,6 +9,11 @@ import java.security.SecureRandom;
  * @author Jeffrey Yaw Annor Tabiri
  */
 public class CodeGenerationUtility {
+
+  private CodeGenerationUtility() {
+    throw new IllegalStateException("Utility class");
+  }
+
   private static final String CHARACTERS =
           """
           abcdefghijklmnopqrstuvwxyz

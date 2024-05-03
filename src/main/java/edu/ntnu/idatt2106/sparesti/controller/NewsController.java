@@ -41,7 +41,7 @@ public class NewsController {
   })
   @GetMapping("/news")
   public ResponseEntity<List<NewsDto>> getNews(@RequestParam int page) {
-    List<NewsDto> newsEntries = newsService.scrapeDN(page, 5);
+    List<NewsDto> newsEntries = newsService.scrapeDn(page, 5);
     log.info("Fetched news from DN with page: {}", page);
     return ResponseEntity.ok(newsEntries);
   }

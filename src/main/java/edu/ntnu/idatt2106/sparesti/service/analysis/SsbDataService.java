@@ -7,7 +7,6 @@ import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import java.util.HashMap;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +18,9 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * Retrieves data from the SSB API.
+ *
+ * @version 1.0
+ * @author Jeffrey Yaw Annor Tabiri
  */
 @Service
 @RequiredArgsConstructor

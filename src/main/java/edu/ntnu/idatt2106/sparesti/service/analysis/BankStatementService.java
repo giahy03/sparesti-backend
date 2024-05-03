@@ -63,6 +63,11 @@ public class BankStatementService {
     return bankStatementRepository.save(bankStatement);
   }
 
+  /**
+   * Saves a transaction.
+   *
+   * @param analysis The analysis to save.
+   */
   @Transactional
   public void deleteAnalysisItems(BankStatementAnalysis analysis) {
     log.info("BEFORE DELETE:");
@@ -86,7 +91,6 @@ public class BankStatementService {
    * @throws NoSuchElementException If the user is not found.
    * @throws IOException            If the file cannot be read properly.
    */
-
   public BankStatement readAndSaveBankStatement(MultipartFile file, Principal principal, Bank bank)
       throws NoSuchElementException, IOException {
 
@@ -100,6 +104,15 @@ public class BankStatementService {
     return bankStatement;
   }
 
+
+  /**
+   * Reads and saves a bank statement from a file.
+   *
+   * @param file The file to read the bank statement from.
+   * @param user The user to save the bank statement for.
+   * @param bank The bank to read the bank statement from.
+   * @return The saved bank statement.
+   */
   public BankStatement readAndSaveBankStatement(File file, User user, Bank bank)
       throws NoSuchElementException {
 
