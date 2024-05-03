@@ -15,8 +15,6 @@ import edu.ntnu.idatt2106.sparesti.model.user.Role;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
 import edu.ntnu.idatt2106.sparesti.repository.AchievementRepository;
-import edu.ntnu.idatt2106.sparesti.repository.AchievementStatsRepository;
-import edu.ntnu.idatt2106.sparesti.repository.BadgeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.ChallengesRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SavingContributionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SavingGoalRepository;
@@ -81,6 +79,13 @@ public class LoadTestData implements CommandLineRunner {
             .income(10000)
             .savingPercentage(20)
             .user(user)
+            .build());
+
+    user2.setUserInfo(UserInfo.builder()
+            .livingStatus(SsbLivingStatus.LIVING_ALONE)
+            .income(10000)
+            .savingPercentage(20)
+            .user(user2)
             .build());
 
     SharedChallenge sharedChallenge = SharedChallenge.builder()
