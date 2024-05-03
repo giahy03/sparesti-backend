@@ -57,8 +57,9 @@ public class AutomaticChallengeService {
       long daysBetween = ChronoUnit.DAYS.between(today, endDate);
       double dailyAmount = (recommendation.getSecond() / daysBetween);
 
-      String description = "Spend " + dailyAmount + " less on " + recommendation
-          .getFirst() + "over the next " + daysBetween + " days";
+      String description = String.format(
+          "Bruk %skr mindre på %s over de neste %d dagene",
+          (int) dailyAmount, recommendation.getFirst(), daysBetween);
 
       ChallengeRecommendationDto challengeRecommendationDto =
           new ChallengeRecommendationDto(
