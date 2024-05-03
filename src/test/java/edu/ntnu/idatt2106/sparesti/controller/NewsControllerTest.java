@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(NewsController.class)
-public class NewsControllerTest {
+class NewsControllerTest {
 
     @InjectMocks
     private NewsController newsController;
@@ -50,7 +50,7 @@ public class NewsControllerTest {
 
     @DisplayName("Test that controller is initialized.")
     @Test
-    public void controllerIsInitialized() {
+    void controllerIsInitialized() {
         assertThat(newsController).isNotNull();
     }
 
@@ -58,14 +58,15 @@ public class NewsControllerTest {
     @DisplayName("Test fetching news")
     @Test
     @WithMockUser(roles = "USER")
-    public void controller_getNews() throws Exception {
+    void controller_getNews() throws Exception {
 
         when(newsScrapingService.scrapeDn(0, 5))
                 .thenReturn(List.of(NewsUtility.createNewsDtoA(), NewsUtility.createNewsDtoB()));
 
         mockMvc
-                .perform(get(url + "/news").with(csrf())
-                        .param("page", "0"))
+                .perform(get(url + "/").with(csrf())
+                        .param("page", "0")
+                        .param("pageSize", "5"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(NewsUtility.createNewsDtoJson()));
     }
