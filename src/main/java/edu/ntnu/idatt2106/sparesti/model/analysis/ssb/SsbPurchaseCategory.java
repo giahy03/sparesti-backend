@@ -28,4 +28,23 @@ public enum SsbPurchaseCategory {
   SsbPurchaseCategory(String categoryCode) {
     this.categoryCode = categoryCode;
   }
+
+  public String translateToNorwegian() {
+    return switch (this) {
+      case IN_TOTAL -> "totalt";
+      case FOOD -> "mat";
+      case ALCOHOL_AND_TOBACCO -> "alkohol & tobakk";
+      case CLOTHING_AND_SHOES -> "klær & sko";
+      case HOUSING_AND_ELECTRICITY -> "bolig & strøm";
+      case FURNITURE -> "møbler";
+      case HEALTH -> "helse";
+      case TRANSPORT -> "transport";
+      case COMMUNICATION -> "kommunikasjon";
+      case LEISURE_SPORT_AND_CULTURE -> "fritid, sport & kultur";
+      case EDUCATION -> "utdanning";
+      case EATING_OUT -> "spise ute";
+      case INSURANCE -> "forsikring";
+      case OTHER -> "annet";
+    };
+  }
 }
