@@ -47,7 +47,7 @@ public class SsbDataService {
     }
 
     for (int i = 0; i < categories.size(); i++) {
-      expectedUsage.put(categories.get(i), (data.get(i) * userInfo.getIncome()) / 100);
+      expectedUsage.put(categories.get(i), (data.get(i) * userInfo.getExpectedUsage()) / 100);
     }
 
     return expectedUsage;
