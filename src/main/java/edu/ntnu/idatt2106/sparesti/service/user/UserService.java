@@ -46,8 +46,10 @@ public class UserService {
    *
    * @param passwordChangeDto The DTO containing old and new password.
    * @param email             The email of the user.
+   * @throws IllegalArgumentException If the input is invalid.
    */
-  public void editPassword(@NonNull PasswordChangeDto passwordChangeDto, @NonNull String email) {
+  public void editPassword(@NonNull PasswordChangeDto passwordChangeDto, @NonNull String email)
+      throws IllegalArgumentException {
     UserValidator.validatePassword(passwordChangeDto.getNewPassword());
 
     User user = findUser(email);
@@ -66,8 +68,10 @@ public class UserService {
    * the new password, updating the user's password in the database, and saving the changes.
    *
    * @param resetPasswordDto The DTO containing the email, verification code, and new password.
+   * @throws IllegalArgumentException If the input is invalid.
    */
-  public void resetPassword(@NonNull ResetPasswordDto resetPasswordDto) {
+  public void resetPassword(@NonNull ResetPasswordDto resetPasswordDto)
+      throws IllegalArgumentException {
 
     emailVerificationService.verifyEmailCode(resetPasswordDto.getEmail(),
         resetPasswordDto.getEmailVerificationCode());
@@ -86,8 +90,10 @@ public class UserService {
    *
    * @param firstNameChangeDto The DTO containing new first name.
    * @param email              The email of the user.
+   * @throws IllegalArgumentException If the input is invalid.
    */
-  public void editFirstName(@NonNull FirstNameChangeDto firstNameChangeDto, @NonNull String email) {
+  public void editFirstName(@NonNull FirstNameChangeDto firstNameChangeDto,
+                            @NonNull String email) throws IllegalArgumentException {
     UserValidator.validateFirstName(firstNameChangeDto.getNewFirstName());
 
     User user = findUser(email);
@@ -102,8 +108,10 @@ public class UserService {
    *
    * @param lastNameChangeDto The DTO containing new last name.
    * @param email             The email of the user.
+   * @throws IllegalArgumentException If the input is invalid.
    */
-  public void editLastName(@NonNull LastNameChangeDto lastNameChangeDto, @NonNull String email) {
+  public void editLastName(@NonNull LastNameChangeDto lastNameChangeDto, @NonNull String email)
+      throws IllegalArgumentException {
     UserValidator.validateLastName(lastNameChangeDto.getNewLastName());
 
     User user = findUser(email);
@@ -118,8 +126,10 @@ public class UserService {
    *
    * @param incomeChangeDto The DTO containing new income.
    * @param email           The email of the user.
+   * @throws IllegalArgumentException If the input is invalid.
    */
-  public void editIncome(@NonNull IncomeChangeDto incomeChangeDto, @NonNull String email) {
+  public void editIncome(@NonNull IncomeChangeDto incomeChangeDto, @NonNull String email)
+      throws IllegalArgumentException {
     UserValidator.validateIncome(incomeChangeDto.getNewIncome());
 
     User user = findUser(email);
@@ -134,8 +144,10 @@ public class UserService {
    *
    * @param savingPercentage The new saving percentage.
    * @param email            The email of the user.
+   * @throws IllegalArgumentException If the input is invalid.
    */
-  public void editSavingPercentage(@NonNull Integer savingPercentage, @NonNull String email) {
+  public void editSavingPercentage(@NonNull Integer savingPercentage, @NonNull String email)
+      throws IllegalArgumentException {
     UserValidator.validateSavingPercentage(savingPercentage);
 
     User user = findUser(email);
@@ -150,9 +162,10 @@ public class UserService {
    *
    * @param livingStatusChangeDto The DTO containing new last name.
    * @param email                 The email of the user.
+   * @throws IllegalArgumentException If the input is invalid.
    */
   public void editLivingStatus(@NonNull LivingStatusChangeDto livingStatusChangeDto,
-                               @NonNull String email) {
+                               @NonNull String email) throws IllegalArgumentException {
 
     User user = findUser(email);
 
@@ -169,8 +182,9 @@ public class UserService {
    *
    * @param email The email of the user to retrieve the information for.
    * @return The UserDetailsDto containing user details.
+   * @throws IllegalArgumentException If the input is invalid.
    */
-  public UserDetailsDto getUserDetails(@NonNull String email) {
+  public UserDetailsDto getUserDetails(@NonNull String email) throws IllegalArgumentException {
     User user = findUser(email);
     UserInfo userInfo = user.getUserInfo();
     return UserDetailsDto.builder()
@@ -187,9 +201,13 @@ public class UserService {
    *
    * @param userInfoDto The DTO containing user additional information.
    * @param email       The email of the user.
+   * @throws IllegalArgumentException If the input is invalid.
    */
-  public void addUserInfo(@NonNull UserInfoDto userInfoDto, @NonNull String email) {
+  public void addUserInfo(@NonNull UserInfoDto userInfoDto, @NonNull String email)
+      throws IllegalArgumentException {
     UserValidator.validateIncome(userInfoDto.getIncome());
+    UserValidator.validateSavingPercentage(userInfoDto.getSavingPercentage());
+
 
     User user = findUser(email);
 
@@ -207,8 +225,10 @@ public class UserService {
    *
    * @param email            The email of the user to be deleted.
    * @param verificationCode The verification code used to authenticate the deletion request.
+   * @throws IllegalArgumentException If the input is invalid.
    */
-  public void deleteUserByEmail(@NonNull String email, @NonNull String verificationCode) {
+  public void deleteUserByEmail(@NonNull String email, @NonNull String verificationCode)
+      throws IllegalArgumentException {
     emailVerificationService.verifyEmailCode(email, verificationCode);
     User user = findUser(email);
     userRepository.delete(user);
@@ -219,9 +239,11 @@ public class UserService {
    *
    * @param email The email of the user to find.
    * @return The user with the given email.
-   * @throws UserNotFoundException If the user with the given email is not found.
+   * @throws UserNotFoundException    If the user with the given email is not found.
+   * @throws IllegalArgumentException If the input is invalid.
    */
-  public User findUser(@NonNull String email) throws UserNotFoundException {
+  public User findUser(@NonNull String email)
+      throws UserNotFoundException, IllegalArgumentException {
     return userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
         new UserNotFoundException("User with email " + email + " not found."));
   }
