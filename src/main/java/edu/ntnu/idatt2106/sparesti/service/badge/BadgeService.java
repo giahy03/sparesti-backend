@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service class for operations related to badges.
+ * A user can
  *
  * @author Hanne-Sofie Søreide
  */
