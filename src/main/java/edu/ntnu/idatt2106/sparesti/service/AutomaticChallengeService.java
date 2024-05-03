@@ -67,7 +67,7 @@ public class AutomaticChallengeService {
               today,
               endDate,
               dailyAmount,
-              recommendation.getFirst().toString());
+              recommendation.getFirst().translateToNorwegian());
 
       recommendationDtoObjects.add(challengeRecommendationDto);
     }
