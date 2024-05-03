@@ -48,6 +48,8 @@ public class UserService {
    * @param email             The email of the user.
    */
   public void editPassword(@NonNull PasswordChangeDto passwordChangeDto, @NonNull String email) {
+    UserValidator.validatePassword(passwordChangeDto.getNewPassword());
+
     User user = findUser(email);
 
     UserValidator.validatePasswordChange(user.getPassword(),
