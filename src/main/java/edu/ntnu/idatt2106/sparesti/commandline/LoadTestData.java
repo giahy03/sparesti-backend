@@ -75,6 +75,13 @@ public class LoadTestData implements CommandLineRunner {
             .user(user)
             .build());
 
+    user2.setUserInfo(UserInfo.builder()
+            .livingStatus(SsbLivingStatus.LIVING_ALONE)
+            .income(10000)
+            .savingPercentage(20)
+            .user(user2)
+            .build());
+
     SharedChallenge sharedChallenge = SharedChallenge.builder()
             .id(1L)
             .title("Buy less food")
