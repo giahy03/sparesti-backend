@@ -20,6 +20,7 @@ import edu.ntnu.idatt2106.sparesti.repository.SavingContributionRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -63,14 +64,14 @@ public class AchievementStatsService {
    * @return An int indicating the level of the new badge the user qualifies for, or 0 if the user
    *         does not qualify for a new badge.
    */
-  public int updateAndCheckAchievement(AchievementCategory category, Principal principal) {
+  public List<Integer> updateAndCheckAchievement(AchievementCategory category, Principal principal) {
 
     String email = principal.getName();
 
     User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
             new UserNotFoundException("User with email " + email + " not found"));
 
-    if (user.getStats() == null) {
+    if(user.getStats()==null) {
       AchievementStats stats = AchievementStats.builder()
               .savingGoalsAchieved(0)
               .challengesAchieved(0)
@@ -84,18 +85,20 @@ public class AchievementStatsService {
     }
 
     return switch (category) {
-      case SAVING_STREAK -> updateSavingStreak(user)
-              ? checkSavingStreakLevel(principal, user) : 0;
-      case AMOUNT_SAVED -> updateTotalSaved(user, principal)
-              ? checkTotalSaved(principal, user) : 0;
+      case SAVING_STREAK ->
+              updateSavingStreak(user) ? checkSavingStreakLevel(principal, user) : Arrays.asList(0,0);
+      case AMOUNT_SAVED ->
+              updateTotalSaved(user, principal) ? checkTotalSaved(principal, user) :  Arrays.asList(0,0);
       case NUMBER_OF_CHALLENGES_COMPLETED ->
-              updateNumberOfChallengesFinished(user, principal)
-                      ? checkChallengesCompleted(principal, user) : 0;
+              updateNumberOfChallengesFinished(user, principal) ?
+                      checkChallengesCompleted(principal, user) :  Arrays.asList(0,0);
       case NUMBER_OF_SAVING_GOALS_ACHIEVED ->
-              updateSavingGoalsAchieved(user, principal)
-                      ? checkGoalsCompleted(principal, user) : 0;
-      case EDUCATION -> updateEducation(user);
+              updateSavingGoalsAchieved(user, principal) ?
+                      checkGoalsCompleted(principal, user) :  Arrays.asList(0,0);
+      case EDUCATION ->
+              updateEducation(user);
     };
+
 
   }
 
@@ -239,46 +242,43 @@ public class AchievementStatsService {
    */
   private boolean updateSavingGoalsAchieved(User user, Principal principal) {
 
-    log.info("Inside: updateSavingGoalAchieved");
     List<SavingGoal> goals = savingContributionRepository
             .findAllContributionsByUser_Email(principal.getName(), Pageable.unpaged())
             .stream().map(SavingContribution::getGoal).toList();
-
-    System.out.println(goals);
 
     int achievedGoals = (int) goals.stream()
             .filter(goal -> goal.getState().equals(GoalState.FINISHED))
             .count();
 
-    System.out.println(achievedGoals);
-
     int oldCount = user.getStats().getSavingGoalsAchieved();
 
-    if (achievedGoals > oldCount) {
-      System.out.println("Updating user stats");
+    if (achievedGoals > oldCount){
       user.getStats().setSavingGoalsAchieved(achievedGoals);
       userRepository.save(user);
       return true;
     } else {
       return false;
     }
+
   }
 
   /**
    * Updates the user's stat related to reading news in the application. If it has changed, the
-   * user's stat is updated and true is returned, otherwise false is returned.
+   * user's stat is updated 1 is returned, otherwise 0 is returned.
    *
    * @param user The user for which the education stat may be updated.
-   * @return True if the user's stat related to reading news is updated, false otherwise.
+   * @return A list with two integers, the first one signifying the highest achieved badge level
+   *          and the second one the number of new badges to create for this category.
    */
-  private int updateEducation(User user) {
+  private List<Integer> updateEducation(User user) {
 
-    if (user.getStats().isReadNews()) {
-      return 0;
+    if (user.getStats().isReadNews()){
+      return Arrays.asList(0,0);
     } else {
       user.getStats().setReadNews(true);
-      return 1;
+      return Arrays.asList(1,1);
     }
+
   }
 
 
@@ -292,7 +292,7 @@ public class AchievementStatsService {
    * @return An int indicating the level of the new badge
    *        or 0 if the user did not qualify for a new badge.
    */
-  private int checkSavingStreakLevel(Principal principal, User user) {
+  private List<Integer> checkSavingStreakLevel(Principal principal, User user) {
 
     Badge currentTopBadge = badgeRepository
             .findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(
@@ -304,8 +304,9 @@ public class AchievementStatsService {
     int currentLevel = currentTopBadge == null ? 0 : currentTopBadge.getLevel();
     int calculatedLevel = findLevel(thresholds, user.getStats().getStreak());
 
-    return calculatedLevel > currentLevel ? calculatedLevel : 0;
-  }
+    int newTopLevel = calculatedLevel > currentLevel ? calculatedLevel : 0;
+
+    return Arrays.asList(newTopLevel, calculatedLevel-currentLevel);  }
 
 
   /**
@@ -318,7 +319,7 @@ public class AchievementStatsService {
    * @return An int indicating the level of the new
    *        badge or 0 if the user did not qualify for a new badge.
    */
-  private int checkTotalSaved(Principal principal, User user) {
+  private List<Integer> checkTotalSaved(Principal principal, User user) {
 
     Badge currentTopBadge = badgeRepository
             .findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(
@@ -330,7 +331,10 @@ public class AchievementStatsService {
     int currentLevel = currentTopBadge == null ? 0 : currentTopBadge.getLevel();
     int calculatedLevel = findLevel(thresholds, user.getStats().getTotalSaved());
 
-    return calculatedLevel > currentLevel ? calculatedLevel : 0;
+    int newTopLevel = calculatedLevel > currentLevel ? calculatedLevel : 0;
+
+    return Arrays.asList(newTopLevel, calculatedLevel-currentLevel);
+
   }
 
 
@@ -344,8 +348,7 @@ public class AchievementStatsService {
    * @return An int indicating the level of the new badge
    *        or 0 if the user did not qualify for a new badge.
    */
-  private int checkGoalsCompleted(Principal principal, User user) {
-    log.info("Inside: checkSavingGoalsCompleted");
+  private List<Integer> checkGoalsCompleted(Principal principal, User user) {
 
     Badge currentTopBadge = badgeRepository
             .findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(
@@ -356,12 +359,12 @@ public class AchievementStatsService {
             AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED)
             .getThresholds();
 
-    System.out.println(thresholds);
-
     int currentLevel = currentTopBadge == null ? 0 : currentTopBadge.getLevel();
     int calculatedLevel = findLevel(thresholds, user.getStats().getSavingGoalsAchieved());
 
-    return calculatedLevel > currentLevel ? calculatedLevel : 0;
+    int newTopLevel = calculatedLevel > currentLevel ? calculatedLevel : 0;
+
+    return Arrays.asList(newTopLevel, calculatedLevel-currentLevel);
   }
 
 
@@ -375,21 +378,22 @@ public class AchievementStatsService {
    * @return An int indicating the level of the new
    *         badge or 0 if the user did not qualify for a new badge.
    */
-  private int checkChallengesCompleted(Principal principal, User user) {
+  private List<Integer> checkChallengesCompleted(Principal principal, User user) {
 
     Badge currentTopBadge = badgeRepository
-            .findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(
-                    principal.getName(),
+            .findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(principal.getName(),
                     AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED).orElse(null);
 
-    List<Integer> thresholds = getAchievementOfCategory(
-            AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
+    List<Integer> thresholds = getAchievementOfCategory(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
             .getThresholds();
 
     int currentLevel = currentTopBadge == null ? 0 : currentTopBadge.getLevel();
     int calculatedLevel = findLevel(thresholds, user.getStats().getChallengesAchieved());
 
-    return calculatedLevel > currentLevel ? calculatedLevel : 0;
+    int newTopLevel = calculatedLevel > currentLevel ? calculatedLevel : 0;
+
+    return Arrays.asList(newTopLevel, calculatedLevel - currentLevel);
+
   }
 
 

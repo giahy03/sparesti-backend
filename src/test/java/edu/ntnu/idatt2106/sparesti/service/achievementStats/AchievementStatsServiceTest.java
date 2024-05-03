@@ -104,7 +104,7 @@ class AchievementStatsServiceTest {
     }
 
   @Test
-  void Service_UpdateAndCheckAchievement_ReturnAnInt() {
+  void Service_UpdateAndCheckAchievement_ReturnAListOfInt() {
     // Arrange
     user.getStats().setTotalSaved(0);
     SavingGoal savingGoal = SavingGoalUtility.createSavingGoal1(user);
@@ -114,7 +114,6 @@ class AchievementStatsServiceTest {
     savingGoal.setContributions(List.of(savingContribution));
     user.setContributions(List.of(savingContribution));
     Challenge challenge = ChallengeUtility.createSharedChallenge3();
-    AchievementStats stats = user.getStats();
 
     when(userRepository.findUserByEmailIgnoreCase(anyString()))
         .thenReturn(Optional.ofNullable(user));
@@ -133,16 +132,16 @@ class AchievementStatsServiceTest {
 
 
     // Act
-    int updatedLevel = achievementStatsService.updateAndCheckAchievement(AchievementCategory.EDUCATION, principal);
-    int updatedLevel2 = achievementStatsService.updateAndCheckAchievement(AchievementCategory.AMOUNT_SAVED, principal);
-    int updatedLevel3 = achievementStatsService.updateAndCheckAchievement(AchievementCategory.SAVING_STREAK, principal);
+    List<Integer> updatedLevel = achievementStatsService.updateAndCheckAchievement(AchievementCategory.EDUCATION, principal);
+    List<Integer> updatedLevel2 = achievementStatsService.updateAndCheckAchievement(AchievementCategory.AMOUNT_SAVED, principal);
+    List<Integer> updatedLevel3 = achievementStatsService.updateAndCheckAchievement(AchievementCategory.SAVING_STREAK, principal);
     achievementStatsService.updateAndCheckAchievement(AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED, principal);
     achievementStatsService.updateAndCheckAchievement(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED, principal);
 
     // Assert
-    assertThat(updatedLevel).isNotZero();
-    assertThat(updatedLevel2).isNotZero();
-    assertThat(updatedLevel3).isNotZero();
+    assertThat(updatedLevel.getFirst()).isNotZero();
+    assertThat(updatedLevel2.getFirst()).isNotZero();
+    assertThat(updatedLevel3.getFirst()).isNotZero();
   }
 
   @Test

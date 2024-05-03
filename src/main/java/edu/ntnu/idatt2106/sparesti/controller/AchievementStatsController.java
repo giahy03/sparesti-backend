@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.security.Principal;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -62,20 +64,30 @@ public class AchievementStatsController {
       Principal principal, @PathVariable AchievementCategory category) {
 
     log.info("Checking if badge of the category {} was qualified for.", category);
-    int level = achievementStatsService.updateAndCheckAchievement(category, principal);
 
-    log.info("If 0, no badge awarded, if a number, a badge of that level was awarded: {}", level);
+    List<Integer> levelChange = achievementStatsService.updateAndCheckAchievement(category, principal);
 
-    if (level > 0) {
-      log.info("Returning a badge preview DTO");
-      BadgePreviewDto createdBadge =
-          achievementStatsService.createBadge(category, principal, level);
+    log.info("If 0, no badge awarded, if a number, badge(s) up to that level was awarded: {}", levelChange.getFirst());
+
+    if (levelChange.get(1) > 1) {
+      for (int i = levelChange.getFirst() - 1; i > levelChange.getFirst() - levelChange.getLast(); i--) {
+        achievementStatsService.createBadge(category, principal, i);
+      }
+    }
+
+    if(levelChange.getFirst() != 0) {
+      BadgePreviewDto createdBadge = achievementStatsService.createBadge(category, principal, levelChange.getFirst());
+
       return new ResponseEntity<>(createdBadge, HttpStatus.CREATED);
+
     } else {
       log.info("No new badge received, but the stats were updated");
       return new ResponseEntity<>(HttpStatus.OK);
     }
+
   }
+
+
 
   /**
    * Get the total amount saved in Sparesti by the current user.
@@ -97,8 +109,11 @@ public class AchievementStatsController {
   public ResponseEntity<Double> getTotalSavedByUser(Principal principal) {
 
     log.info("Returning total saved amount by user: {}", principal.getName());
+
+    achievementStatsService.updateAndCheckAchievement(AchievementCategory.AMOUNT_SAVED, principal);
     double total = achievementStatsRepository.findAchievementStatsByUserEmail(principal.getName())
-        .orElseThrow().getTotalSaved();
+            .orElseThrow().getTotalSaved();
+
     log.info("Total saved amount in Sparesti: {}", total);
 
     return new ResponseEntity<>(total, HttpStatus.OK);

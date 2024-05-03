@@ -65,4 +65,5 @@ public class AchievementStats {
   @Schema(description = "If the user has clicked on any of the news links in Sparesti ")
   @Column(name = "read_news")
   private boolean readNews;
+
 }
