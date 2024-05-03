@@ -3,8 +3,6 @@ package edu.ntnu.idatt2106.sparesti.commandline;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbLivingStatus;
 import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
-import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
-import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
 import edu.ntnu.idatt2106.sparesti.model.banking.Bank;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Difficulty;
 import edu.ntnu.idatt2106.sparesti.model.challenge.Progress;
@@ -30,7 +28,6 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -47,10 +44,6 @@ public class LoadTestData implements CommandLineRunner {
   private final UserRepository userRepository;
 
   private final ChallengesRepository challengesRepository;
-
-  private final AchievementStatsRepository achievementStatsRepository;
-
-  private final BadgeRepository badgeRepository;
 
   private final AchievementRepository achievementRepository;
 
@@ -156,31 +149,6 @@ public class LoadTestData implements CommandLineRunner {
             .build();
 
 
-
-/*
-    Badge badgeA = Badge.builder()
-            .user(user)
-            .achievement(achievementA)
-            .achievedDate(LocalDate.of(2024, 4, 3))
-            .level(1)
-            .build();
-
-    Badge badgeB = Badge.builder()
-            .user(user)
-            .achievement(achievementB)
-            .achievedDate(LocalDate.of(2024, 4, 4))
-            .level(1)
-            .build();
-
-    Badge badgeC = Badge.builder()
-            .user(user)
-            .achievement(achievementB)
-            .achievedDate(LocalDate.of(2024, 4, 25))
-            .level(2)
-            .build();
-*/
-
-
     SavingGoal savingGoalA = SavingGoal.builder()
             .lives(5)
             .state(GoalState.UNDER_PROGRESS)
@@ -226,18 +194,6 @@ public class LoadTestData implements CommandLineRunner {
     userRepository.save(user2);
 
 
-/*
-    AchievementStats achievementStatsA = AchievementStats.builder()
-            .challengesAchieved(9)
-            .savingGoalsAchieved(4)
-            .streak(29)
-            .totalSaved(999)
-            .readNews(false)
-            .user(user)
-            .build();
-*/
-
-
     achievementRepository.save(achievementA);
     achievementRepository.save(achievementB);
     achievementRepository.save(achievementC);
@@ -247,15 +203,7 @@ public class LoadTestData implements CommandLineRunner {
     challengesRepository.save(sharedChallenge);
     challengesRepository.save(sharedChallenge2);
 
-    // user.setBadges(Set.of(badgeA, badgeB, badgeC));
-
-    //achievementStatsRepository.save(achievementStatsA);
-
     challengesRepository.save(sharedChallenge);
-
-//    badgeRepository.save(badgeA);
-//    badgeRepository.save(badgeB);
-//    badgeRepository.save(badgeC);
 
     savingGoalRepository.save(savingGoalA);
     savingGoalRepository.save(savingGoalB);
