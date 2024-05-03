@@ -120,31 +120,31 @@ public class LoadTestData implements CommandLineRunner {
 
     Achievement achievementA = Achievement.builder()
             .category(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
-            .description("Complete a certain number of saving challenges in Sparesti.")
+            .description("Fullføre et gitt antall spareutfordringer i Sparesti.")
             .thresholds(List.of(10, 20, 50, 100, 500, 1000))
             .build();
 
     Achievement achievementB = Achievement.builder()
             .category(AchievementCategory.AMOUNT_SAVED)
-            .description("Save up a specific amount of money through Sparesti.")
+            .description("Spare opp en gitt sum med penger i Sparesti.")
             .thresholds(List.of(1000, 2000, 5000, 10000, 50000, 100000))
             .build();
 
     Achievement achievementC = Achievement.builder()
             .category(AchievementCategory.SAVING_STREAK)
-            .description("Save a number of days in a row.")
+            .description("Spar penger et gitt antall dager på rad.")
             .thresholds(List.of(7, 30, 60, 100, 150, 200, 365, 500, 750, 1000, 2000))
             .build();
 
     Achievement achievementD = Achievement.builder()
             .category(AchievementCategory.EDUCATION)
-            .description("Visit a news article for the first time.")
+            .description("Oppdag nyhetssiden og bli litt klokere.")
             .thresholds(List.of(1))
             .build();
 
     Achievement achievementE = Achievement.builder()
             .category(AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED)
-            .description("Complete a certain number of saving goals in Sparesti.")
+            .description("Fullføre et gitt antall sparemål i Sparesti.")
             .thresholds(List.of(1, 5, 10, 20, 50, 100, 200, 500))
             .build();
 
