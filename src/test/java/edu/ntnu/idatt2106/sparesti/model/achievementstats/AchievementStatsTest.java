@@ -1,8 +1,9 @@
-package edu.ntnu.idatt2106.sparesti.model.achievementStats.util;
+package edu.ntnu.idatt2106.sparesti.model.achievementstats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import edu.ntnu.idatt2106.sparesti.model.achievementstats.util.AchievementStatsUtility;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,12 +47,12 @@ class AchievementStatsTest {
             .build();
 
     // Act
-    int actualChallenges = testStats.getChallengesAchieved();
-    int actualGoals = testStats.getSavingGoalsAchieved();
-    int actualStreak = testStats.getStreak();
-    double actualSaved = testStats.getTotalSaved();
-    boolean actualNews = testStats.isReadNews();
-    User actualUser = testStats.getUser();
+    final int actualChallenges = testStats.getChallengesAchieved();
+    final int actualGoals = testStats.getSavingGoalsAchieved();
+    final int actualStreak = testStats.getStreak();
+    final double actualSaved = testStats.getTotalSaved();
+    final boolean actualNews = testStats.isReadNews();
+    final User actualUser = testStats.getUser();
 
     // Assert
     assertEquals(10, actualChallenges);

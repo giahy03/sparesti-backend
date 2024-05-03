@@ -33,9 +33,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *
  * @author Jeffrey Yaw Annor Tabiri
  * @version 1.0
- *  <p>
- *  The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/test/java/edu/ntnu/idatt2105/quizapp/services/user/AuthenticationServiceTest.java">...</a>
- *  </p>
+ *      <p>
+ *      The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/test/java/edu/ntnu/idatt2105/quizapp/services/user/AuthenticationServiceTest.java">...</a>
+ *      </p>
  * @see AuthService
  */
 @ExtendWith(MockitoExtension.class)

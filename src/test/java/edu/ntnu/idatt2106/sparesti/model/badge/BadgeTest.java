@@ -33,10 +33,10 @@ class BadgeTest {
   void badge_getters_returnsExpectedValues() {
 
     // Arrange
-    Long expectedId = 1L;
-    User expectedUser = BadgeUtility.createUserA();
-    Achievement expectedAchievement = BadgeUtility.createAchievementA();
-    LocalDate expectedDate = LocalDate.of(2024, 4, 3);
+    final Long expectedId = 1L;
+    final User expectedUser = BadgeUtility.createUserA();
+    final Achievement expectedAchievement = BadgeUtility.createAchievementA();
+    final LocalDate expectedDate = LocalDate.of(2024, 4, 3);
 
     // Assert
     assertEquals(expectedId, badge.getId());
@@ -50,11 +50,11 @@ class BadgeTest {
   void badge_setters_returnsExpectedValues() {
 
     // Arrange
-    Long expectedId = 2L;
-    User expectedUser = BadgeUtility.createUserB();
-    Achievement expectedAchievement = BadgeUtility.createAchievementB();
-    LocalDate expectedDate = LocalDate.of(2024, 4, 10);
-    int expectedLevel = 3;
+    final Long expectedId = 2L;
+    final User expectedUser = BadgeUtility.createUserB();
+    final Achievement expectedAchievement = BadgeUtility.createAchievementB();
+    final LocalDate expectedDate = LocalDate.of(2024, 4, 10);
+    final int expectedLevel = 3;
 
     // Act
     badge.setId(2L);

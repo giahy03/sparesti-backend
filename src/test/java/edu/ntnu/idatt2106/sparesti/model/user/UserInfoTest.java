@@ -56,7 +56,7 @@ class UserInfoTest {
   void userInfo_UserInfoConstructorWithNoArgs_ReturnUserInfo() {
     // Arrange
     double expectedIncome = 0;
-    SsbLivingStatus expectedLivingStatus = SsbLivingStatus.fromInteger(0);
+    final SsbLivingStatus expectedLivingStatus = SsbLivingStatus.fromInteger(0);
     User expectedUser = user;
 
     // Act

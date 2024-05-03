@@ -67,7 +67,7 @@ public class AchievementStatsService {
    * @param category  The achievement type to update and check.
    * @param principal The authenticated user.
    * @return A list containing two integers specifying how many new badges to
-   *        create and of which level.
+   *         create and of which level.
    */
   public List<Integer> updateAndCheckAchievement(
           AchievementCategory category, Principal principal) {
@@ -96,9 +96,8 @@ public class AchievementStatsService {
               ? checkSavingStreakLevel(principal, user) : Arrays.asList(0, 0);
       case AMOUNT_SAVED -> updateTotalSaved(user, principal)
               ? checkTotalSaved(principal, user) : Arrays.asList(0, 0);
-      case NUMBER_OF_CHALLENGES_COMPLETED ->
-              updateNumberOfChallengesFinished(user, principal)
-                      ? checkChallengesCompleted(principal, user) : Arrays.asList(0, 0);
+      case NUMBER_OF_CHALLENGES_COMPLETED -> updateNumberOfChallengesFinished(user, principal)
+              ? checkChallengesCompleted(principal, user) : Arrays.asList(0, 0);
       case NUMBER_OF_SAVING_GOALS_ACHIEVED -> updateSavingGoalsAchieved(user, principal)
               ? checkGoalsCompleted(principal, user) : Arrays.asList(0, 0);
       case EDUCATION -> updateEducation(user);
@@ -219,7 +218,7 @@ public class AchievementStatsService {
    *                  completed challenges may be updated.
    * @param principal The authenticated user.
    * @return True if the total number of completed challenges
-   *         in increased, false otherwise.
+   *                  in increased, false otherwise.
    */
   private boolean updateNumberOfChallengesFinished(
           User user, Principal principal) {
@@ -252,7 +251,7 @@ public class AchievementStatsService {
    *                  number of completed saving goals may be updated.
    * @param principal The authenticated user.
    * @return True if the total number of completed
-   *        saving goals in increased, false otherwise.
+   *          saving goals in increased, false otherwise.
    */
   private boolean updateSavingGoalsAchieved(User user, Principal principal) {
 
@@ -418,8 +417,8 @@ public class AchievementStatsService {
    * @param principal The authenticated user.
    * @param user      The user who may have qualified for a new badge.
    * @return A list containing two integers. The first specifies the highest
-   *        level badge to create and the second specifies the number of new
-   *        badges to create.
+   *         level badge to create and the second specifies the number of new
+   *         badges to create.
    */
   private List<Integer> checkChallengesCompleted(Principal principal, User user) {
 
@@ -427,8 +426,8 @@ public class AchievementStatsService {
             .findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(principal.getName(),
                     AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED).orElse(null);
 
-    List<Integer> thresholds =
-            getAchievementOfCategory(AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
+    List<Integer> thresholds = getAchievementOfCategory(
+            AchievementCategory.NUMBER_OF_CHALLENGES_COMPLETED)
             .getThresholds();
 
     int currentLevel = currentTopBadge == null ? 0 : currentTopBadge.getLevel();
@@ -478,6 +477,5 @@ public class AchievementStatsService {
       }
     }
     return value >= thresholds.getLast() ? thresholds.size() : 0;
-
   }
 }

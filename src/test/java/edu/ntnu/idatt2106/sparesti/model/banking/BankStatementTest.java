@@ -76,12 +76,12 @@ class BankStatementTest {
   @Test
   void bankStatement_Setter_ReturnCorrectValues() {
     //Arrange
-    Transaction transaction = BankingUtility.createTransactionA();
-    User expectedUser = ChallengeUtility.createUserB();
-    String expectedUserEmail = ChallengeUtility.createUserB().getEmail();
-    String expectedAccountNumber = "1234";
-    int expectedSize = 2;
-    String expectedDate = "2023-12";
+    final Transaction transaction = BankingUtility.createTransactionA();
+    final User expectedUser = ChallengeUtility.createUserB();
+    final String expectedUserEmail = ChallengeUtility.createUserB().getEmail();
+    final String expectedAccountNumber = "1234";
+    final int expectedSize = 2;
+    final String expectedDate = "2023-12";
 
     //Act
     bankStatementEmail.setUser(expectedUser);

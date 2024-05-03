@@ -1,4 +1,4 @@
-package edu.ntnu.idatt2106.sparesti.model.achievementStats.util;
+package edu.ntnu.idatt2106.sparesti.model.achievementstats.util;
 
 import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;

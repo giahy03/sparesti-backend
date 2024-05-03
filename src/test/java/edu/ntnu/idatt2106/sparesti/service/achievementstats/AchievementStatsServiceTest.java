@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.mapper.BadgeMapper;
-import edu.ntnu.idatt2106.sparesti.model.achievementStats.util.AchievementStatsUtility;
+import edu.ntnu.idatt2106.sparesti.model.achievementstats.util.AchievementStatsUtility;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementStats;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
@@ -105,7 +105,6 @@ class AchievementStatsServiceTest {
     assertThat(achievementStatsService.findLevel(levels, 50.0)).isEqualTo(7);
   }
 
-  @DisplayName("Test that method to update and check achievement returns a list of int")
   @Test
   void service_UpdateAndCheckAchievement_ReturnListOfInt() {
     // Arrange
@@ -121,15 +120,16 @@ class AchievementStatsServiceTest {
     when(userRepository.findUserByEmailIgnoreCase(anyString()))
             .thenReturn(Optional.ofNullable(user));
 
-    when(badgeRepository.findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(
-            anyString(), any(AchievementCategory.class)))
+    when(badgeRepository.findFirstByUser_EmailAndAchievement_Category_OrderByLevelDesc(anyString(),
+            any(AchievementCategory.class)))
             .thenReturn(Optional.of(BadgeUtility.createBadgeA()));
 
     when(achievementRepository.findByCategory(any(AchievementCategory.class)))
             .thenReturn(Optional.ofNullable(AchievementStatsUtility.createAchievement()));
 
     when(challengeRepository.findByUser_Email(anyString(), any(Pageable.class)))
-            .thenReturn(List.of(challenge, challenge, challenge, challenge, challenge));
+            .thenReturn(List.of(challenge, challenge,
+                    challenge, challenge, challenge));
 
     when(savingContributionRepository
             .findAllContributionsByUser_Email(anyString(), any(Pageable.class)))
@@ -138,11 +138,11 @@ class AchievementStatsServiceTest {
 
 
     // Act
-    List<Integer> updatedLevel = achievementStatsService
-            .updateAndCheckAchievement(AchievementCategory.EDUCATION, principal);
-    List<Integer> updatedLevel2 = achievementStatsService
+    final List<Integer> updatedLevel = achievementStatsService
+         .updateAndCheckAchievement(AchievementCategory.EDUCATION, principal);
+    final List<Integer> updatedLevel2 = achievementStatsService
             .updateAndCheckAchievement(AchievementCategory.AMOUNT_SAVED, principal);
-    List<Integer> updatedLevel3 = achievementStatsService
+    final List<Integer> updatedLevel3 = achievementStatsService
             .updateAndCheckAchievement(AchievementCategory.SAVING_STREAK, principal);
     achievementStatsService.updateAndCheckAchievement(
             AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED, principal);
@@ -155,7 +155,6 @@ class AchievementStatsServiceTest {
     assertThat(updatedLevel3.getFirst()).isNotZero();
   }
 
-  @DisplayName("Test that method to create badge returns badge preview dto")
   @Test
   void service_CreateBadge_ReturnsBadge() {
     // Arrange
@@ -168,12 +167,12 @@ class AchievementStatsServiceTest {
     when(badgeRepository.save(any(Badge.class)))
             .thenReturn(BadgeUtility.createBadgeA());
 
-    when(badgeMapper.mapToBadgePreviewDto(
-            any(Badge.class))).thenReturn(BadgeUtility.createBadgePreviewDto());
+    when(badgeMapper.mapToBadgePreviewDto(any(Badge.class)))
+            .thenReturn(BadgeUtility.createBadgePreviewDto());
 
     // Act
-    BadgePreviewDto createdBadgeA =
-            achievementStatsService.createBadge(AchievementCategory.AMOUNT_SAVED, principal, 4);
+    BadgePreviewDto createdBadgeA = achievementStatsService
+            .createBadge(AchievementCategory.AMOUNT_SAVED, principal, 4);
     assertThat(createdBadgeA).isNotNull();
   }
 
