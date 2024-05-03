@@ -100,19 +100,23 @@ public class StockService {
     String startDate;
     String endDate;
 
-    if (currentDayOfWeek == DayOfWeek.MONDAY || currentDayOfWeek == DayOfWeek.SUNDAY) {
+    switch (currentDayOfWeek) {
+      case DayOfWeek.MONDAY, DayOfWeek.SUNDAY -> {
 
-      int daysToAdd = (currentDayOfWeek == DayOfWeek.SUNDAY) ? 1 : 2;
+        int daysToAdd = (currentDayOfWeek == DayOfWeek.SUNDAY) ? 1 : 2;
 
-      startDate = currentDate.minusDays(daysToAdd + 2).toString();
-      endDate = currentDate.minusDays(daysToAdd + 1).toString();
+        startDate = currentDate.minusDays((long) daysToAdd + 2).toString();
+        endDate = currentDate.minusDays((long) daysToAdd + 1).toString();
 
-    } else if (currentDayOfWeek == DayOfWeek.TUESDAY) {
-      startDate = currentDate.minusDays(4).toString();
-      endDate = currentDate.minusDays(1).toString();
-    } else {
-      startDate = currentDate.minusDays(2).toString();
-      endDate = currentDate.minusDays(1).toString();
+      }
+      case DayOfWeek.TUESDAY -> {
+        startDate = currentDate.minusDays(4).toString();
+        endDate = currentDate.minusDays(1).toString();
+      }
+      default -> {
+        startDate = currentDate.minusDays(2).toString();
+        endDate = currentDate.minusDays(1).toString();
+      }
     }
 
     return new String[]{startDate, endDate};

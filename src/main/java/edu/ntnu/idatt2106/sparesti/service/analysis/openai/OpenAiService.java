@@ -2,6 +2,7 @@ package edu.ntnu.idatt2106.sparesti.service.analysis.openai;
 
 import static java.lang.Thread.sleep;
 
+import edu.ntnu.idatt2106.sparesti.exception.analysis.ExternalApiException;
 import edu.ntnu.idatt2106.sparesti.model.analysis.openai.OpenAiMessage;
 import edu.ntnu.idatt2106.sparesti.model.analysis.openai.OpenAiPollResponse;
 import edu.ntnu.idatt2106.sparesti.model.analysis.openai.OpenAiRunRequest;
@@ -31,12 +32,13 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @AllArgsConstructor
 public class OpenAiService {
-
   private static final int MAX_POLLING_ATTEMPTS = 60;
   public static final int POLLING_INTERVAL = 500;
-  private static final String secretKey = Dotenv.load().get("OPENAI_API_KEY");
+  private static final String SECRET_KEY = Dotenv.load().get("OPENAI_API_KEY");
 
   public static final String OPENAI_API_URL = "https://api.openai.com/v1";
+  public static final String FAILED_TO_RETRIEVE_DATA_FROM_OPEN_AI_API =
+          "Failed to retrieve data from OpenAI API";
 
   private final RestTemplate restTemplate = new RestTemplate();
 
@@ -93,7 +95,8 @@ public class OpenAiService {
           throw new SocketTimeoutException("OpenAI api call took too long to complete");
         }
       } catch (InterruptedException e) {
-        log.error("Thread interrupted", e);
+        log.warn("Thread interrupted", e);
+        Thread.currentThread().interrupt();
       }
     }
   }
@@ -121,7 +124,7 @@ public class OpenAiService {
       return responseEntity.getBody();
 
     } else {
-      throw new RuntimeException("Failed to retrieve messages from OpenAI API");
+      throw new ExternalApiException("Failed to retrieve messages from OpenAI API");
     }
   }
 
@@ -146,7 +149,7 @@ public class OpenAiService {
     if (responseEntity.getStatusCode().is2xxSuccessful()) {
       return responseEntity.getBody();
     } else {
-      throw new RuntimeException("Failed to retrieve data from OpenAI API");
+      throw new ExternalApiException(FAILED_TO_RETRIEVE_DATA_FROM_OPEN_AI_API);
     }
   }
 
@@ -174,8 +177,8 @@ public class OpenAiService {
 
     HttpEntity<OpenAiRunRequest> requestEntity = new HttpEntity<>(openAiRunRequest, getHeaders());
 
-    log.info("Sending message to OpenAI" + requestEntity.getBody().toString());
-    log.info("Secret key" + secretKey);
+    log.info("Sending message to OpenAI" + requestEntity.getBody());
+    log.info("Secret key" + SECRET_KEY);
     ResponseEntity<OpenAiThreadResponse> responseEntity =
         restTemplate.exchange(formattedLocation,
             HttpMethod.POST,
@@ -185,13 +188,13 @@ public class OpenAiService {
     if (responseEntity.getStatusCode().is2xxSuccessful()) {
       OpenAiThreadResponse response = responseEntity.getBody();
       if (response == null) {
-        throw new RuntimeException("Failed to retrieve data from OpenAI API");
+        throw new ExternalApiException(FAILED_TO_RETRIEVE_DATA_FROM_OPEN_AI_API);
       } else {
         log.info("Open AI thread created with id: " + response.getThreadId());
       }
       return response;
     } else {
-      throw new RuntimeException("Failed to retrieve data from OpenAI API");
+      throw new ExternalApiException(FAILED_TO_RETRIEVE_DATA_FROM_OPEN_AI_API);
     }
 
   }
@@ -205,7 +208,7 @@ public class OpenAiService {
   private @NonNull HttpHeaders getHeaders() {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.setBearerAuth(secretKey);
+    headers.setBearerAuth(SECRET_KEY);
     headers.set("OpenAI-Beta", "assistants=v2");
     return headers;
   }

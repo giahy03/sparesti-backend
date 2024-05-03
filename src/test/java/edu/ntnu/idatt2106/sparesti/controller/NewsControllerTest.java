@@ -60,7 +60,7 @@ public class NewsControllerTest {
     @WithMockUser(roles = "USER")
     public void controller_getNews() throws Exception {
 
-        when(newsScrapingService.scrapeDN(0, 5))
+        when(newsScrapingService.scrapeDn(0, 5))
                 .thenReturn(List.of(NewsUtility.createNewsDtoA(), NewsUtility.createNewsDtoB()));
 
         mockMvc

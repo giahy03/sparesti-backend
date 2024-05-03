@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
  * @author Hanne-Sofie Søreide
  */
 @ExtendWith(MockitoExtension.class)
-public class BadgeServiceTest {
+class BadgeServiceTest {
 
     @InjectMocks
     BadgeService badgeService;
@@ -135,7 +135,7 @@ public class BadgeServiceTest {
         when(achievementRepository.findByCategory(BadgeUtility.createAchievementCategoryA())).thenReturn(Optional.of(BadgeUtility.createAchievementA()));
 
         // Act and assert
-        assertNotNull(badgeService.getAchievementOfCategory(BadgeUtility.createAchievementCategoryA(), principal));
+        assertNotNull(badgeService.getAchievementOfCategory(BadgeUtility.createAchievementCategoryA()));
     }
 
     @Test

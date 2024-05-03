@@ -1,22 +1,31 @@
 package edu.ntnu.idatt2106.sparesti.service.saving;
 
-import edu.ntnu.idatt2106.sparesti.dto.saving.*;
+import edu.ntnu.idatt2106.sparesti.dto.saving.AddSharedGoalToUserDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributionDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalContributorDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalCreationRequestDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalIdDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalUpdateStateDto;
+import edu.ntnu.idatt2106.sparesti.dto.saving.SavingGoalUpdateValueDto;
 import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
+import edu.ntnu.idatt2106.sparesti.mapper.SavingGoalMapper;
 import edu.ntnu.idatt2106.sparesti.model.goal.SavingContribution;
 import edu.ntnu.idatt2106.sparesti.model.goal.SavingGoal;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.repository.SavingContributionRepository;
-import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SavingGoalRepository;
-import edu.ntnu.idatt2106.sparesti.mapper.SavingGoalMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Pageable;
+import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 
 /**
  * Service class for operations related to Saving Goals.
@@ -30,243 +39,255 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SavingGoalService {
 
-    private final UserRepository userRepository;
-    private final SavingGoalRepository savingGoalRepository;
-    private final SavingGoalMapper savingGoalMapper;
-    private final SavingContributionRepository savingContributionRepository;
+  private final UserRepository userRepository;
+  private final SavingGoalRepository savingGoalRepository;
+  private final SavingGoalMapper savingGoalMapper;
+  private final SavingContributionRepository savingContributionRepository;
 
 
-    /**
-     * Create a saving goal and store it in the database.
-     *
-     * @param savingGoalCreationRequestDto DTO containing the information needed to create a saving goal
-     * @param principal The authenticated user
-     * @return The response DTO containing the ID of the created saving goal
-     */
-    public SavingGoalIdDto createSavingGoal( Principal principal,
-                                             SavingGoalCreationRequestDto savingGoalCreationRequestDto) {
+  /**
+   * Create a saving goal and store it in the database.
+   *
+   * @param savingGoalCreationRequestDto DTO containing the
+   *                                     information needed to create a saving goal
+   * @param principal                    The authenticated user
+   * @return The response DTO containing the ID of the created saving goal
+   */
+  public SavingGoalIdDto createSavingGoal(Principal principal,
+                                          SavingGoalCreationRequestDto
+                                                  savingGoalCreationRequestDto) {
 
-        String email = principal.getName();
-        User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
-                new UserNotFoundException("User with email " + email + " not found"));
-        System.out.println(savingGoalCreationRequestDto);
-        SavingGoal createdSavingGoal = savingGoalMapper.mapToSavingGoal(savingGoalCreationRequestDto, user);
-        SavingContribution startingContribution = SavingContribution.builder()
-                .user(user)
-                .goal(createdSavingGoal)
-                .contribution(0.0).build();
-        
-        SavingGoal savedSavingGoal = savingGoalRepository.save(createdSavingGoal);
-        savingContributionRepository.save(startingContribution);
+    String email = principal.getName();
+    User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(() ->
+            new UserNotFoundException("User with email " + email + " not found"));
 
-        return SavingGoalIdDto.builder()
-                .id(savedSavingGoal.getId())
-                .title(savedSavingGoal.getTitle())
-                .state(savedSavingGoal.getState())
-                .build();
+    SavingGoal createdSavingGoal = savingGoalMapper.mapToSavingGoal(
+            savingGoalCreationRequestDto, user);
+    SavingContribution startingContribution = SavingContribution.builder()
+            .user(user)
+            .goal(createdSavingGoal)
+            .contribution(0.0).build();
+
+    SavingGoal savedSavingGoal = savingGoalRepository.save(createdSavingGoal);
+    savingContributionRepository.save(startingContribution);
+
+    return SavingGoalIdDto.builder()
+            .id(savedSavingGoal.getId())
+            .title(savedSavingGoal.getTitle())
+            .state(savedSavingGoal.getState())
+            .build();
+  }
+
+
+  /**
+   * Add a new contributor to an existing goal with the given join-code.
+   * The authenticated user is the one being added to the goal.
+   *
+   * @param principal               The authenticated user
+   * @param addUserToGoalRequestDto DTO containing the join code from the user
+   * @return DTO containing basic information about the saving goal that the user was added to
+   */
+  public SavingGoalDto addGoalToUser(Principal principal,
+                                     AddSharedGoalToUserDto addUserToGoalRequestDto) {
+
+    User newUser = userRepository.findUserByEmailIgnoreCase(principal.getName()).orElseThrow();
+
+    SavingGoal savingGoal = savingGoalRepository.findByJoinCode(
+            addUserToGoalRequestDto.getJoinCode()).orElseThrow();
+
+    // If the user is already associated with this goal, do not add again.
+    SavingContribution contribution = savingContributionRepository
+            .findByUser_EmailAndGoal_Id(principal.getName(), savingGoal.getId()).orElse(null);
+
+    if (contribution == null) {
+      SavingContribution newContribution = SavingContribution.builder()
+              .goal(savingGoal).user(newUser).contribution(0.0).build();
+      savingContributionRepository.save(newContribution);
     }
 
+    return savingGoalMapper.mapToSavingGoalDto(savingGoal);
+  }
 
-    /**
-     * Add a new contributor to an existing goal with the given join-code.
-     * The authenticated user is the one being added to the goal.
-     *
-     * @param principal The authenticated user
-     * @param addUserToGoalRequestDto DTO containing the join code from the user
-     * @return DTO containing basic information about the saving goal that the user was added to
-     */
-    public SavingGoalDto addGoalToUser(Principal principal, AddSharedGoalToUserDto addUserToGoalRequestDto) {
 
-        User newUser = userRepository.findUserByEmailIgnoreCase(principal.getName()).orElseThrow();
+  /**
+   * Retrieves all the goals belonging to the authenticated user. The goals are represented by
+   * a list of DTOs containing the goal id, title and state.
+   *
+   * @param principal The authenticated user
+   * @param pageable  Pageable object defining page and page size
+   * @return List of DTOs containing basic information of each goal
+   */
+  public List<SavingGoalIdDto> getAllGoalsOfUser(Principal principal, Pageable pageable) {
 
-        SavingGoal savingGoal = savingGoalRepository.findByJoinCode(addUserToGoalRequestDto.getJoinCode()).orElseThrow();
+    userRepository.findUserByEmailIgnoreCase(principal.getName()).orElseThrow(() ->
+            new UserNotFoundException("User with email " + principal.getName() + " not found"));
 
-        // If the user is already associated with this goal, do not add again.
-        SavingContribution contribution = savingContributionRepository
-                .findByUser_EmailAndGoal_Id(principal.getName(), savingGoal.getId()).orElse(null);
+    List<SavingContribution> contributions = savingContributionRepository
+            .findAllContributionsByUser_Email(principal.getName(), pageable);
 
-        if (contribution == null) {
-            SavingContribution newContribution = SavingContribution.builder()
-                    .goal(savingGoal).user(newUser).contribution(0.0).build();
-            savingContributionRepository.save(newContribution);
-        }
+    List<SavingGoal> goals = contributions.stream().map(SavingContribution::getGoal).toList();
 
-        return savingGoalMapper.mapToSavingGoalDto(savingGoal);
+    return goals
+            .stream()
+            .map(savingGoalMapper::mapToSavingGoalIdDto)
+            .toList();
+  }
+
+
+  /**
+   * Retrieves a goal from the database based on its id.
+   *
+   * @param principal The authenticated user
+   * @param goalId    The unique id of the saving goal
+   * @return DTO containing the saving goal
+   */
+  public SavingGoalDto getSavingGoalById(Principal principal, long goalId) {
+    checkIfContributor(goalId, principal.getName());
+    SavingGoal savingGoal = savingGoalRepository.findById(goalId).orElseThrow();
+    return savingGoalMapper.mapToSavingGoalDto(savingGoal);
+  }
+
+
+  /**
+   * Delete a saving goal based on its unique id.
+   *
+   * @param savingGoalIdDto DTO containing the unique goal id
+   */
+  public void deleteSavingGoal(Principal principal, SavingGoalIdDto savingGoalIdDto) {
+    checkIfAuthor(savingGoalIdDto.getId(), principal.getName());
+    savingGoalRepository.deleteById(savingGoalIdDto.getId());
+  }
+
+
+  /**
+   * Updates the number of lives of the mascot.
+   *
+   * @param updateValueDto DTO containing the unique saving goal id
+   * @return the number of lives left for the mascot after updating
+   */
+  public int editLives(Principal principal, SavingGoalUpdateValueDto updateValueDto) {
+    checkIfContributor(updateValueDto.getId(), principal.getName());
+    SavingGoal savingGoal = savingGoalRepository.findById(updateValueDto.getId()).orElseThrow();
+    savingGoal.setLives(updateValueDto.getValue());
+    savingGoalRepository.save(savingGoal);
+
+    return savingGoalRepository.findById(updateValueDto.getId()).orElseThrow(
+            () -> new NoSuchElementException("Saving goal not found")
+    ).getLives();
+  }
+
+
+  /**
+   * Add a new saved amount to the saving goal and return the updated total amount saved up for the
+   * given goal.
+   *
+   * @param principal                 The authenticated user
+   * @param savingGoalContributionDto DTO containing the saving goal
+   *                                  id and the saved amount to add to the goal's progress
+   * @return the updated progress to the saving goal after adding the saved amount
+   */
+  public double registerSavingContribution(Principal principal,
+                                           SavingGoalContributionDto savingGoalContributionDto) {
+    checkIfContributor(savingGoalContributionDto.getGoalId(), principal.getName());
+    if (savingGoalContributionDto.getContribution() > 0) {
+      SavingContribution contribution = savingContributionRepository
+              .findByUser_EmailAndGoal_Id(principal.getName(),
+                      savingGoalContributionDto.getGoalId()).orElseThrow();
+
+      double oldContribution = contribution.getContribution();
+      contribution.setContribution(oldContribution + savingGoalContributionDto.getContribution());
+      savingContributionRepository.save(contribution);
     }
 
+    // Return the total saved up amount on this goal (from all users)
+    return checkTotalOfContributions(principal, savingGoalContributionDto.getGoalId());
+  }
 
-    /**
-     * Retrieves all the goals belonging to the authenticated user. The goals are represented by
-     * a list of DTOs containing the goal id, title and state.
-     *
-     * @param principal The authenticated user
-     * @param pageable Pageable object defining page and page size
-     * @return List of DTOs containing basic information of each goal
-     */
-    public List<SavingGoalIdDto> getAllGoalsOfUser(Principal principal, Pageable pageable) {
 
-        userRepository.findUserByEmailIgnoreCase(principal.getName()).orElseThrow(() ->
-                new UserNotFoundException("User with email " + principal.getName() + " not found"));
+  /**
+   * Updates the state of a given goal.
+   *
+   * @param updateStateDto DTO containing the goal id and new state
+   * @return A DTO containing base information about the updated goal
+   */
+  public SavingGoalIdDto updateGoalState(Principal principal,
+                                         SavingGoalUpdateStateDto updateStateDto) {
+    checkIfContributor(updateStateDto.getId(), principal.getName());
+    SavingGoal savingGoal = savingGoalRepository.findById(updateStateDto.getId()).orElseThrow();
+    savingGoal.setState(updateStateDto.getGoalState());
+    savingGoalRepository.save(savingGoal);
+    return savingGoalMapper.mapToSavingGoalIdDto(savingGoal);
+  }
 
-        List<SavingContribution> contributions = savingContributionRepository.findAllContributionsByUser_Email(principal.getName(), pageable);
 
-        List<SavingGoal> goals = contributions.stream().map(SavingContribution::getGoal).toList();
+  /**
+   * Summarizes and returns all the contributions made to the saving goal of the given id.
+   *
+   * @param goalId Unique identifier of the goal to get the currently total saved amount for
+   * @return The currently saved up amount for this goal
+   */
+  public double checkTotalOfContributions(Principal principal, Long goalId) {
+    checkIfContributor(goalId, principal.getName());
+    return savingContributionRepository.findAllContributionsByGoal_Id(goalId)
+            .stream()
+            .map(SavingContribution::getContribution).mapToDouble(f -> f).sum();
+  }
 
-        return goals
-                .stream()
-                .map(savingGoalMapper::mapToSavingGoalIdDto)
-                .toList();
+
+  /**
+   * Get a list of DTOs representing all the contributors to a given goal, in terms of their
+   * first name, last name, email and contributed amount to this particular goal.
+   *
+   * @param principal The authenticated user
+   * @param goalId    The unique id of the goal
+   * @return A list of DTOs representing the contributors to a goal.
+   */
+  public List<SavingGoalContributorDto> getContributorsToGoal(Principal principal, long goalId) {
+    checkIfContributor(goalId, principal.getName());
+    List<SavingContribution> contributions = savingContributionRepository
+            .findAllContributionsByGoal_Id(goalId);
+    List<SavingGoalContributorDto> contributors = new ArrayList<>();
+
+    for (SavingContribution contribution : contributions) {
+      contributors.add(SavingGoalContributorDto.builder()
+              .firstName(contribution.getUser().getFirstName())
+              .lastName(contribution.getUser().getLastName())
+              .contributedAmount(contribution.getContribution())
+              .build());
     }
 
+    return contributors;
 
-    /**
-     * Retrieves a goal from the database based on its id.
-     *
-     * @param principal The authenticated user
-     * @param goalId The unique id of the saving goal
-     * @return DTO containing the saving goal
-     */
-    public SavingGoalDto getSavingGoalById(Principal principal, long goalId) {
-        checkIfContributor(goalId, principal.getName());
-        SavingGoal savingGoal = savingGoalRepository.findById(goalId).orElseThrow();
-        return savingGoalMapper.mapToSavingGoalDto(savingGoal);
+  }
+
+  /**
+   * Check if the user has access to the goal and is the author.
+   *
+   * @param goalId   The unique id of the goal.
+   * @param username is the username of the user.
+   */
+  private void checkIfAuthor(long goalId, String username) {
+    SavingGoal goal = savingGoalRepository.findById(goalId).orElseThrow();
+    if (!goal.getAuthor().getUsername().equals(username)) {
+      throw new UnauthorizedOperationException("User not authorized to edit the saving goal");
     }
+  }
 
+  /**
+   * Check if the user has access to the goal as a contributor or author.
+   *
+   * @param goalId   The unique id of the goal.
+   * @param username is the username of the user.
+   */
+  private void checkIfContributor(long goalId, String username) {
+    SavingContribution existingContribution = savingContributionRepository
+            .findByUser_EmailAndGoal_Id(username, goalId).orElse(null);
 
-    /**
-     * Delete a saving goal based on its unique id.
-     *
-     * @param savingGoalIdDto DTO containing the unique goal id
-     */
-    public void deleteSavingGoal(Principal principal, SavingGoalIdDto savingGoalIdDto) {
-        checkIfAuthor(savingGoalIdDto.getId(), principal.getName());
-        savingGoalRepository.deleteById(savingGoalIdDto.getId());
+    if (existingContribution == null) {
+      throw new UnauthorizedOperationException(
+              "User not authorized to see or edit this saving goal");
     }
-
-
-
-    /**
-     * Updates the number of lives of the mascot.
-     *
-     * @param updateValueDto DTO containing the unique saving goal id
-     * @return the number of lives left for the mascot after updating
-     */
-    public int editLives(Principal principal, SavingGoalUpdateValueDto updateValueDto) {
-        checkIfContributor(updateValueDto.getId(), principal.getName());
-        SavingGoal savingGoal = savingGoalRepository.findById(updateValueDto.getId()).orElseThrow();
-        savingGoal.setLives(updateValueDto.getValue());
-        savingGoalRepository.save(savingGoal);
-
-        return savingGoalRepository.findById(updateValueDto.getId()).get().getLives();
-    }
-
-
-    /**
-     * Add a new saved amount to the saving goal and return the updated total amount saved up for the
-     * given goal.
-     *
-     * @param principal The authenticated user
-     * @param savingGoalContributionDto DTO containing the saving goal id and the saved amount to add to the goal's progress
-     * @return the updated progress to the saving goal after adding the saved amount
-     */
-    public double registerSavingContribution(Principal principal, SavingGoalContributionDto savingGoalContributionDto) {
-        checkIfContributor(savingGoalContributionDto.getGoalId(), principal.getName());
-        if (savingGoalContributionDto.getContribution() > 0) {
-            SavingContribution contribution = savingContributionRepository
-                    .findByUser_EmailAndGoal_Id(principal.getName(), savingGoalContributionDto.getGoalId()).orElseThrow();
-
-            double oldContribution = contribution.getContribution();
-            contribution.setContribution(oldContribution + savingGoalContributionDto.getContribution());
-            savingContributionRepository.save(contribution);
-        }
-
-        // Return the total saved up amount on this goal (from all users)
-        return checkTotalOfContributions(principal, savingGoalContributionDto.getGoalId());
-    }
-
-
-
-    /**
-     * Updates the state of a given goal.
-     *
-     * @param updateStateDto DTO containing the goal id and new state
-     * @return A DTO containing base information about the updated goal
-     */
-    public SavingGoalIdDto updateGoalState(Principal principal, SavingGoalUpdateStateDto updateStateDto) {
-        checkIfContributor(updateStateDto.getId(), principal.getName());
-        SavingGoal savingGoal = savingGoalRepository.findById(updateStateDto.getId()).orElseThrow();
-        savingGoal.setState(updateStateDto.getGoalState());
-        savingGoalRepository.save(savingGoal);
-        return savingGoalMapper.mapToSavingGoalIdDto(savingGoal);
-    }
-
-
-    /**
-     * Summarizes and returns all the contributions made to the saving goal of the given id.
-     *
-     * @param goalId Unique identifier of the goal to get the currently total saved amount for
-     * @return The currently saved up amount for this goal
-     */
-    public double checkTotalOfContributions(Principal principal, Long goalId) {
-        checkIfContributor(goalId, principal.getName());
-        return savingContributionRepository.findAllContributionsByGoal_Id(goalId)
-                .stream()
-                .map(SavingContribution::getContribution).mapToDouble(f -> f).sum();
-    }
-
-
-    /**
-     * Get a list of DTOs representing all the contributors to a given goal, in terms of their
-     * first name, last name, email and contributed amount to this particular goal.
-     *
-     * @param principal The authenticated user
-     * @param goalId The unique id of the goal
-     * @return A list of DTOs representing the contributors to a goal.
-     */
-    public List<SavingGoalContributorDto> getContributorsToGoal(Principal principal, long goalId) {
-        checkIfContributor(goalId, principal.getName());
-        List<SavingContribution> contributions = savingContributionRepository.findAllContributionsByGoal_Id(goalId);
-        List<SavingGoalContributorDto> contributors = new ArrayList<>();
-
-        for (SavingContribution contribution : contributions) {
-            contributors.add(SavingGoalContributorDto.builder()
-                    .firstName(contribution.getUser().getFirstName())
-                    .lastName(contribution.getUser().getLastName())
-                    .contributedAmount(contribution.getContribution())
-                    .build());
-        }
-
-        return contributors;
-
-    }
-
-    /**
-     * Check if the user has access to the goal and is the author.
-     *
-     * @param goalId The unique id of the goal.
-     * @param username  is the username of the user.
-     */
-    private void checkIfAuthor(long goalId, String username) {
-        SavingGoal goal = savingGoalRepository.findById(goalId).orElseThrow();
-        if (!goal.getAuthor().getUsername().equals(username)) {
-            throw new UnauthorizedOperationException("User not authorized to edit the saving goal");
-        }
-    }
-
-    /**
-     * Check if the user has access to the goal as a contributor or author.
-     *
-     * @param goalId The unique id of the goal.
-     * @param username  is the username of the user.
-     */
-    private void checkIfContributor(long goalId, String username) {
-        SavingContribution existingContribution = savingContributionRepository
-                .findByUser_EmailAndGoal_Id(username, goalId).orElse(null);
-
-        if (existingContribution == null) {
-            throw new UnauthorizedOperationException("User not authorized to see or edit this saving goal");
-        }
-    }
+  }
 
 
 }

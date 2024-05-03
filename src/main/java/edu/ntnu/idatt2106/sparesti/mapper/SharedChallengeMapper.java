@@ -20,6 +20,7 @@ public interface SharedChallengeMapper {
 
   /**
    * Maps a SharedChallengeDto object to a SharedChallenge object.
+   *
    * @param challenge The SharedChallengeDto object to map.
    * @param challengeMapperImpl The ChallengeMapper object to map.
    * @return A SharedChallenge object.
@@ -30,6 +31,7 @@ public interface SharedChallengeMapper {
 
   /**
    * Maps a SharedChallenge object to a SharedChallengeDto object.
+   *
    * @param sharedChallenge The SharedChallenge object to map.
    * @param challengeMapperImpl The ChallengeMapper object to map.
    * @return A SharedChallengeDto object.

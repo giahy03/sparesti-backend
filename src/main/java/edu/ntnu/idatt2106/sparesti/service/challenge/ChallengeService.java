@@ -62,9 +62,11 @@ public class ChallengeService {
     return challengesRepository.findByUser_Email(principal.getName(), pageable)
             .stream()
             .map(challenge -> {
-              ChallengePreviewDto challengePreviewDto = challengeMapperImpl.challengeIntoChallengePreviewDto(challenge);
+              ChallengePreviewDto challengePreviewDto =
+                      challengeMapperImpl.challengeIntoChallengePreviewDto(challenge);
               if (challenge instanceof SharedChallenge sharedChallenge) {
-                challengePreviewDto.setJoinCode(sharedChallenge.getSharedChallengeCode().getJoinCode());
+                challengePreviewDto.setJoinCode(
+                        sharedChallenge.getSharedChallengeCode().getJoinCode());
               }
               return challengePreviewDto;
             })

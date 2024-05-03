@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2106.sparesti.service.analysis;
 
 import edu.ntnu.idatt2106.sparesti.dto.analysis.TransactionDto;
-import edu.ntnu.idatt2106.sparesti.mapper.TransactionMapper;
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import edu.ntnu.idatt2106.sparesti.model.banking.Transaction;
 import edu.ntnu.idatt2106.sparesti.repository.TransactionRepository;
@@ -23,11 +22,15 @@ import org.springframework.stereotype.Service;
 
 /**
  * Classifies a transaction into a category.
+ *
+ * @version 1.0
+ * @author Jeffrey Yaw Annor Tabiri
  */
 @Slf4j
 @Service
 @AllArgsConstructor
 public class TransactionService {
+  public static final String TRANSACTION_NOT_FOUND = "Transaction not found.";
   OpenAiService openAiService;
 
   TransactionRepository transactionRepository;
@@ -140,13 +143,14 @@ public class TransactionService {
 
   /**
    * Deletes a transaction.
+   *
    * @param principal The principal of the user.
    * @param id The id of the transaction to delete.
    */
   public void deleteTransaction(Principal principal, Long id) {
 
     Transaction transaction = transactionRepository.findById(id).orElseThrow(
-            () -> new NoSuchElementException("Transaction not found."));
+            () -> new NoSuchElementException(TRANSACTION_NOT_FOUND));
     checkIfUserExists(principal);
     checkIfUserIsAuthorized(principal, transaction);
     transactionRepository.deleteById(id);
@@ -160,7 +164,7 @@ public class TransactionService {
    */
   public void updateTransaction(Principal principal, TransactionDto transactionDto) {
     Transaction transaction = transactionRepository.findById(transactionDto.getId()).orElseThrow(
-            () -> new NoSuchElementException("Transaction not found."));
+            () -> new NoSuchElementException(TRANSACTION_NOT_FOUND));
     checkIfUserIsAuthorized(principal, transaction);
 
     // Update transaction
@@ -169,24 +173,7 @@ public class TransactionService {
     transaction.setDate(transactionDto.getDate());
     transaction.setIsIncoming(transactionDto.getIsIncoming());
     transaction.setDescription(transactionDto.getDescription());
-
     transactionRepository.save(transaction);
   }
 
-
-  /**
-   * Retrieves a transaction.
-   *
-   * @param principal The principal of the user.
-   * @param id The id of the transaction to retrieve.
-   * @return The transaction DTO.
-   */
-  public TransactionDto getTransaction(Principal principal, Long id) {
-    Transaction transaction = transactionRepository.findById(id).orElseThrow(
-            () -> new NoSuchElementException("Transaction not found."));
-    checkIfUserExists(principal);
-    checkIfUserIsAuthorized(principal, transaction);
-
-    return TransactionMapper.INSTANCE.transactionToTransactionDto(transaction);
-  }
 }
