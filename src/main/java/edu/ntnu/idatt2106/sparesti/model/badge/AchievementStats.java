@@ -66,4 +66,16 @@ public class AchievementStats {
   @Column(name = "read_news")
   private boolean readNews;
 
+  public String printStats() {
+    StringBuilder stats = new StringBuilder();
+    stats.append("Achievement Stats\n");
+    stats.append("\tUser: " + user + "\n");
+    stats.append("\tStreak: " + streak + "\n");
+    stats.append("\tChallenges: " + challengesAchieved + "\n");
+    stats.append("\tSaving Goals: " + savingGoalsAchieved + "\n");
+    stats.append("\tTotal: " + totalSaved + "\n");
+    stats.append("\tRead News: " + readNews + "\n");
+    return stats.toString();
+  }
+
 }
