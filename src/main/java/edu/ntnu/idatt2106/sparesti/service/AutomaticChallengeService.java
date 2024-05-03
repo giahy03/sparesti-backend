@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
@@ -23,6 +22,9 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service for creating random challenge recommendations.
+ *
+ * @author Tobias Oftedal
+ * @version 1.0
  */
 @Service
 @Slf4j
@@ -32,6 +34,8 @@ public class AutomaticChallengeService {
   private final UserRepository userRepository;
   private static final int MINIMUM_DAYS = 5;
   private static final int MAX_DAYS = 30;
+
+  private final Random random = new Random();
 
   /**
    * Get challenge recommendations for the user.
@@ -94,7 +98,7 @@ public class AutomaticChallengeService {
    * @return a random date between today and a number of days in the future
    */
   private LocalDate getRandomDateFromToday() {
-    return LocalDate.now().plusDays(new Random().nextInt(MAX_DAYS - MINIMUM_DAYS) + MINIMUM_DAYS);
+    return LocalDate.now().plusDays(random.nextInt(MAX_DAYS - MINIMUM_DAYS) +  (long) MINIMUM_DAYS);
   }
 
   /**

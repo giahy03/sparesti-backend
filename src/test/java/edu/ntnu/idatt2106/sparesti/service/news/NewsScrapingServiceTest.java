@@ -8,9 +8,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,13 +53,13 @@ class NewsScrapingServiceTest {
     when(elements.get(0).select(anyString()).text()).thenReturn("Category");
 
     // Act
-    List<NewsDto> newsDtoList = newsScrapingService.scrapeDN(0, 1);
+    List<NewsDto> newsDtoList = newsScrapingService.scrapeDn(0, 1);
 
     // Assert
     assertEquals(1, newsDtoList.size());
 
     when(Jsoup.connect(anyString())).thenReturn(mock(Connection.class));
     when(Jsoup.connect(anyString()).get()).thenThrow(new IOException());
-    assertThrows(RuntimeException.class, () -> newsScrapingService.scrapeDN(1, 3));
+    assertThrows(RuntimeException.class, () -> newsScrapingService.scrapeDn(1, 3));
   }
 }

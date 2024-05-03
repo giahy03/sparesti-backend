@@ -9,7 +9,7 @@ package edu.ntnu.idatt2106.sparesti.validation.validators;
  * @author Ramtin Samavat
  * @version 1.0
  */
-public class SimpleValidator {
+class SimpleValidator {
 
   /**
    * The method checks if the provided string is not null and not blank.

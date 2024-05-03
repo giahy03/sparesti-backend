@@ -1,15 +1,17 @@
 package edu.ntnu.idatt2106.sparesti.service.email;
 
 import edu.ntnu.idatt2106.sparesti.dto.email.EmailDetailsDto;
+import edu.ntnu.idatt2106.sparesti.model.challenge.Challenge;
 import edu.ntnu.idatt2106.sparesti.model.challenge.SharedChallenge;
 import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
+
 
 /**
  * Service class for sending email with join code to a friend.
@@ -30,21 +32,37 @@ public class EmailFriendCodeService {
   /**
    * Sends an email to a friend with the join code of a challenge.
    *
-   * @param email the email to send the verification code to.
+   * @param emailToSend the email to send the verification code to.
    * @param id the id of the challenge to send the join code to.
    */
-  public void sendJoinCode(Principal principal, String email, Long id) {
+  public void sendJoinCode(Principal principal, String emailToSend, Long id) {
     SharedChallenge challenge =
             sharedChallengeRepository
                     .findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("No challenge with id: " + id));
 
-    checkUser(email);
+    checkUser(emailToSend);
+    checkAuthorization(principal.getName(), challenge);
 
-    EmailDetailsDto emailDetailsDto = buildEmailDto(principal.getName(), challenge);
 
+    EmailDetailsDto emailDetailsDto = buildEmailDto(emailToSend, challenge);
     emailService.sendEmail(emailDetailsDto);
   }
+
+
+  /**
+   * Check if user owns the challenge.
+   *
+   * @param email the email of the user.
+   */
+  private void checkAuthorization(String email, Challenge challenge) {
+    if (!challenge.getUser().getEmail().equals(email)) {
+      throw new IllegalArgumentException("You do not own this challenge");
+    }
+  }
+
+
+
 
   private void checkUser(String email) {
     userRepository
