@@ -57,16 +57,14 @@ class AchievementStatsServiceTest {
   AchievementRepository achievementRepository;
 
   @Mock
-  AchievementStatsRepository achievementStatsRepository;
-
-  @Mock
   BadgeMapper badgeMapper;
 
   @Mock
   BadgeRepository badgeRepository;
   @Mock
   SavingContributionRepository savingContributionRepository;
-
+  @Mock
+  AchievementStatsRepository achievementStatsRepository;
   @Mock
   ChallengesRepository challengeRepository;
 
@@ -174,6 +172,20 @@ class AchievementStatsServiceTest {
     BadgePreviewDto createdBadgeA = achievementStatsService
             .createBadge(AchievementCategory.AMOUNT_SAVED, principal, 4);
     assertThat(createdBadgeA).isNotNull();
+  }
+
+  @Test
+  void service_findTotalSavedByUserReturnsAmount() {
+
+    // Arrange
+    double expectedAmount = AchievementStatsUtility.createAchievementStatsA().getTotalSaved();
+    when(achievementStatsRepository.findAchievementStatsByUserEmail(principal.getName())).thenReturn(Optional.ofNullable(AchievementStatsUtility.createAchievementStatsA()));
+
+    // Act
+    double actualAmount = achievementStatsService.findTotalSavedByUser(principal);
+
+    // Assert
+    assertThat(actualAmount).isEqualTo(expectedAmount);
   }
 
 }
