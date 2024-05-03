@@ -41,6 +41,7 @@ public class DnbReader extends BankStatementReader {
         .orElseThrow()
         .split("\\s+");
 
+
     bankStatement.setAccountNumber(accountLineSplit[2]);
     Optional<String> accountName = getAccountName(accountLineSplit);
     if (accountName.isPresent()) {
@@ -49,7 +50,6 @@ public class DnbReader extends BankStatementReader {
       bankStatement.setAccountName("Unknown");
     }
 
-    lineIndex = accountLine.getSecond();
 
     readTransactions(bankStatement, splitText, lineIndex);
   }
@@ -141,7 +141,7 @@ public class DnbReader extends BankStatementReader {
     }
     try {
       Double amount = Double.parseDouble(splitLine[splitLine.length - 3]
-          .replace("\\.", "")
+          .replace(".", "")
           .replace(",", ".")
       );
       transaction.setAmount(amount);
@@ -150,8 +150,8 @@ public class DnbReader extends BankStatementReader {
     }
 
     try {
-      for (String word : splitLine){
-        if (Arrays.asList(INCOMING_KEYWORDS).contains(word.toLowerCase())){
+      for (String word : splitLine) {
+        if (Arrays.asList(INCOMING_KEYWORDS).contains(word.toLowerCase())) {
           transaction.setIsIncoming(true);
           break;
         }

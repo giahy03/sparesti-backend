@@ -49,6 +49,7 @@ public abstract class BankStatementReader {
 
       return bankStatement;
     } catch (Exception e) {
+      log.error("Error reading bank statement from file: {}", file, e);
       throw new IllegalArgumentException("Error reading SpareBank1 statement from file:" + file);
     }
   }
