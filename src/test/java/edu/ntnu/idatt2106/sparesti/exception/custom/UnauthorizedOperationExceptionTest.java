@@ -6,6 +6,11 @@ import edu.ntnu.idatt2106.sparesti.exception.auth.UnauthorizedOperationException
 import edu.ntnu.idatt2106.sparesti.exception.stock.StockProcessingException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the UnauthorizedOperationException.
+ *
+ * @author Tobias Oftedal
+ */
 class UnauthorizedOperationExceptionTest {
   @Test
   void testConstructorWithMessage() {

@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.ntnu.idatt2106.sparesti.exception.analysis.ExternalApiException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the ExternalApiException.
+ *
+ * @author Tobias Oftedal
+ */
 class ExternalApiExceptionTest {
 
   @Test

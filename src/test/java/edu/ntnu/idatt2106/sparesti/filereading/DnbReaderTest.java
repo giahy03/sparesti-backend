@@ -8,6 +8,12 @@ import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import java.io.File;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the DnbReader class.
+ *
+ * @version 1.0
+ * @author Jeffrey Yaw Annor Tabiri
+ */
 class DnbReaderTest {
 
   @Test
@@ -27,8 +33,8 @@ class DnbReaderTest {
     DnbReader dnbReader = new DnbReader();
     String path = "src/main/resources/bankstatements/dnb/dnbExample.pdf";
     //act
-    BankStatement bankStatement = dnbReader.readStatement
-        (new File(path));
+    BankStatement bankStatement = dnbReader.readStatement(
+            new File(path));
     //assert
     assertEquals("1207.84.17631", bankStatement.getAccountNumber());
     //TODO, check that this number should actually be 192

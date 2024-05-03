@@ -1,31 +1,42 @@
 package edu.ntnu.idatt2106.sparesti.model.streak;
 
 import edu.ntnu.idatt2106.sparesti.dto.streak.StreakRequestDto;
-import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
 
+/**
+ * Utility class that creates objects to support the testing classes.
+ *
+ * @author Hanne-Sofie Søreide
+ */
 public class StreakUtility {
 
+  /**
+   * Creates a streak object.
+   *
+   * @return a streak object.
+   */
   public static StreakRequestDto createStreakRequestDto1() {
     StreakRequestDto streakRequestDto = new StreakRequestDto();
     streakRequestDto.setIncrement(true);
     return streakRequestDto;
   }
 
+  /**
+   * Creates a streak object.
+   *
+   * @return a streak object.
+   */
   public static StreakRequestDto createStreakRequestDto2() {
     StreakRequestDto streakRequestDto = new StreakRequestDto();
     streakRequestDto.setIncrement(false);
     return streakRequestDto;
   }
 
-  public static Streak createStreak1() {
-    return Streak.builder()
-            .numberOfDays(20)
-            .build();
-  }
-
+  /**
+   * Creates a json string of a streak request dto.
+   *
+   * @return a json string of a streak request dto.
+   */
   public static String createStreakRequestDtoJson() {
-        return "{\"increment\": true}";
+    return "{\"increment\": true}";
   }
-
-
 }

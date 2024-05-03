@@ -5,7 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
-
+/**
+ * Test class for the ChallengeRecommendationDto.
+ *
+ * @author Tobias Oftedal
+ */
 class ChallengeRecommendationDtoTest {
 
   @Test

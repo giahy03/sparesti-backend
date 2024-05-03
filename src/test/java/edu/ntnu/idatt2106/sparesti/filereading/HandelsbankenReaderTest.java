@@ -8,6 +8,12 @@ import edu.ntnu.idatt2106.sparesti.model.banking.BankStatement;
 import java.io.File;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the HandelsBankenReader class.
+ *
+ * @version 1.0
+ * @author Jeffrey Yaw Annor Tabiri
+ */
 class HandelsbankenReaderTest {
 
   @Test
@@ -44,7 +50,8 @@ class HandelsbankenReaderTest {
     String path = "src/test/resources/bankstatements/invalid_pdf.pdf";
     File invalidFile = new File(path);
     //act
-    assertThrows(IllegalArgumentException.class, () -> handelsbankenReader.readStatement(invalidFile));
+    assertThrows(
+            IllegalArgumentException.class, () -> handelsbankenReader.readStatement(invalidFile));
   }
 
 

@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the UserNotFoundException.
+ *
+ * @author Tobias Oftedal
+ */
 class UserNotFoundExceptionTest {
   @Test
   void testConstructorWithMessage() {

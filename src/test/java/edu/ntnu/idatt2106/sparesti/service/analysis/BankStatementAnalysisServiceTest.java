@@ -17,12 +17,22 @@ import java.time.YearMonth;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+
+
+
+/**
+ * Test class for the BankStatementAnalysisService class.
+ *
+ * @version 1.0
+ * @see BankStatementAnalysisService
+ */
 @ExtendWith(MockitoExtension.class)
 class BankStatementAnalysisServiceTest {
   @InjectMocks
@@ -33,6 +43,9 @@ class BankStatementAnalysisServiceTest {
   @Mock
   private TransactionService transactionService;
 
+
+  @DisplayName("Given valid bank statement, when calculate "
+          + "actual usage, then cost is 100 for food, 0 for other")
   @Test
   void givenValidBankStatement_whenCalculateActualUsage_thenCostIs100ForFood0ForOther()
       throws Exception {

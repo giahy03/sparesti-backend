@@ -1,23 +1,25 @@
 package edu.ntnu.idatt2106.sparesti.validation.validators;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+
 /**
  * The class tests basic validation for user input.
  *
- * @version 1.0
  * @author Jeffrey Yaw Annor Tabiri
+ * @version 1.0
  */
 class UserValidatorTest {
 
   @Test
-  void UserValidator_ValidatePassword_ThrowsIllegalArgument() {
+  void userValidator_ValidatePassword_ThrowsIllegalArgument() {
     // Arrange
     String password = "p";
 
@@ -26,7 +28,7 @@ class UserValidatorTest {
   }
 
   @Test
-  void UserValidator_ValidatePasswordChange_ShouldChangePassword() {
+  void userValidator_ValidatePasswordChange_ShouldChangePassword() {
     // Arrange
     String passwordFromDatabase = "password";
     String oldPassword = "password";
@@ -42,7 +44,7 @@ class UserValidatorTest {
 
 
   @Test
-  void UserValidator_ValidatePasswordChange_ShouldReturnException() {
+  void userValidator_ValidatePasswordChange_ShouldReturnException() {
     // Arrange
     String passwordFromDatabase = "password";
     String oldPassword = "password";
@@ -59,7 +61,7 @@ class UserValidatorTest {
   }
 
   @Test
-  void UserValidator_ValidateEmail_ShouldReturnException() {
+  void userValidator_ValidateEmail_ShouldReturnException() {
     // Arrange
     String email = "test@test";
 
@@ -68,7 +70,7 @@ class UserValidatorTest {
   }
 
   @Test
-  void UserValidator_Validate_ShouldReturn() {
+  void userValidator_Validate_ShouldReturn() {
     // Arrange
     String email = "test@test.com";
     String firstName = "Cody";
@@ -83,12 +85,13 @@ class UserValidatorTest {
   }
 
   @Test
-  void UserValidator_Validate_ShouldReturnExceptions() {
+  @DisplayName("User validator validate should return exceptions")
+  void userValidator_Validate_ShouldReturnExceptions() {
     // Arrange
-    String email = ".";
-    String firstName = "1";
-    String lastName = "2";
-    double income = -1.0;
+    final String email = ".";
+    final String firstName = "1";
+    final String lastName = "2";
+    final double income = -1.0;
 
     // Act & Assert
     assertThrows(IllegalArgumentException.class, () -> {

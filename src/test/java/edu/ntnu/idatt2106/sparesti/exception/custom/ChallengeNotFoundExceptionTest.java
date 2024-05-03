@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.ntnu.idatt2106.sparesti.exception.challenge.ChallengeNotFoundException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the ChallengeNotFoundException.
+ *
+ * @author Tobias Oftedal
+ */
 class ChallengeNotFoundExceptionTest {
 
   @Test

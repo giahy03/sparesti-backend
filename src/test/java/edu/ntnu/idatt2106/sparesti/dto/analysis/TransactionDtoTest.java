@@ -6,9 +6,14 @@ import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import java.time.MonthDay;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the TransactionDto.
+ *
+ * @author Tobias Oftedal
+ */
 class TransactionDtoTest {
   @Test
-  void givenValidInput_settersAndGetters_work(){
+  void givenValidInput_settersAndGetters_work() {
     //arrange
     long transactionId = 1;
     MonthDay date = MonthDay.of(1, 1);
