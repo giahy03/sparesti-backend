@@ -17,6 +17,7 @@ import org.springframework.data.util.Pair;
 @Slf4j
 public class DnbReader extends BankStatementReader {
   private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy");
+  private static final String[] INCOMING_KEYWORDS = {"kontoregulering", "lønn"};
 
   /**
    * Reads the first page of a DNB bank statement.
@@ -138,7 +139,6 @@ public class DnbReader extends BankStatementReader {
     } catch (Exception e) {
       transaction.setDate(MonthDay.now());
     }
-
     try {
       Double amount = Double.parseDouble(splitLine[splitLine.length - 3]
           .replace("\\.", "")
@@ -149,7 +149,18 @@ public class DnbReader extends BankStatementReader {
       transaction.setAmount(0.0);
     }
 
-    transaction.setIsIncoming(true);
+    try {
+      for (String word : splitLine){
+        if (Arrays.asList(INCOMING_KEYWORDS).contains(word.toLowerCase())){
+          transaction.setIsIncoming(true);
+          break;
+        }
+        transaction.setIsIncoming(false);
+      }
+    } catch (Exception e) {
+      transaction.setIsIncoming(false);
+    }
+
     return transaction;
   }
 

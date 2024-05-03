@@ -28,8 +28,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BankStatementAnalysisService {
 
-  SsbDataService ssbDataService;
-  TransactionService transactionService;
+  private final SsbDataService ssbDataService;
+  private final TransactionService transactionService;
 
   /**
    * Analyzes a bank statement and compares it to the expected usage of the given demography.
@@ -48,6 +48,7 @@ public class BankStatementAnalysisService {
       expectedUsage =
           ssbDataService.getExpectedUsage(userInfo);
     } catch (Exception e) {
+      log.error("Error while fetching expected usage from SSB.", e);
       throw new ExternalApiException("Error while fetching expected usage from SSB.");
     }
 
