@@ -86,6 +86,7 @@ public class LoadTestData implements CommandLineRunner {
     user.setUserInfo(UserInfo.builder()
             .livingStatus(SsbLivingStatus.LIVING_ALONE)
             .income(10000)
+            .savingPercentage(20)
             .user(user)
             .build());
 

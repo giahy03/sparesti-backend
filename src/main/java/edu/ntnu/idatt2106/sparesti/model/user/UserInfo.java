@@ -57,4 +57,15 @@ public class UserInfo {
   @Schema(description = "The user associated with this additional information.")
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
+
+  @Schema(description = "The percentage of income the user wants to use.")
+  private Integer savingPercentage;
+
+  public double getExpectedUsage() {
+    double expected = ((100 - savingPercentage) * income) / 100;
+    if (expected < 0) {
+      throw new IllegalArgumentException("Expected usage cannot be negative");
+    }
+    return expected;
+  }
 }

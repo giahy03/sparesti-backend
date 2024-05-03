@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 /**
- * Data Transfer Object (DTO) representing user information.
+ * Data Transfer Object (DTO) for retrieving user details.
  *
  * @author Ramtin Samavat
  * @version 1.0
@@ -20,7 +20,11 @@ public class UserDetailsDto {
   @NonNull
   private String lastName;
 
-  private double income;
+  @NonNull
+  private Double income;
+
+  @NonNull
+  private Integer savingPercentage;
 
   @NonNull
   private String livingStatus;

@@ -48,6 +48,8 @@ public class UserService {
    * @param email             The email of the user.
    */
   public void editPassword(@NonNull PasswordChangeDto passwordChangeDto, @NonNull String email) {
+    UserValidator.validatePassword(passwordChangeDto.getNewPassword());
+
     User user = findUser(email);
 
     UserValidator.validatePasswordChange(user.getPassword(),
@@ -128,6 +130,22 @@ public class UserService {
   }
 
   /**
+   * The method edits the user's saving percentage.
+   *
+   * @param savingPercentage The new saving percentage.
+   * @param email            The email of the user.
+   */
+  public void editSavingPercentage(@NonNull Integer savingPercentage, @NonNull String email) {
+    UserValidator.validateSavingPercentage(savingPercentage);
+
+    User user = findUser(email);
+
+    user.getUserInfo().setSavingPercentage(savingPercentage);
+
+    userRepository.save(user);
+  }
+
+  /**
    * The method edits the last name of the user.
    *
    * @param livingStatusChangeDto The DTO containing new last name.
@@ -160,6 +178,7 @@ public class UserService {
         .lastName(user.getLastName())
         .income(userInfo.getIncome())
         .livingStatus(userInfo.getLivingStatus().getStatus())
+        .savingPercentage(userInfo.getSavingPercentage())
         .build();
   }
 
