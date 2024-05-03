@@ -478,4 +478,18 @@ public class AchievementStatsService {
     }
     return value >= thresholds.getLast() ? thresholds.size() : 0;
   }
+
+
+  /**
+   * Get the total amount saved by the user from the achievement stats.
+   *
+   * @param principal The authenticated user
+   * @return The amount saved by the user in the app.
+   */
+  public double findTotalSavedByUser(Principal principal) {
+    return achievementStatsRepository.findAchievementStatsByUserEmail(principal.getName())
+            .orElseThrow().getTotalSaved();
+
+  }
+
 }

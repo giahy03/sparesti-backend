@@ -2,7 +2,6 @@ package edu.ntnu.idatt2106.sparesti.controller;
 
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
-import edu.ntnu.idatt2106.sparesti.repository.AchievementStatsRepository;
 import edu.ntnu.idatt2106.sparesti.service.achievementstats.AchievementStatsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AchievementStatsController {
 
   private final AchievementStatsService achievementStatsService;
-  private final AchievementStatsRepository achievementStatsRepository;
 
   /**
    * Controller class that responds to
@@ -129,8 +127,7 @@ public class AchievementStatsController {
       }
     }
 
-    double total = achievementStatsRepository.findAchievementStatsByUserEmail(principal.getName())
-            .orElseThrow().getTotalSaved();
+    double total = achievementStatsService.findTotalSavedByUser(principal);
 
     log.info("Total saved amount in Sparesti by user {}: {}", principal.getName(), total);
 
