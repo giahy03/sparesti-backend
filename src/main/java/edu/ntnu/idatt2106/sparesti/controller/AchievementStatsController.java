@@ -37,8 +37,10 @@ public class AchievementStatsController {
   private final AchievementStatsRepository achievementStatsRepository;
 
   /**
-   * Responds to post requests that specify an achievement type to update the user stats for and,
-   * if the user qualified for a new badge, returns a DTO providing a preview of the new badge.
+   * Controller class that responds to requests that specify an achievement type
+   * to update the user stats for it and, if the user qualified for one or several new badges,
+   * create the badges and return a DTO providing a preview of the badge created with the highest level.
+   * The controller also provides the total amount saved by the current user.
    *
    * @param principal The authenticated user
    * @param category  DTO specifying the achievement type to check and the date.
@@ -88,7 +90,6 @@ public class AchievementStatsController {
   }
 
 
-
   /**
    * Get the total amount saved in Sparesti by the current user.
    *
@@ -110,7 +111,6 @@ public class AchievementStatsController {
 
     log.info("Returning total saved amount by user: {}", principal.getName());
 
-    // ========== Fjerne om vi ikke har testbruker med eksisterende sparemål, skal jo egentlig starte på 0.
     List<Integer> levelChange = achievementStatsService.updateAndCheckAchievement(AchievementCategory.AMOUNT_SAVED, principal);
 
     if (levelChange.get(1) >= 1) {
@@ -119,12 +119,10 @@ public class AchievementStatsController {
       }
     }
 
-    // =================
-
     double total = achievementStatsRepository.findAchievementStatsByUserEmail(principal.getName())
             .orElseThrow().getTotalSaved();
 
-    log.info("Total saved amount in Sparesti: {}", total);
+    log.info("Total saved amount in Sparesti by user {}: {}", principal.getName(), total);
 
     return new ResponseEntity<>(total, HttpStatus.OK);
   }

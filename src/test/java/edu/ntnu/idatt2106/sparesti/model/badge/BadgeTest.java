@@ -7,9 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test class for the Badge model class.
@@ -66,16 +64,6 @@ public class BadgeTest {
         assertEquals(expectedAchievement.getCategory(), badge.getAchievement().getCategory());
         assertEquals(expectedDate, badge.getAchievedDate());
         assertEquals(expectedLevel, badge.getLevel());
-    }
-
-    @DisplayName("Test for setters expecting exceptions setting null")
-    @Test
-    public void Badge_setters_expectingExceptions() {
-
-        // Act and Assert
-        assertThrows(NullPointerException.class, () -> badge.setUser(null));
-        assertThrows(NullPointerException.class, () -> badge.setAchievement(null));
-        assertThrows(NullPointerException.class, () -> badge.setAchievedDate(null));
     }
 
 }

@@ -53,16 +53,21 @@ public class AchievementStatsService {
 
   /**
    * Updates the user stats related to the achievement type
-   * specified in the input Dto object. If a stat is updated,
+   * specified in the input category. If a stat is updated,
    * the user's statistics are compared to the
    * corresponding achievement thresholds to determine if the user
-   * qualifies for a new badge. If so, an int indicated the level of the badge is returned.
-   * If the user does not qualify for a new badge 0 is returned.
+   * qualifies for one or several new badges. If so, a list containing
+   * two integers is returned. The first integer represents the highest
+   * level of the badge to be created and the second integer gives hos many
+   * new badges the user was qualified for.
+   * If the user does not qualify for a new badge both integers are 0.
+   * If the user checks its stats for the first time, a new achievement
+   * stats object is created and assigned to the user.
    *
    * @param category  The achievement type to update and check.
-   * @param principal The authenticated user
-   * @return An int indicating the level of the new badge the user qualifies for, or 0 if the user
-   *         does not qualify for a new badge.
+   * @param principal The authenticated user.
+   * @return A list containing two integers specifying how many new badges to
+   *        create and of which level.
    */
   public List<Integer> updateAndCheckAchievement(AchievementCategory category, Principal principal) {
 
@@ -104,12 +109,13 @@ public class AchievementStatsService {
   }
 
   /**
-   * Creates and stores a new badge for the user.
+   * Creates and stores a new badge of a given achievement category and
+   * level for the user.
    *
    * @param category  The achievement type and the date it was achieved.
    * @param principal The authenticated user.
    * @param level     The level of the badge to be created.
-   * @return A DTO containing info to preview a Badge object.
+   * @return A DTO containing info to preview the Badge object.
    */
   public BadgePreviewDto createBadge(AchievementCategory category, Principal principal, int level) {
     log.info("Inside: createBadge");
@@ -153,10 +159,11 @@ public class AchievementStatsService {
    * Compares the stored streak in user stats object
    * against the user streak and updates the stored stats if a
    * higher streak is achieved.
-   * If a change was made to the stats, true is returned. If there is no change, false is returned.
+   * If a change was made to the stats, true is returned.
+   * If there is no change, false is returned.
    *
    * @param user The user the streak belongs to.
-   * @return True if the user stats has been updated, false otherwise.
+   * @return True if the user stats were updated, false otherwise.
    */
   private boolean updateSavingStreak(User user) {
 
@@ -179,9 +186,10 @@ public class AchievementStatsService {
    * user's stats, the value is updated and true is returned.
    * If it is not updated, false is returned.
    *
-   * @param user      The user for which the total saved amount may be updated.
+   * @param user      The user for which the total saved amount
+   *                  may be updated.
    * @param principal The authenticated user.
-   * @return True if the total saved amount is updated, false if not.
+   * @return True if the total saved amount has increased, false if not.
    */
   private boolean updateTotalSaved(User user, Principal principal) {
 
@@ -208,9 +216,11 @@ public class AchievementStatsService {
    * stats is updated and true is returned, if not false is
    * returned.
    *
-   * @param user      The user for which teh total number of completed challenges may be updated.
+   * @param user      The user for which teh total number of
+   *                  completed challenges may be updated.
    * @param principal The authenticated user.
-   * @return True if the total number of completed challenges in increased, false otherwise.
+   * @return True if the total number of completed challenges
+   *          in increased, false otherwise.
    */
   private boolean updateNumberOfChallengesFinished(
           User user, Principal principal) {
@@ -268,12 +278,15 @@ public class AchievementStatsService {
   }
 
   /**
-   * Updates the user's stat related to reading news in the application. If it has changed, the
-   * user's stat is updated 1 is returned, otherwise 0 is returned.
+   * Updates the user's stat related to reading news in the application.
+   * A list containing two integers is returned. If the user should
+   * receive the education badge, the list contains 1 and 1, so
+   * signal creation of one badge of level one.
+   * If not, the list contains 0 and 0.
    *
    * @param user The user for which the education stat may be updated.
    * @return A list with two integers, the first one signifying the highest achieved badge level
-   *          and the second one the number of new badges to create for this category.
+   *          and the second one the number of new badges to create.
    */
   private List<Integer> updateEducation(User user) {
 
@@ -290,13 +303,19 @@ public class AchievementStatsService {
 
   /**
    * Checks if the user qualifies for a new badge
-   * related to saving streak with the current user stats. If so,
-   * an int representing the level of the new badge is returned.
+   * related to saving streak with the current user stats.
+   * A list containing two integers is returned.
+   * If the user qualifies for a new badge, the first entry in
+   * the list contains the level of the highest badge to create
+   * while the second entry contains the number of badges to create.
+   * If the user did not qualify for a new badge, the list contains
+   * 0 and 0.
    *
    * @param principal The authenticated user.
    * @param user      The user who may have qualified for a new badge.
-   * @return An int indicating the level of the new badge
-   *        or 0 if the user did not qualify for a new badge.
+   * @return A list containing two integers. The first specifies the highest
+   *        level badge to create and the second specifies the number of new
+   *        badges to create.
    */
   private List<Integer> checkSavingStreakLevel(Principal principal, User user) {
 
@@ -318,12 +337,18 @@ public class AchievementStatsService {
   /**
    * Checks if the user qualifies for a new badge
    * related to total saved amount with the current user stats.
-   * If so, an int representing the level of the new badge is returned.
+   * A list containing two integers is returned.
+   * If the user qualifies for a new badge, the first entry in
+   * the list contains the level of the highest badge to create
+   * while the second entry contains the number of badges to create.
+   * If the user did not qualify for a new badge, the list contains
+   * 0 and 0.
    *
    * @param principal The authenticated user.
    * @param user      The user who may have qualified for a new badge.
-   * @return An int indicating the level of the new
-   *        badge or 0 if the user did not qualify for a new badge.
+   * @return A list containing two integers. The first specifies the highest
+   *        level badge to create and the second specifies the number of new
+   *        badges to create.
    */
   private List<Integer> checkTotalSaved(Principal principal, User user) {
 
@@ -347,12 +372,18 @@ public class AchievementStatsService {
   /**
    * Checks if the user qualifies for a new badge related
    * to the number of saving goal completed with the current
-   * user stats. If so, an int representing the level of the new badge is returned.
+   * user stats. A list containing two integers is returned.
+   * If the user qualifies for a new badge, the first entry in
+   * the list contains the level of the highest badge to create
+   * while the second entry contains the number of badges to create.
+   * If the user did not qualify for a new badge, the list contains
+   * 0 and 0.
    *
    * @param principal The authenticated user.
    * @param user      The user who may have qualified for a new badge.
-   * @return An int indicating the level of the new badge
-   *        or 0 if the user did not qualify for a new badge.
+   * @return A list containing two integers. The first specifies the highest
+   *         level badge to create and the second specifies the number of new
+   *         badges to create.
    */
   private List<Integer> checkGoalsCompleted(Principal principal, User user) {
 
@@ -377,12 +408,18 @@ public class AchievementStatsService {
   /**
    * Checks if the user qualifies for a new badge
    * related to the number of completed challenges with the current
-   * user stats. If so, an int representing the level of the new badge is returned.
+   * user stats. A list containing two integers is returned.
+   * If the user qualifies for a new badge, the first entry in
+   * the list contains the level of the highest badge to create
+   * while the second entry contains the number of badges to create.
+   * If the user did not qualify for a new badge, the list contains
+   * 0 and 0.
    *
    * @param principal The authenticated user.
    * @param user      The user who may have qualified for a new badge.
-   * @return An int indicating the level of the new
-   *         badge or 0 if the user did not qualify for a new badge.
+   * @return A list containing two integers. The first specifies the highest
+   *         level badge to create and the second specifies the number of new
+   *         badges to create.
    */
   private List<Integer> checkChallengesCompleted(Principal principal, User user) {
 
