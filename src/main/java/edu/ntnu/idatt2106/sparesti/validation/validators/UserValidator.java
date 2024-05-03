@@ -8,7 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * The class provides specific validation for different types of user information.
  * The class extends {@link SimpleValidator}.
  * <p>
- * The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/validation/validators/UserValidator.java">...</a>
+ * The code is inspired by Ramtin Samavat's GitHub repository:
+ * <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/validation/validators/UserValidator.java">...</a>
  * </p>
  *
  * @author Ramtin Samavat
@@ -39,8 +40,8 @@ public class UserValidator extends SimpleValidator {
    * and checks if the old password matches the password stored in the database.
    *
    * @param passwordFromDatabase The password retrieved from the database for comparison.
-   * @param oldPassword The old password provided by the user.
-   * @param newPassword The new password provided by the user.
+   * @param oldPassword          The old password provided by the user.
+   * @param newPassword          The new password provided by the user.
    * @throws IllegalArgumentException If the old password was incorrect.
    */
   public static void validatePasswordChange(String passwordFromDatabase, String oldPassword,
@@ -72,10 +73,10 @@ public class UserValidator extends SimpleValidator {
    */
   public static void validateFirstName(String firstName) throws IllegalArgumentException {
     if (!isNotNullOrBlank(firstName) || !firstName
-            .matches(UserValidationRules.FIRSTNAME.getRegex())) {
+        .matches(UserValidationRules.FIRSTNAME.getRegex())) {
 
       throw new IllegalArgumentException("First name must be 1-64 characters "
-              + "and contain only letters.");
+          + "and contain only letters.");
     }
   }
 
@@ -88,7 +89,7 @@ public class UserValidator extends SimpleValidator {
   public static void validateLastName(String lastName) throws IllegalArgumentException {
     if (!isNotNullOrBlank(lastName) || !lastName.matches(UserValidationRules.LASTNAME.getRegex())) {
       throw new IllegalArgumentException("Last name must be 1-64 characters"
-              + " and contain only letters.");
+          + " and contain only letters.");
     }
   }
 
@@ -101,6 +102,19 @@ public class UserValidator extends SimpleValidator {
   public static void validateIncome(double income) throws IllegalArgumentException {
     if (income < 0) {
       throw new IllegalArgumentException("Income cannot be negative.");
+    }
+  }
+
+  /**
+   * The method validates that the saving percentage is between 0 and 100.
+   *
+   * @param savingPercentage The saving percentage to be validated.
+   * @throws IllegalArgumentException If the saving percentage is not between 0 and 100.
+   */
+  public static void validateSavingPercentage(int savingPercentage)
+      throws IllegalArgumentException {
+    if (savingPercentage < 0 || savingPercentage > 100) {
+      throw new IllegalArgumentException("Saving percentage must be between 0 and 100.");
     }
   }
 }

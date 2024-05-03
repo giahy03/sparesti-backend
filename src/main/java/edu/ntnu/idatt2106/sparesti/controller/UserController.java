@@ -134,6 +134,27 @@ public class UserController {
   }
 
   /**
+   * REST-endpoint for changing the saving percentage of the currently logged-in user.
+   *
+   * @param savingPercentage The new saving percentage.
+   * @param principal        The principal object representing the currently authenticated user.
+   * @return A ResponseEntity with status OK if the operation is successful.
+   */
+  @Operation(summary = "Change user's saving percentage")
+  @ApiResponse(responseCode = "200", description = "User saving percentage successfully updated.")
+  @ApiResponse(responseCode = "400", description = "Invalid saving percentage from user.")
+  @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
+  @PutMapping(path = "/saving-percentage")
+  public ResponseEntity<Void> changeSavingPercentage(@RequestBody Integer savingPercentage,
+                                                     Principal principal) {
+    String email = principal.getName();
+    log.info("Changing saving percentage for user with email {}.", email);
+    userService.editSavingPercentage(savingPercentage, email);
+    log.info("Saving percentage for {} successfully updated.", email);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  /**
    * REST-endpoint for changing the living status of the currently logged-in user.
    *
    * @param livingStatusChangeDto The DTO containing the new living status.
