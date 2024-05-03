@@ -1,5 +1,14 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edu.ntnu.idatt2106.sparesti.model.user.util.UserUtility;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
@@ -17,157 +26,149 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the User controller.
  *
  * @author Hanne-Sofie Søreide
  */
-
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+class UserControllerTest {
 
-    @InjectMocks
-    UserController userController;
+  @InjectMocks
+  UserController userController;
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-    @MockBean
-    private JwtService jwtService;
-    @MockBean
-    private UserService userService;
-    @MockBean
-    private UserRepository userRepository;
+  @MockBean
+  private JwtService jwtService;
 
-    String url = "/api/v1/users";
+  @MockBean
+  private UserService userService;
 
+  @MockBean
+  private UserRepository userRepository;
 
-    @DisplayName("Test that controller is initialized.")
-    @Test
-    public void controllerIsInitialized() {
-        assertThat(userController).isNotNull();
-    }
+  String url = "/api/v1/users";
 
+  @DisplayName("Test that controller is initialized.")
+  @Test
+  void controllerIsInitialized() {
+    assertThat(userController).isNotNull();
+  }
 
-    @DisplayName("Test change password end-point")
-    @Test
-    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
-    public void controller_changePasswordEndPoint() throws Exception {
+  @DisplayName("Test change password end-point")
+  @Test
+  @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+  void controller_changePasswordEndPoint() throws Exception {
 
-        mockMvc
-                .perform(put(url + "/password").with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(UserUtility.createPasswordChangeDtoJson()))
-                .andExpect(status().isOk());
-    }
+    mockMvc
+            .perform(put(url + "/password").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(UserUtility.createPasswordChangeDtoJson()))
+            .andExpect(status().isOk());
+  }
 
-    @DisplayName("Test change user first name")
-    @Test
-    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
-    public void controller_changeFirstName() throws Exception {
+  @DisplayName("Test change user first name")
+  @Test
+  @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+  void controller_changeFirstName() throws Exception {
 
-        mockMvc
-                .perform(put(url + "/first-name").with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(UserUtility.createFirstNameChangeDtoJson()))
-                .andExpect(status().isOk());
-    }
+    mockMvc
+            .perform(put(url + "/first-name").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(UserUtility.createFirstNameChangeDtoJson()))
+            .andExpect(status().isOk());
+  }
 
-    @DisplayName("Test change user last name")
-    @Test
-    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
-    public void controller_changeLastName() throws Exception {
+  @DisplayName("Test change user last name")
+  @Test
+  @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+  void controller_changeLastName() throws Exception {
 
-        mockMvc
-                .perform(put(url + "/last-name").with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(UserUtility.createLastNameChangeDtoJson()))
-                .andExpect(status().isOk());
-    }
-
-
-    @DisplayName("Test change user income")
-    @Test
-    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
-    public void controller_changeUserIncome() throws Exception {
-
-        mockMvc
-                .perform(put(url + "/income").with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(UserUtility.createIncomeChangeDtoJson()))
-                .andExpect(status().isOk());
-    }
-
-    @DisplayName("Test change user's living status")
-    @Test
-    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
-    public void controller_changeUserLivingStatus() throws Exception {
-
-        mockMvc
-                .perform(put(url + "/living-status").with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(UserUtility.createLivingStatusChangeDtoJson()))
-                .andExpect(status().isOk());
-    }
-
-    @DisplayName("Test retrieval of user details")
-    @Test
-    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
-    public void controller_getUserDetails() throws Exception {
-
-        when(userService.getUserDetails("abc@email.com")).thenReturn(UserUtility.createUserDetailsDto());
-
-        mockMvc
-                .perform(get(url + "/details").with(csrf()))
-                .andExpect(status().isOk())
-                .andExpect(content().json(UserUtility.createUserDetailsDtoJson()));
-    }
-
-    @DisplayName("Test registration of additional user information")
-    @Test
-    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
-    public void controller_registerAdditionalUserInfo() throws Exception {
-
-        mockMvc
-                .perform(post(url + "/info").with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(UserUtility.createUserInfoDtoJson()))
-                .andExpect(status().isCreated());
-    }
+    mockMvc
+            .perform(put(url + "/last-name").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(UserUtility.createLastNameChangeDtoJson()))
+            .andExpect(status().isOk());
+  }
 
 
-    @DisplayName("Test deletion of user account")
-    @Test
-    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
-    public void controller_deleteUserAccount() throws Exception {
+  @DisplayName("Test change user income")
+  @Test
+  @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+  void controller_changeUserIncome() throws Exception {
 
-        mockMvc
-                .perform(delete(url).with(csrf())
-                        .param("verificationCode","CODE"))
-                .andExpect(status().isOk());
-    }
+    mockMvc
+            .perform(put(url + "/income").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(UserUtility.createIncomeChangeDtoJson()))
+            .andExpect(status().isOk());
+  }
 
-    @DisplayName("Test reset of user password")
-    @Test
-    @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
-    public void controller_resetUserPassword() throws Exception {
+  @DisplayName("Test change user's living status")
+  @Test
+  @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+  void controller_changeUserLivingStatus() throws Exception {
 
-        mockMvc
-                .perform(put(url + "/password-reset").with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(UserUtility.createResetPasswordDtoJson()))
-                .andExpect(status().isOk());
-    }
+    mockMvc
+            .perform(put(url + "/living-status").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(UserUtility.createLivingStatusChangeDtoJson()))
+            .andExpect(status().isOk());
+  }
+
+  @DisplayName("Test retrieval of user details")
+  @Test
+  @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+  void controller_getUserDetails() throws Exception {
+
+    when(userService.getUserDetails("abc@email.com"))
+            .thenReturn(UserUtility.createUserDetailsDto());
+
+    mockMvc
+            .perform(get(url + "/details").with(csrf()))
+            .andExpect(status().isOk())
+            .andExpect(content().json(UserUtility.createUserDetailsDtoJson()));
+  }
+
+  @DisplayName("Test registration of additional user information")
+  @Test
+  @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+  void controller_registerAdditionalUserInfo() throws Exception {
+
+    mockMvc
+            .perform(post(url + "/info").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(UserUtility.createUserInfoDtoJson()))
+            .andExpect(status().isCreated());
+  }
+
+
+  @DisplayName("Test deletion of user account")
+  @Test
+  @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+  void controller_deleteUserAccount() throws Exception {
+
+    mockMvc
+            .perform(delete(url).with(csrf())
+                    .param("verificationCode", "CODE"))
+            .andExpect(status().isOk());
+  }
+
+  @DisplayName("Test reset of user password")
+  @Test
+  @WithMockUser(password = "abc", username = "abc@email.com", roles = "USER")
+  void controller_resetUserPassword() throws Exception {
+
+    mockMvc
+            .perform(put(url + "/password-reset").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(UserUtility.createResetPasswordDtoJson()))
+            .andExpect(status().isOk());
+  }
 
 
 }

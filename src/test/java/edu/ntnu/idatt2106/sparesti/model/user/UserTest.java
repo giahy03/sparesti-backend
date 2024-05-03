@@ -1,15 +1,18 @@
 package edu.ntnu.idatt2106.sparesti.model.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.streak.Streak;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
   User user;
@@ -24,7 +27,7 @@ class UserTest {
 
   @Test
   @DisplayName("Test that user constructor returns a user object")
-  void User_UserConstructor_ReturnUser() {
+  void user_UserConstructor_ReturnUser() {
     //Arrange
     String expectedEmail = "example@guide";
     String expectedName = "Example";
@@ -57,7 +60,7 @@ class UserTest {
   }
 
   @Test
-  void User_UserConstructorWithNoArgs_ReturnUser() {
+  void user_UserConstructorWithNoArgs_ReturnUser() {
     //Arrange
 
     User user = new User();
@@ -90,14 +93,16 @@ class UserTest {
     assertEquals(expectedStreak, user.getStreak());
   }
 
+  @DisplayName("Test that user constructor with null email throws exception")
   @Test
-  void User_UserConstructWithNull_ThrowsException() {
+  void user_UserConstructWithNull_ThrowsException() {
     User user = new User();
     assertThrows(NullPointerException.class, () -> user.setEmail(null));
   }
 
+  @DisplayName("Test that user constructor with null password throws exception")
   @Test
-  void User_GetSimpleAuthority_ReturnRole() {
+  void user_GetSimpleAuthority_ReturnRole() {
 
     //Act
     List<? extends GrantedAuthority> actual = user.getAuthorities().stream().toList();
@@ -106,8 +111,9 @@ class UserTest {
     assertFalse(actual.isEmpty());
   }
 
+  @DisplayName("Test that user constructor with null password throws exception")
   @Test
-  void User_isEnabled_True() {
+  void user_isEnabled_True() {
     //Arrange
     boolean expected = true;
 
@@ -118,8 +124,10 @@ class UserTest {
     assertEquals(expected, actual);
   }
 
+
+  @DisplayName("Test that user constructor with null password throws exception")
   @Test
-  void User_isCredentialsNonExpired_True() {
+  void user_isCredentialsNonExpired_True() {
     //Arrange
     boolean expected = true;
 
@@ -130,8 +138,9 @@ class UserTest {
     assertEquals(expected, actual);
   }
 
+  @DisplayName("Test that user constructor with null password throws exception")
   @Test
-  void User_isAccountNonLocked_True() {
+  void user_isAccountNonLocked_True() {
     //Arrange
     boolean expected = true;
 
@@ -142,8 +151,9 @@ class UserTest {
     assertEquals(expected, actual);
   }
 
+  @DisplayName("Test that user constructor with null password throws exception")
   @Test
-  void User_isAccountNonExpired_True() {
+  void user_isAccountNonExpired_True() {
     //Arrange
     boolean expected = true;
 
@@ -155,8 +165,9 @@ class UserTest {
   }
 
 
+  @DisplayName("Test that user constructor with null password throws exception")
   @Test
-  void User_SetPasswordToNull_ReturnException() {
+  void user_SetPasswordToNull_ReturnException() {
     //Arrange
     String expected = "password is marked non-null but is null";
 
@@ -170,8 +181,9 @@ class UserTest {
 
   }
 
+  @DisplayName("Test that user constructor with null password throws exception")
   @Test
-  void User_SetRole_ReturnSavedRole() {
+  void user_SetRole_ReturnSavedRole() {
     //Arrange
     Role expected = Role.ADMIN;
 

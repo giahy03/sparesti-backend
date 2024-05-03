@@ -1,18 +1,22 @@
 package edu.ntnu.idatt2106.sparesti.service.auth;
 
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import io.jsonwebtoken.Claims;
+import java.util.function.Function;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.function.Function;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for JwtService
+ * Test class for JwtService.
  *
  * @version 1.0
  * @see JwtService
@@ -31,7 +35,8 @@ class JwtServiceTest {
   }
 
   @Test
-  void JwtService_ExtractClaim_ReturnClaim() {
+  @DisplayName("Service extract claim should return claim")
+  void jwtService_ExtractClaim_ReturnClaim() {
     //Arrange
     String expected = testUser.getUsername();
     String token = jwtService.generateToken(testUser);
@@ -45,7 +50,8 @@ class JwtServiceTest {
   }
 
   @Test
-  void JwtService_GenerateToken_ReturnToken() {
+  @DisplayName("Service extract claim should return null")
+  void jwtService_GenerateToken_ReturnToken() {
     //Act
     String token = jwtService.generateToken(testUser);
 
@@ -56,7 +62,8 @@ class JwtServiceTest {
   }
 
   @Test
-  void JwtService_isTokenValid_ReturnTrue() {
+  @DisplayName("Service extract claim should return null")
+  void jwtService_isTokenValid_ReturnTrue() {
     //Arrange
     String generatedToken = jwtService.generateToken(testUser);
 
@@ -68,7 +75,8 @@ class JwtServiceTest {
   }
 
   @Test
-  void JwtService_isTokenValid_ReturnFalse() {
+  @DisplayName("Service extract claim should return null")
+  void jwtService_isTokenValid_ReturnFalse() {
     //Arrange
     String generatedToken = jwtService.generateToken(testUser);
     User differentUser = ChallengeUtility.createUserC();
@@ -81,7 +89,8 @@ class JwtServiceTest {
   }
 
   @Test
-  void JwtService_ExtractUsername_ReturnUsername() {
+  @DisplayName("Service extract claim should return null")
+  void jwtService_ExtractUsername_ReturnUsername() {
     //Arrange
     String expected = testUser.getUsername();
     String token = jwtService.generateToken(testUser);

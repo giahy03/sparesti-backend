@@ -1,11 +1,12 @@
 package edu.ntnu.idatt2106.sparesti.model.challenge;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for the SharedChallengeCode class.
@@ -17,7 +18,7 @@ class SharedChallengeCodeTest {
 
   @Test
   @DisplayName("ChallengeCode NoArgsConstructor Return ChallengeCode")
-  void ChallengeCode_NoArgsConstructor_ReturnChallengeCode() {
+  void challengeCode_NoArgsConstructor_ReturnChallengeCode() {
     //Arrange
     long expectedId = 1L;
     String expectedCode = "Code";
@@ -33,7 +34,7 @@ class SharedChallengeCodeTest {
 
   @Test
   @DisplayName("ChallengeCode AllArgsConstructor Returns Expected Values")
-  void ChallengeCode_AllArgsConstructor_ReturnsExpectedValues() {
+  void challengeCode_AllArgsConstructor_ReturnsExpectedValues() {
     //Arrange
     long expectedId = 1L;
     String expectedCode = "Code";

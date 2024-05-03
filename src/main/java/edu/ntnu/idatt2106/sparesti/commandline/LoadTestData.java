@@ -21,12 +21,10 @@ import edu.ntnu.idatt2106.sparesti.repository.SavingGoalRepository;
 import edu.ntnu.idatt2106.sparesti.repository.SharedChallengeCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.service.analysis.BankStatementService;
-
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -38,13 +36,9 @@ import org.springframework.stereotype.Component;
 @Profile("!test")
 @RequiredArgsConstructor
 public class LoadTestData implements CommandLineRunner {
-
   private final UserRepository userRepository;
-
   private final ChallengesRepository challengesRepository;
-
   private final AchievementRepository achievementRepository;
-
   private final SharedChallengeCodeRepository sharedChallengeCodeRepository;
   private final SavingGoalRepository savingGoalRepository;
   private final SavingContributionRepository savingContributionRepository;
@@ -79,13 +73,6 @@ public class LoadTestData implements CommandLineRunner {
             .income(10000)
             .savingPercentage(20)
             .user(user)
-            .build());
-
-    user2.setUserInfo(UserInfo.builder()
-            .livingStatus(SsbLivingStatus.LIVING_ALONE)
-            .income(10000)
-            .savingPercentage(20)
-            .user(user2)
             .build());
 
     SharedChallenge sharedChallenge = SharedChallenge.builder()

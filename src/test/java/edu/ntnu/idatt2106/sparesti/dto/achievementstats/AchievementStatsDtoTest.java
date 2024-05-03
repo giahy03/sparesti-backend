@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 
+/**
+ * Test class for the AchievementStatsDto.
+ *
+ * @author Tobias Oftedal
+ */
 class AchievementStatsDtoTest {
 
   @Test

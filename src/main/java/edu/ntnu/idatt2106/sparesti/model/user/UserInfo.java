@@ -61,6 +61,11 @@ public class UserInfo {
   @Schema(description = "The percentage of income the user wants to use.")
   private Integer savingPercentage;
 
+  /**
+   * Returns the expected usage of the user.
+   *
+   * @return The expected usage of the user.
+   */
   public double getExpectedUsage() {
     double expected = ((100 - savingPercentage) * income) / 100;
     if (expected < 0) {

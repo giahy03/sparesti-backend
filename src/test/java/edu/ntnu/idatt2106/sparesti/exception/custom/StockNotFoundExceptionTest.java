@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.ntnu.idatt2106.sparesti.exception.stock.StockNotFoundException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the StockNotFoundException.
+ *
+ * @author Tobias Oftedal
+ */
 class StockNotFoundExceptionTest {
   @Test
   void testConstructorWithMessage() {

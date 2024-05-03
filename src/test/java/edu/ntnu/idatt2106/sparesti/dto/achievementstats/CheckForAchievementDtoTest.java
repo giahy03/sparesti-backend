@@ -5,6 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for the CheckForAchievementDto.
+ *
+ * @author Tobias Oftedal
+ */
 class CheckForAchievementDtoTest {
 
   @Test

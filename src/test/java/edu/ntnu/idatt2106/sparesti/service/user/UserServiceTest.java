@@ -1,5 +1,10 @@
 package edu.ntnu.idatt2106.sparesti.service.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import edu.ntnu.idatt2106.sparesti.dto.user.UserDetailsDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.UserInfoDto;
 import edu.ntnu.idatt2106.sparesti.dto.user.edit.FirstNameChangeDto;
@@ -10,9 +15,9 @@ import edu.ntnu.idatt2106.sparesti.exception.user.UserNotFoundException;
 import edu.ntnu.idatt2106.sparesti.model.challenge.util.ChallengeUtility;
 import edu.ntnu.idatt2106.sparesti.model.user.User;
 import edu.ntnu.idatt2106.sparesti.model.user.UserInfo;
-import edu.ntnu.idatt2106.sparesti.repository.EmailCodeRepository;
 import edu.ntnu.idatt2106.sparesti.repository.user.UserRepository;
 import edu.ntnu.idatt2106.sparesti.service.email.EmailVerificationService;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,13 +25,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * A test for the user-service class which is responsible for handling user-related operations.
@@ -60,7 +58,7 @@ class UserServiceTest {
 
   @Test
   @DisplayName("Service delete user should delete given user")
-  void Service_DeleteUserByEmail_DeletesUser() {
+  void service_DeleteUserByEmail_DeletesUser() {
     // Arrange
     when(userRepository.findUserByEmailIgnoreCase(user.getEmail())).thenReturn(Optional.of(user));
 
@@ -73,7 +71,7 @@ class UserServiceTest {
 
   @Test
   @DisplayName("Service edit first name should return saved first name")
-  void Service_EditFirstName_ReturnsSavedFirstName() {
+  void service_EditFirstName_ReturnsSavedFirstName() {
     // Arrange
     FirstNameChangeDto firstNameChangeDto = UserServiceUtility.createFirstNameChangeDto("Jane");
     when(userRepository.save(user)).thenReturn(user);
@@ -90,7 +88,7 @@ class UserServiceTest {
 
   @Test
   @DisplayName("Service edit last name should return saved last name")
-  void Service_EditLastName_ReturnSavedLastName() {
+  void service_EditLastName_ReturnSavedLastName() {
     //Arrange
     LastNameChangeDto lastNameChangeDto = UserServiceUtility.createLastNameChangeDto("Smith");
     when(userRepository.save(user)).thenReturn(user);
@@ -106,7 +104,7 @@ class UserServiceTest {
 
   @Test
   @DisplayName("Service edit income should return saved last income")
-  void Service_EditIncome_ReturnSavedLastIncome() {
+  void service_EditIncome_ReturnSavedLastIncome() {
     //Arrange
     IncomeChangeDto incomeChangeDto = UserServiceUtility.createIncomeChangeDto(1000);
     when(userRepository.save(user)).thenReturn(user);
@@ -122,7 +120,7 @@ class UserServiceTest {
 
   @Test
   @DisplayName("Service edit living status should return saved living status")
-  void Service_EditLivingStatus_ReturnSavedLivingStatus() {
+  void service_EditLivingStatus_ReturnSavedLivingStatus() {
     //Arrange
     LivingStatusChangeDto livingStatusChangeDto = UserServiceUtility.createLivingStatusChangeDto(1);
     when(userRepository.save(user)).thenReturn(user);
@@ -138,7 +136,7 @@ class UserServiceTest {
 
   @Test
   @DisplayName("Service get user details should return actual user dto")
-  void Service_GetUserDetails_ReturnCorrectUserDetails() {
+  void service_GetUserDetails_ReturnCorrectUserDetails() {
     //Arrange
     String expectedFirstName = user.getFirstName();
     String expectedLastName = user.getLastName();
@@ -156,18 +154,20 @@ class UserServiceTest {
 
   @Test
   @DisplayName("Service add user info throws exception if user already exists")
-  void Service_AddUserInfo_DoesNotThrowException() {
+  void service_AddUserInfo_DoesNotThrowException() {
+
     //Arrange
     UserInfoDto userInfoDto = ChallengeUtility.createUserInfoDtoA();
     when(userRepository.findUserByEmailIgnoreCase(user.getEmail())).thenReturn(Optional.empty());
 
     //Assert
-    assertThrows(UserNotFoundException.class, () -> userService.addUserInfo(userInfoDto, user.getEmail()));
+    assertThrows(UserNotFoundException.class,
+            () -> userService.addUserInfo(userInfoDto, user.getEmail()));
   }
 
   @Test
   @DisplayName("Service add user info should return saved user info")
-  void Service_AddUserInfo_ReturnSavedUserInfo() {
+  void service_AddUserInfo_ReturnSavedUserInfo() {
     //Arrange
     UserInfoDto userInfoDto = ChallengeUtility.createUserInfoDtoA();
     when(userRepository.save(user)).thenReturn(user);
@@ -181,4 +181,5 @@ class UserServiceTest {
     assertEquals(1000, user.getUserInfo().getIncome());
     assertEquals(1, user.getUserInfo().getLivingStatus().ordinal());
   }
+
 }

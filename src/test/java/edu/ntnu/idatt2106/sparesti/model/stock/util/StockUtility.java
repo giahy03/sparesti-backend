@@ -9,16 +9,27 @@ import edu.ntnu.idatt2106.sparesti.dto.stock.StockDataDto;
  */
 public class StockUtility {
 
-    public static String createStockDataDtoJson() {
+  /**
+   * Creates a json string of a stock data dto.
+   *
+   * @return a json string of a stock data dto.
+   */
+  public static String createStockDataDtoJson() {
 
-        return "{" +
-                "\"currentPrice\":110.0," +
-                "\"changePercent\":0.5" +
-                "}";
-    }
+    return "{"
+            + "\"currentPrice\":110.0,"
+            + "\"changePercent\":0.5"
+            + "}";
+  }
 
-    public static StockDataDto createStockDataDto() {
-        return new StockDataDto(110.0, 0.5);
-    }
+
+  /**
+   * Creates a stock data dto object.
+   *
+   * @return a stock data dto object.
+   */
+  public static StockDataDto createStockDataDto() {
+    return new StockDataDto(110.0, 0.5);
+  }
 
 }

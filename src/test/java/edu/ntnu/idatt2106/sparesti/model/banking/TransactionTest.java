@@ -1,10 +1,13 @@
 package edu.ntnu.idatt2106.sparesti.model.banking;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import edu.ntnu.idatt2106.sparesti.model.analysis.ssb.SsbPurchaseCategory;
 import java.time.MonthDay;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
  * Test class for a transaction.
@@ -22,14 +25,16 @@ class TransactionTest {
     transaction = BankingUtility.createTransactionA();
   }
 
+  @DisplayName("Test that transaction constructor returns a transaction object")
   @Test
-  void Transaction_RequiredArgsConstructor_ReturnsNotNull() {
+  void transaction_RequiredArgsConstructor_ReturnsNotNull() {
     //Arrange
     MonthDay expectedMonthDay = MonthDay.of(12, 20);
     String expectedDescription = "Test transaction A";
     double expectedAmount = 167.0;
     boolean expectedIsIncoming = false;
-    Transaction transaction = new Transaction(expectedMonthDay, expectedDescription, expectedAmount, expectedIsIncoming);
+    Transaction transaction = new Transaction(
+            expectedMonthDay, expectedDescription, expectedAmount, expectedIsIncoming);
 
     // Act
     MonthDay actualDate = transaction.getDate();
@@ -44,8 +49,9 @@ class TransactionTest {
   }
 
 
+  @DisplayName("Test that transaction access returns correct fields")
   @Test
-  void Transaction_Access_ReturnsFields() {
+  void transaction_Access_ReturnsFields() {
     //Arrange
     MonthDay expectedMonthDay = MonthDay.of(12, 20);
     String expectedDescription = "Test transaction A";
@@ -68,8 +74,9 @@ class TransactionTest {
   }
 
 
+  @DisplayName("Test that transaction setters return correct field")
   @Test
-  void Transaction_Setters_ReturnsCorrectField() {
+  void transaction_Setters_ReturnsCorrectField() {
     //Arrange
     MonthDay expectedMonthDay = MonthDay.of(12, 10);
     String expectedDescription = "Test transaction B";
@@ -91,14 +98,16 @@ class TransactionTest {
     SsbPurchaseCategory actualCategory = transaction.getCategory();
 
     // Assert
-    assertTransactionFields(expectedMonthDay, actual, expectedDescription, actualDescription, expectedAmount,
+    assertTransactionFields(expectedMonthDay, actual,
+            expectedDescription, actualDescription, expectedAmount,
             actualAmount, expectedIsIncoming, actualIsIncoming);
     assertEquals(expectedCategory, actualCategory);
   }
 
 
+  @DisplayName("Test that transaction setBankStatement returns correct bank statement")
   @Test
-  void Transaction_SetBankStatement_ReturnsCorrectBankStatement() {
+  void transaction_SetBankStatement_ReturnsCorrectBankStatement() {
     //Arrange
     BankStatement expected = BankingUtility.createBankStatementA();
 
@@ -111,9 +120,12 @@ class TransactionTest {
     assertEquals(expected.getTimestamp(), actual.getTimestamp());
   }
 
-  private static void assertTransactionFields(MonthDay expectedMonthDay, MonthDay actualDate, String expectedDescription,
-                                              String actualDescription, double expectedAmount, double actualAmount,
-                                              boolean expectedIsIncoming, boolean actualIsIncoming) {
+  private static void assertTransactionFields(MonthDay expectedMonthDay,
+                                              MonthDay actualDate, String expectedDescription,
+                                              String actualDescription,
+                                              double expectedAmount, double actualAmount,
+                                              boolean expectedIsIncoming,
+                                              boolean actualIsIncoming) {
     assertEquals(expectedMonthDay, actualDate);
     assertEquals(expectedDescription, actualDescription);
     assertEquals(expectedAmount, actualAmount);
