@@ -33,14 +33,14 @@ class SavingGoalTest {
   @Test
   void goal_getGoal_returnsExpectedValues() {
     // Arrange
-    Long expectedId = 1L;
-    String expectedTitle = "Goal";
-    LocalDate expectedStartDate = LocalDate.of(2024, 4, 15);
-    LocalDate expectedEndDate = LocalDate.of(2024, 5, 3);
-    int expectedLives = 3;
-    GoalState expectedState = GoalState.UNDER_PROGRESS;
-    double expectedAmount = 10000.0;
-    User expectedAuthor = SavingGoalUtility.createUserA();
+    final Long expectedId = 1L;
+    final String expectedTitle = "Goal";
+    final LocalDate expectedStartDate = LocalDate.of(2024, 4, 15);
+    final LocalDate expectedEndDate = LocalDate.of(2024, 5, 3);
+    final int expectedLives = 3;
+    final GoalState expectedState = GoalState.UNDER_PROGRESS;
+    final double expectedAmount = 10000.0;
+    final User expectedAuthor = SavingGoalUtility.createUserA();
 
 
     // Assert

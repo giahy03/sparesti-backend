@@ -138,11 +138,11 @@ class AchievementStatsServiceTest {
 
 
     // Act
-    List<Integer> updatedLevel = achievementStatsService
+    final List<Integer> updatedLevel = achievementStatsService
             .updateAndCheckAchievement(AchievementCategory.EDUCATION, principal);
-    List<Integer> updatedLevel2 = achievementStatsService
+    final List<Integer> updatedLevel2 = achievementStatsService
             .updateAndCheckAchievement(AchievementCategory.AMOUNT_SAVED, principal);
-    List<Integer> updatedLevel3 = achievementStatsService
+    final List<Integer> updatedLevel3 = achievementStatsService
             .updateAndCheckAchievement(AchievementCategory.SAVING_STREAK, principal);
     achievementStatsService.updateAndCheckAchievement(
             AchievementCategory.NUMBER_OF_SAVING_GOALS_ACHIEVED, principal);

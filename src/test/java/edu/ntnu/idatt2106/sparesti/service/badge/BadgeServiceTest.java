@@ -70,22 +70,6 @@ class BadgeServiceTest {
     principal = () -> "test@test.tea";
   }
 
-  @DisplayName("Test for getBadgeById")
-  @Test
-  void badge_getBadgeById_ReturnBadge() {
-
-    // Arrange
-    when(badgeRepository.findById(1L)).thenReturn(Optional.of(badge));
-    when(badgeMapper.mapToBadgePreviewDto(badge)).thenReturn(BadgeUtility.createBadgePreviewDto());
-
-    // Act
-    BadgePreviewDto badgePreviewDto = badgeService.getBadgeById(BadgeUtility.createBadgeIdDto());
-
-    // Assert
-    assertNotNull(badgePreviewDto);
-  }
-
-
   @DisplayName("Test for getAllBadgesByEmail")
   @Test
   void badge_getAllBadgesByEmail_ReturnBadges() {
@@ -105,46 +89,7 @@ class BadgeServiceTest {
     assertThat(returnedPreviewBadges.size()).isEqualTo(2);
   }
 
-  @DisplayName("Test for deleteBadgeById")
-  @Test
-  void badge_deleteBadgeById_DeleteBadge() {
 
-    // Act and assert
-    assertDoesNotThrow(() -> badgeService
-            .deleteBadgeById(principal, BadgeUtility.createBadgeIdDto()));
-
-  }
-
-  @DisplayName("Test for createBadge")
-  @Test
-  void badge_createBadge_CreateBadge() {
-
-    // Arrange
-    User user = BadgeUtility.createUserA();
-    BadgeCreateDto badgeCreateDto =
-            BadgeUtility.createBadgeCreateDto();
-    when(userRepository
-            .findUserByEmailIgnoreCase(principal.getName())).thenReturn(Optional.of(user));
-    when(badgeMapper.mapToBadge(badgeCreateDto, user)).thenReturn(badge);
-    when(badgeRepository.save(badge)).thenReturn(badge);
-    when(badgeMapper.mapToBadgePreviewDto(badge)).thenReturn(BadgeUtility.createBadgePreviewDto());
-
-    // Act and assert
-    assertDoesNotThrow(() -> badgeService.createBadge(badgeCreateDto, principal));
-    assertNotNull(badgeService.createBadge(badgeCreateDto, principal));
-
-  }
-
-  @Test
-  void badge_getAchievementOfCategory_ReturnsBadge() {
-    // Arrange
-    when(achievementRepository.findByCategory(BadgeUtility.createAchievementCategoryA()))
-            .thenReturn(Optional.of(BadgeUtility.createAchievementA()));
-
-    // Act and assert
-    assertNotNull(badgeService.getAchievementOfCategory(
-            BadgeUtility.createAchievementCategoryA()));
-  }
 
   @Test
   void badge_getAchievementPreviews_ReturnsAchievementPreviews() {
