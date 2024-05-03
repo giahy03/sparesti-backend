@@ -98,6 +98,7 @@ public class ChallengeUtility {
     return UserInfoDto.builder()
             .income(1000)
             .livingStatus(1)
+            .savingPercentage(10)
             .build();
   }
 
@@ -106,6 +107,7 @@ public class ChallengeUtility {
     return UserInfo.builder()
             .income(1000)
             .livingStatus(SsbLivingStatus.fromInteger(1))
+            .savingPercentage(10)
             .build();
   }
 

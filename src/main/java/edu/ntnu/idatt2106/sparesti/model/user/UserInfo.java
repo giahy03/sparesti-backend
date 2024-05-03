@@ -57,4 +57,7 @@ public class UserInfo {
   @Schema(description = "The user associated with this additional information.")
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
+
+  @Schema(description = "The percentage of income the user wants to use.")
+  private Integer savingPercentage;
 }
