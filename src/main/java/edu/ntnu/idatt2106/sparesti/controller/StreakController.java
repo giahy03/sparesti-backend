@@ -37,13 +37,13 @@ public class StreakController {
    * REST-endpoint for changing the streak.
    *
    * @param streakRequestDto The streak request containing the action to be performed on the streak.
-   * @param principal The principal object representing the currently authenticated user.
+   * @param principal        The principal object representing the currently authenticated user.
    * @return A ResponseEntity with status OK if the operation is successful.
    */
   @Operation(summary = "Change user's streak")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "User's streak successfully updated."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
+      @ApiResponse(responseCode = "200", description = "User's streak successfully updated."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
   })
   @PutMapping()
   public ResponseEntity<Void> changeStreak(@RequestBody StreakRequestDto streakRequestDto,
@@ -64,10 +64,10 @@ public class StreakController {
    */
   @Operation(summary = "Retrieve user streak")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "Streak successfully retrieved.",
-                  content = {@Content(mediaType = "application/json",
-                          schema = @Schema(implementation = StreakResponseDto.class))}),
-          @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
+      @ApiResponse(responseCode = "200", description = "Streak successfully retrieved.",
+          content = {@Content(mediaType = "application/json",
+              schema = @Schema(implementation = StreakResponseDto.class))}),
+      @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
   })
   @GetMapping()
   public ResponseEntity<StreakResponseDto> retrieveStreak(Principal principal) {

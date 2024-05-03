@@ -1,7 +1,9 @@
 package edu.ntnu.idatt2106.sparesti.controller;
 
-import edu.ntnu.idatt2106.sparesti.service.AutomaticChallengeService;
 import edu.ntnu.idatt2106.sparesti.dto.challenge.ChallengeRecommendationDto;
+import edu.ntnu.idatt2106.sparesti.service.AutomaticChallengeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.security.Principal;
 import java.util.List;
 import lombok.NonNull;
@@ -29,6 +31,10 @@ public class AutomaticChallengeController {
    * @param principal the user to get recommendations for.
    * @return a list of challenge recommendations.
    */
+  @Operation(summary = "Get challenge recommendations for the user")
+  @ApiResponse(responseCode = "200", description = "Challenge recommendations returned")
+  @ApiResponse(responseCode = "400", description = "Bad request")
+  @ApiResponse(responseCode = "500", description = "Internal server error")
   @GetMapping("/")
   public ResponseEntity<List<ChallengeRecommendationDto>> getRecommendations(Principal principal) {
     log.info("Getting challenge recommendations for user: {}", principal.getName());

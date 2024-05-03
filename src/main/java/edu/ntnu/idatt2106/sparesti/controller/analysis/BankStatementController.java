@@ -175,8 +175,7 @@ public class BankStatementController {
       @ApiResponse(responseCode = "500", description = "The bank statements were not retrieved "
           + "because of an internal server error")})
   @GetMapping("/")
-  public ResponseEntity<List<BankStatementDto>>
-  getAllStatementsForUser(Principal principal,
+  public ResponseEntity<List<BankStatementDto>> getAllStatementsForUser(Principal principal,
                           @RequestParam(defaultValue = "0")
                           Integer month,
                           @RequestParam(defaultValue = "0")

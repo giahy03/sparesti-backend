@@ -46,7 +46,7 @@ public class UserController {
    * REST-endpoint for changing the password of the currently logged-in user.
    *
    * @param passwordChangeDto The DTO containing old and new password.
-   * @param principal The principal object representing the currently authenticated user.
+   * @param principal         The principal object representing the currently authenticated user.
    * @return A ResponseEntity with status OK if the operation is successful.
    */
   @Operation(summary = "Change user's password")
@@ -69,7 +69,7 @@ public class UserController {
    * REST-endpoint for changing the first name of the currently logged-in user.
    *
    * @param firstNameChangeDto The DTO containing the new first name.
-   * @param principal The principal object representing the currently authenticated user.
+   * @param principal          The principal object representing the currently authenticated user.
    * @return A ResponseEntity with status OK if the operation is successful.
    */
   @Operation(summary = "Change user's first name")
@@ -92,7 +92,7 @@ public class UserController {
    * REST-endpoint for changing the last name of the currently logged-in user.
    *
    * @param lastNameChangeDto The DTO containing the new last name.
-   * @param principal The principal object representing the currently authenticated user.
+   * @param principal         The principal object representing the currently authenticated user.
    * @return A ResponseEntity with status OK if the operation is successful.
    */
   @Operation(summary = "Change user's last name")
@@ -115,7 +115,7 @@ public class UserController {
    * REST-endpoint for changing the income of the currently logged-in user.
    *
    * @param incomeChangeDto The DTO containing the new income.
-   * @param principal The principal object representing the currently authenticated user.
+   * @param principal       The principal object representing the currently authenticated user.
    * @return A ResponseEntity with status OK if the operation is successful.
    */
   @Operation(summary = "Change user's income")
@@ -137,7 +137,8 @@ public class UserController {
    * REST-endpoint for changing the living status of the currently logged-in user.
    *
    * @param livingStatusChangeDto The DTO containing the new living status.
-   * @param principal The principal object representing the currently authenticated user.
+   * @param principal             The principal object representing the currently authenticated
+   *                              user.
    * @return A ResponseEntity with status OK if the operation is successful.
    */
   @Operation(summary = "Change user's living status")
@@ -216,7 +217,8 @@ public class UserController {
       @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content)
   })
   @DeleteMapping
-  public ResponseEntity<Void> deleteUser(@RequestParam String verificationCode, Principal principal) {
+  public ResponseEntity<Void> deleteUser(@RequestParam String verificationCode,
+                                         Principal principal) {
     String email = principal.getName();
     log.info("Attempting to delete user with email {}.", email);
     userService.deleteUserByEmail(email, verificationCode);

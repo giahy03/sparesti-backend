@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.security.Principal;
 
 /**
  * Controller class responsible for handling email related REST-endpoints.
@@ -102,7 +101,7 @@ public class EmailController {
   @Operation(summary = "Send verification email")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Verification email successfully sent.",
-          content = { @Content(mediaType = "application/json",
+          content = {@Content(mediaType = "application/json",
               schema = @Schema(implementation = EmailCodeExpirationDto.class))}),
       @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
@@ -167,7 +166,8 @@ public class EmailController {
       @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
   @GetMapping("/challenge/join/{id}")
-  public ResponseEntity<Void> sendJoinCode(Principal principal, @RequestParam String email, @PathVariable long id) {
+  public ResponseEntity<Void> sendJoinCode(Principal principal, @RequestParam String email,
+                                           @PathVariable long id) {
     log.info("Sending join code about challenge with id: {} to: {}", id, email);
     emailFriendCodeService.sendJoinCode(principal, email, id);
     log.info("Join code about challenge with id: {} sent to: {}", id, email);
