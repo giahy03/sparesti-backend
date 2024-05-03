@@ -29,8 +29,10 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service class for operations related to Saving Goals.
- * The service provides creation of new Saving Goals, retrieval of existing ones and
- * update of lives, currentTile and saved amount associated with the saving goal.
+ * The service provides creation of new Saving Goals, retrieval
+ * of existing ones, adding a user as a contributor,
+ * retrieve list of all contributors, update mascot
+ * lives, update saved amount associated with the saving goal.
  *
  * @author Hanne-Sofie Søreide
  */
@@ -179,7 +181,7 @@ public class SavingGoalService {
 
   /**
    * Add a new saved amount to the saving goal and return the updated total amount saved up for the
-   * given goal.
+   * given goal by all contributing users.
    *
    * @param principal                 The authenticated user
    * @param savingGoalContributionDto DTO containing the saving goal
@@ -199,7 +201,6 @@ public class SavingGoalService {
       savingContributionRepository.save(contribution);
     }
 
-    // Return the total saved up amount on this goal (from all users)
     return checkTotalOfContributions(principal, savingGoalContributionDto.getGoalId());
   }
 
@@ -257,7 +258,6 @@ public class SavingGoalService {
     }
 
     return contributors;
-
   }
 
   /**

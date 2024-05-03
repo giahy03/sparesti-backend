@@ -34,6 +34,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller class for handling requests related to saving goals.
+ * A user can get a list of all its saving goals, can retrieve details
+ * of a specific saving goal, create a new goal, add oneself to an
+ * existing saving goal using a join code, get a list of all contributors
+ * of to the goal, get the currently saved total for a goal and
+ * delete a goal. The controller also provides the operations to
+ * edit the number of lives for the saving mascot, update the
+ * goal state, contribute an amount to the goal.
  *
  * @author Hanne-Sofie Søreide
  */
