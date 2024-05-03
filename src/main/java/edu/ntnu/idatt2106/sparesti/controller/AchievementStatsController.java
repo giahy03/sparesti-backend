@@ -110,7 +110,17 @@ public class AchievementStatsController {
 
     log.info("Returning total saved amount by user: {}", principal.getName());
 
-    achievementStatsService.updateAndCheckAchievement(AchievementCategory.AMOUNT_SAVED, principal);
+    // ========== Fjerne om vi ikke har testbruker med eksisterende sparemål, skal jo egentlig starte på 0.
+    List<Integer> levelChange = achievementStatsService.updateAndCheckAchievement(AchievementCategory.AMOUNT_SAVED, principal);
+
+    if (levelChange.get(1) >= 1) {
+      for (int i = levelChange.getFirst(); i > levelChange.getFirst() - levelChange.getLast(); i--) {
+        achievementStatsService.createBadge(AchievementCategory.AMOUNT_SAVED, principal, i);
+      }
+    }
+
+    // =================
+
     double total = achievementStatsRepository.findAchievementStatsByUserEmail(principal.getName())
             .orElseThrow().getTotalSaved();
 

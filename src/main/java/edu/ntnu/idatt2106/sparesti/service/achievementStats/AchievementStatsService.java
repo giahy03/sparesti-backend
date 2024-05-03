@@ -82,6 +82,7 @@ public class AchievementStatsService {
               .build();
       AchievementStats storedStats = achievementStatsRepository.save(stats);
       user.setStats(storedStats);
+      userRepository.save(user);
     }
 
     return switch (category) {
@@ -128,6 +129,7 @@ public class AchievementStatsService {
     Badge savedBadge = badgeRepository.save(badge);
     if (user.getBadges() == null) {
       user.setBadges(Set.of(badge));
+      userRepository.save(user);
     } else {
       user.getBadges().add(badge);
     }
@@ -163,6 +165,7 @@ public class AchievementStatsService {
 
     if (streak > oldStreak) {
       user.getStats().setStreak(streak);
+      userRepository.save(user);
       return true;
     } else {
       return false;
@@ -191,6 +194,7 @@ public class AchievementStatsService {
 
     if (totalContribution > oldTotal) {
       user.getStats().setTotalSaved(totalContribution);
+      userRepository.save(user);
       return true;
     } else {
       return false;
@@ -221,6 +225,7 @@ public class AchievementStatsService {
 
     if (completedChallenges > oldCount) {
       user.getStats().setChallengesAchieved(completedChallenges);
+      userRepository.save(user);
       return true;
     } else {
       return false;
@@ -276,6 +281,7 @@ public class AchievementStatsService {
       return Arrays.asList(0,0);
     } else {
       user.getStats().setReadNews(true);
+      userRepository.save(user);
       return Arrays.asList(1,1);
     }
 
