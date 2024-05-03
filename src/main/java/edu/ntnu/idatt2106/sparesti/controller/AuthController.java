@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller class responsible for handling user authentication operations
  * such as registration and login.
  * <p>
- * The code is inspired by Ramtin Samavat's GitHub repository: <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/controller/AuthenticationController.java">...</a>
+ * The code is inspired by Ramtin Samavat's GitHub repository:
+ * <a href="https://github.com/RamtinS/quiz-app-backend/blob/main/src/main/java/edu/ntnu/idatt2105/quizapp/controller/AuthenticationController.java">...</a>
  * </p>
  *
  * @author Ramtin Samavat
@@ -47,17 +48,17 @@ public class AuthController {
    */
   @Operation(summary = "Register a new user")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "201", description = "User registered successfully",
-                  content = {@Content(mediaType = "application/json",
-                          schema = @Schema(implementation = AuthenticationDto.class))}
-          ),
-          @ApiResponse(responseCode = "400", description = "Invalid input from user."),
-          @ApiResponse(responseCode = "409", description = "Email already in use."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.")
+      @ApiResponse(responseCode = "201", description = "User registered successfully",
+          content = {@Content(mediaType = "application/json",
+              schema = @Schema(implementation = AuthenticationDto.class))}
+      ),
+      @ApiResponse(responseCode = "400", description = "Invalid input from user."),
+      @ApiResponse(responseCode = "409", description = "Email already in use."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
   @PostMapping("/register")
   public ResponseEntity<AuthenticationDto> registerUser(
-          @RequestBody RegistrationDto registrationDto) {
+      @RequestBody RegistrationDto registrationDto) {
     log.info("Attempting to register user: {}", registrationDto.getEmail());
     AuthenticationDto authenticationDto = authService.registerUser(registrationDto);
     log.info("User {} registered successfully.", registrationDto.getEmail());
@@ -73,12 +74,12 @@ public class AuthController {
    */
   @Operation(summary = "Login for user")
   @ApiResponses(value = {
-          @ApiResponse(responseCode = "200", description = "User logged in successfully",
-                  content = {@Content(mediaType = "application/json",
-                          schema = @Schema(implementation = AuthenticationDto.class))}
-          ),
-          @ApiResponse(responseCode = "401", description = "User is unauthorized to log in."),
-          @ApiResponse(responseCode = "500", description = "Internal server error.")
+      @ApiResponse(responseCode = "200", description = "User logged in successfully",
+          content = {@Content(mediaType = "application/json",
+              schema = @Schema(implementation = AuthenticationDto.class))}
+      ),
+      @ApiResponse(responseCode = "401", description = "User is unauthorized to log in."),
+      @ApiResponse(responseCode = "500", description = "Internal server error.")
   })
   @PostMapping("/login")
   public ResponseEntity<AuthenticationDto> loginUser(@RequestBody LoginRequestDto loginRequestDto) {
