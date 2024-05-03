@@ -15,11 +15,8 @@ public class CodeGenerationUtility {
   }
 
   private static final String CHARACTERS =
-          """
-          abcdefghijklmnopqrstuvwxyz
-          ABCDEFGHIJKLMNOPQRSTUVWXYZ
-          0123456789
-          """;
+          "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
   private static final int LENGTH = 8;
   private static final SecureRandom random = new SecureRandom();
 
