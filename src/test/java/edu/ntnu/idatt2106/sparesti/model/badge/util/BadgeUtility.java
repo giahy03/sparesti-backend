@@ -1,10 +1,7 @@
 package edu.ntnu.idatt2106.sparesti.model.badge.util;
 
-
 import edu.ntnu.idatt2106.sparesti.dto.achievementstats.AchievementPreviewDto;
-import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeIdDto;
 import edu.ntnu.idatt2106.sparesti.dto.badge.BadgePreviewDto;
-import edu.ntnu.idatt2106.sparesti.dto.badge.BadgeCreateDto;
 import edu.ntnu.idatt2106.sparesti.model.badge.Achievement;
 import edu.ntnu.idatt2106.sparesti.model.badge.AchievementCategory;
 import edu.ntnu.idatt2106.sparesti.model.badge.Badge;
@@ -15,7 +12,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Utility class that creates objects to support the testing related to badges.
+ * Utility class that creates objects to support
+ * the testing related to badges.
  *
  * @author Hanne-Sofie Søreide
  */
@@ -113,23 +111,6 @@ public class BadgeUtility {
     }
 
 
-    public static BadgeCreateDto createBadgeCreateDto() {
-
-        return BadgeCreateDto.builder()
-                .achievement(BadgeUtility.createAchievementA())
-                .achievementDate(LocalDate.of(2024, 4, 3))
-                .level(1)
-                .build();
-    }
-
-
-    public static BadgeIdDto createBadgeIdDto() {
-        return BadgeIdDto.builder()
-                .id(1L)
-                .build();
-    }
-
-
     public static String createBadgePreviewDtoListJson() {
         return    "[{"
                 + "\"achievement\":\"AMOUNT_SAVED\","
@@ -147,11 +128,6 @@ public class BadgeUtility {
                 + "\"threshold\":5000.0"
                 + "}]";
     }
-
-
-  public static AchievementCategory createAchievementCategoryA() {
-    return AchievementCategory.AMOUNT_SAVED;
-  }
 
     public static AchievementPreviewDto createAchievementPreviewDtoA() {
         return AchievementPreviewDto.builder()
