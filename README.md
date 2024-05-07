@@ -17,6 +17,7 @@ at the Norwegian University of Science and Technology (NTNU). The application is
 - [Features](#features)
 - [Installation Manual](#installation-manual)
 - [Test](#test)
+- [API Documentation](#api-documentation)
 - [Acknowledgements](#acknowledgements)
 
 ## Overview
@@ -49,28 +50,25 @@ The project utilizes the following technologies:
 
 1. Begin by cloning the project into your device. In your terminal, enter the following command:
    ```
-   git clone https://github.com/RamtinS/quiz-app-backend.git
+   git clone https://gitlab.stud.idi.ntnu.no/idatt2106_2024_04/backend.git
    ```
 
 2. Navigate to the project directory by typing the following command in the terminal:
    ```
-   cd quiz-app-backend
+   cd backend
    ```
 
-3. Navigate to the docker file by running this command in the terminal:
-   ```
-   cd docker
-   ```
-
-4. Run the database required for the backend to function by starting the docker compose file in the terminal with this command.
+3. Run the database required for the backend to function by starting the docker compose file in the terminal with this command.
    ```sh
    docker-compose up
    ```
 
-5. Find a new terminal and enter the following command to finally start the backend.
+4. Find a new terminal, navigate to the project directory, and enter the following command to finally start the backend.
    ```sh
-   /mvnw spring-boot:run
+   ./mvnw spring-boot:run
    ```
+
+The program should now be running on port 8080.
 
 ## Test
 To run the tests in the project, you would use the command
@@ -84,6 +82,13 @@ To run the tests in the project, you would use the command
 - Password: password
 
 Test data, such as bank statements, can be located within the resource folder.
+
+## API Documentation
+The API documentation for Sparesti backend is available through Swagger.
+
+To access the Swagger documentation:
+1. Ensure that the backend server is running.
+2. Open a web browser and navigate to: `http://localhost:8080/api/v1/docs/ui`
 
 
 ## Acknowledgements
